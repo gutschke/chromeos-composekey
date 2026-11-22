@@ -1,0 +1,152 @@
+# Title: Emoji by name (Compose Compose name)
+# Written for this extension. The scheme (press Compose twice,
+# then the emoji's name) comes from WinCompose; the names here are short and
+# guessable rather than full Unicode names, and limited to popular emoji: the
+# ChromeOS emoji picker covers the rest. Colourful (emoji-presentation) forms,
+# with U+FE0F where a character defaults to text style.
+# Licence: Apache-2.0 (the extension's own).
+
+# faces
+<Multi_key> <Multi_key> <s> <m> <i> <l> <e> : "😄"  # GRINNING FACE WITH SMILING EYES
+<Multi_key> <Multi_key> <g> <r> <i> <n> : "😁"  # BEAMING FACE WITH SMILING EYES
+<Multi_key> <Multi_key> <j> <o> <y> : "😂"  # FACE WITH TEARS OF JOY
+<Multi_key> <Multi_key> <r> <o> <f> <l> : "🤣"  # ROLLING ON THE FLOOR LAUGHING
+<Multi_key> <Multi_key> <w> <i> <n> <k> : "😉"  # WINKING FACE
+<Multi_key> <Multi_key> <b> <l> <u> <s> <h> : "😊"  # SMILING FACE WITH SMILING EYES
+<Multi_key> <Multi_key> <h> <e> <a> <r> <t> <e> <y> <e> <s> : "😍"  # SMILING FACE WITH HEART-SHAPED EYES
+<Multi_key> <Multi_key> <k> <i> <s> <s> : "😘"  # FACE THROWING A KISS
+<Multi_key> <Multi_key> <y> <u> <m> : "😋"  # FACE SAVOURING DELICIOUS FOOD
+<Multi_key> <Multi_key> <c> <o> <o> <l> : "😎"  # SMILING FACE WITH SUNGLASSES
+<Multi_key> <Multi_key> <t> <h> <i> <n> <k> : "🤔"  # THINKING FACE
+<Multi_key> <Multi_key> <t> <h> <i> <n> <k> <i> <n> <g> : "🤔"  # THINKING FACE
+<Multi_key> <Multi_key> <n> <e> <u> <t> <r> <a> <l> : "😐"  # NEUTRAL FACE
+<Multi_key> <Multi_key> <r> <o> <l> <l> <e> <y> <e> <s> : "🙄"  # FACE WITH ROLLING EYES
+<Multi_key> <Multi_key> <s> <m> <i> <r> <k> : "😏"  # SMIRKING FACE
+<Multi_key> <Multi_key> <s> <a> <d> : "😞"  # DISAPPOINTED FACE
+<Multi_key> <Multi_key> <c> <r> <y> : "😢"  # CRYING FACE
+<Multi_key> <Multi_key> <s> <o> <b> : "😭"  # LOUDLY CRYING FACE
+<Multi_key> <Multi_key> <a> <n> <g> <r> <y> : "😠"  # ANGRY FACE
+<Multi_key> <Multi_key> <r> <a> <g> <e> : "😡"  # POUTING FACE
+<Multi_key> <Multi_key> <s> <c> <r> <e> <a> <m> : "😱"  # FACE SCREAMING IN FEAR
+<Multi_key> <Multi_key> <s> <w> <e> <a> <t> : "😅"  # SMILING FACE WITH OPEN MOUTH AND COLD SWEAT
+<Multi_key> <Multi_key> <r> <e> <l> <i> <e> <v> <e> <d> : "😌"  # RELIEVED FACE
+<Multi_key> <Multi_key> <s> <l> <e> <e> <p> <y> : "😪"  # SLEEPY FACE
+<Multi_key> <Multi_key> <s> <l> <e> <e> <p> <i> <n> <g> : "😴"  # SLEEPING FACE
+<Multi_key> <Multi_key> <s> <i> <c> <k> : "🤒"  # FACE WITH THERMOMETER
+<Multi_key> <Multi_key> <n> <e> <r> <d> : "🤓"  # NERD FACE
+<Multi_key> <Multi_key> <p> <a> <r> <t> <y> : "🥳"  # FACE WITH PARTY HORN AND PARTY HAT
+<Multi_key> <Multi_key> <s> <h> <u> <s> <h> : "🤫"  # FACE WITH FINGER COVERING CLOSED LIPS
+<Multi_key> <Multi_key> <h> <u> <g> : "🤗"  # HUGGING FACE
+<Multi_key> <Multi_key> <h> <a> <l> <o> : "😇"  # SMILING FACE WITH HALO
+<Multi_key> <Multi_key> <d> <e> <v> <i> <l> : "😈"  # SMILING FACE WITH HORNS
+<Multi_key> <Multi_key> <u> <p> <s> <i> <d> <e> <d> <o> <w> <n> : "🙃"  # UPSIDE-DOWN FACE
+<Multi_key> <Multi_key> <z> <a> <n> <y> : "🤪"  # GRINNING FACE WITH ONE LARGE AND ONE SMALL EYE
+<Multi_key> <Multi_key> <m> <o> <n> <o> <c> <l> <e> : "🧐"  # FACE WITH MONOCLE
+<Multi_key> <Multi_key> <f> <a> <c> <e> <p> <a> <l> <m> : "🤦"  # FACE PALM
+<Multi_key> <Multi_key> <s> <h> <r> <u> <g> : "🤷"  # SHRUG
+<Multi_key> <Multi_key> <s> <k> <u> <l> <l> : "💀"  # SKULL
+<Multi_key> <Multi_key> <p> <o> <o> <p> : "💩"  # PILE OF POO
+<Multi_key> <Multi_key> <c> <l> <o> <w> <n> : "🤡"  # CLOWN FACE
+<Multi_key> <Multi_key> <g> <h> <o> <s> <t> : "👻"  # GHOST
+<Multi_key> <Multi_key> <a> <l> <i> <e> <n> : "👽"  # EXTRATERRESTRIAL ALIEN
+<Multi_key> <Multi_key> <r> <o> <b> <o> <t> : "🤖"  # ROBOT FACE
+<Multi_key> <Multi_key> <s> <e> <e> <n> <o> <e> <v> <i> <l> : "🙈"  # SEE-NO-EVIL MONKEY
+
+# hands
+<Multi_key> <Multi_key> <t> <h> <u> <m> <b> <s> <u> <p> : "👍"  # THUMBS UP SIGN
+<Multi_key> <Multi_key> <t> <h> <u> <m> <b> <s> <d> <o> <w> <n> : "👎"  # THUMBS DOWN SIGN
+<Multi_key> <Multi_key> <o> <k> : "👌"  # OK HAND SIGN
+<Multi_key> <Multi_key> <c> <l> <a> <p> : "👏"  # CLAPPING HANDS SIGN
+<Multi_key> <Multi_key> <p> <r> <a> <y> : "🙏"  # PERSON WITH FOLDED HANDS
+<Multi_key> <Multi_key> <w> <a> <v> <e> : "👋"  # WAVING HAND SIGN
+<Multi_key> <Multi_key> <m> <u> <s> <c> <l> <e> : "💪"  # FLEXED BICEPS
+<Multi_key> <Multi_key> <f> <i> <s> <t> : "👊"  # FISTED HAND SIGN
+<Multi_key> <Multi_key> <v> <i> <c> <t> <o> <r> <y> : "✌️"  # VICTORY HAND
+<Multi_key> <Multi_key> <f> <i> <n> <g> <e> <r> <s> <c> <r> <o> <s> <s> <e> <d> : "🤞"  # HAND WITH INDEX AND MIDDLE FINGERS CROSSED
+<Multi_key> <Multi_key> <p> <o> <i> <n> <t> : "👉"  # WHITE RIGHT POINTING BACKHAND INDEX
+<Multi_key> <Multi_key> <h> <a> <n> <d> <s> <h> <a> <k> <e> : "🤝"  # HANDSHAKE
+<Multi_key> <Multi_key> <r> <a> <i> <s> <e> <d> <h> <a> <n> <d> <s> : "🙌"  # PERSON RAISING BOTH HANDS IN CELEBRATION
+
+# hearts and symbols
+<Multi_key> <Multi_key> <h> <e> <a> <r> <t> : "❤️"  # HEAVY BLACK HEART (emoji presentation)
+<Multi_key> <Multi_key> <h> <e> <a> <r> <t> <s> : "💕"  # TWO HEARTS
+<Multi_key> <Multi_key> <b> <r> <o> <k> <e> <n> <h> <e> <a> <r> <t> : "💔"  # BROKEN HEART
+<Multi_key> <Multi_key> <f> <i> <r> <e> : "🔥"  # FIRE
+<Multi_key> <Multi_key> <s> <t> <a> <r> : "⭐"  # WHITE MEDIUM STAR
+<Multi_key> <Multi_key> <s> <p> <a> <r> <k> <l> <e> <s> : "✨"  # SPARKLES
+<Multi_key> <Multi_key> <1> <0> <0> : "💯"  # HUNDRED POINTS SYMBOL
+<Multi_key> <Multi_key> <c> <h> <e> <c> <k> : "✅"  # WHITE HEAVY CHECK MARK
+<Multi_key> <Multi_key> <c> <r> <o> <s> <s> : "❌"  # CROSS MARK
+<Multi_key> <Multi_key> <w> <a> <r> <n> <i> <n> <g> : "⚠️"  # WARNING SIGN (emoji presentation)
+<Multi_key> <Multi_key> <q> <u> <e> <s> <t> <i> <o> <n> : "❓"  # BLACK QUESTION MARK ORNAMENT
+<Multi_key> <Multi_key> <e> <x> <c> <l> <a> <m> <a> <t> <i> <o> <n> : "❗"  # HEAVY EXCLAMATION MARK SYMBOL
+<Multi_key> <Multi_key> <z> <z> <z> : "💤"  # SLEEPING SYMBOL
+<Multi_key> <Multi_key> <b> <o> <o> <m> : "💥"  # COLLISION SYMBOL
+<Multi_key> <Multi_key> <t> <a> <d> <a> : "🎉"  # PARTY POPPER
+<Multi_key> <Multi_key> <g> <i> <f> <t> : "🎁"  # WRAPPED PRESENT
+<Multi_key> <Multi_key> <c> <a> <k> <e> : "🎂"  # BIRTHDAY CAKE
+<Multi_key> <Multi_key> <b> <a> <l> <l> <o> <o> <n> : "🎈"  # BALLOON
+<Multi_key> <Multi_key> <t> <r> <o> <p> <h> <y> : "🏆"  # TROPHY
+<Multi_key> <Multi_key> <m> <e> <d> <a> <l> : "🏅"  # SPORTS MEDAL
+<Multi_key> <Multi_key> <e> <y> <e> <s> : "👀"  # EYES
+<Multi_key> <Multi_key> <r> <o> <c> <k> <e> <t> : "🚀"  # ROCKET
+<Multi_key> <Multi_key> <b> <u> <l> <b> : "💡"  # ELECTRIC LIGHT BULB
+<Multi_key> <Multi_key> <b> <e> <l> <l> : "🔔"  # BELL
+<Multi_key> <Multi_key> <l> <o> <c> <k> : "🔒"  # LOCK
+<Multi_key> <Multi_key> <k> <e> <y> : "🔑"  # KEY
+<Multi_key> <Multi_key> <m> <o> <n> <e> <y> : "💰"  # MONEY BAG
+<Multi_key> <Multi_key> <c> <h> <a> <r> <t> : "📈"  # CHART WITH UPWARDS TREND
+<Multi_key> <Multi_key> <c> <a> <l> <e> <n> <d> <a> <r> : "📅"  # CALENDAR
+<Multi_key> <Multi_key> <p> <i> <n> : "📌"  # PUSHPIN
+<Multi_key> <Multi_key> <l> <i> <n> <k> : "🔗"  # LINK SYMBOL
+<Multi_key> <Multi_key> <m> <a> <i> <l> : "📧"  # E-MAIL SYMBOL
+<Multi_key> <Multi_key> <p> <h> <o> <n> <e> : "📱"  # MOBILE PHONE
+<Multi_key> <Multi_key> <l> <a> <p> <t> <o> <p> : "💻"  # PERSONAL COMPUTER
+<Multi_key> <Multi_key> <m> <u> <s> <i> <c> : "🎵"  # MUSICAL NOTE
+<Multi_key> <Multi_key> <g> <a> <m> <e> : "🎮"  # VIDEO GAME
+<Multi_key> <Multi_key> <b> <o> <o> <k> : "📖"  # OPEN BOOK
+<Multi_key> <Multi_key> <c> <a> <m> <e> <r> <a> : "📷"  # CAMERA
+<Multi_key> <Multi_key> <h> <o> <u> <r> <g> <l> <a> <s> <s> : "⏳"  # HOURGLASS WITH FLOWING SAND
+<Multi_key> <Multi_key> <a> <l> <a> <r> <m> : "⏰"  # ALARM CLOCK
+
+# food and drink
+<Multi_key> <Multi_key> <c> <o> <f> <f> <e> <e> : "☕"  # HOT BEVERAGE
+<Multi_key> <Multi_key> <b> <e> <e> <r> : "🍺"  # BEER MUG
+<Multi_key> <Multi_key> <w> <i> <n> <e> : "🍷"  # WINE GLASS
+<Multi_key> <Multi_key> <c> <h> <e> <e> <r> <s> : "🥂"  # CLINKING GLASSES
+<Multi_key> <Multi_key> <p> <i> <z> <z> <a> : "🍕"  # SLICE OF PIZZA
+<Multi_key> <Multi_key> <t> <a> <c> <o> : "🌮"  # TACO
+<Multi_key> <Multi_key> <b> <u> <r> <g> <e> <r> : "🍔"  # HAMBURGER
+<Multi_key> <Multi_key> <a> <p> <p> <l> <e> : "🍎"  # RED APPLE
+<Multi_key> <Multi_key> <b> <a> <n> <a> <n> <a> : "🍌"  # BANANA
+<Multi_key> <Multi_key> <a> <v> <o> <c> <a> <d> <o> : "🥑"  # AVOCADO
+
+# nature and weather
+<Multi_key> <Multi_key> <s> <u> <n> : "☀️"  # BLACK SUN WITH RAYS (emoji presentation)
+<Multi_key> <Multi_key> <m> <o> <o> <n> : "🌙"  # CRESCENT MOON
+<Multi_key> <Multi_key> <c> <l> <o> <u> <d> : "☁️"  # CLOUD (emoji presentation)
+<Multi_key> <Multi_key> <r> <a> <i> <n> : "🌧️"  # CLOUD WITH RAIN
+<Multi_key> <Multi_key> <s> <n> <o> <w> : "❄️"  # SNOWFLAKE (emoji presentation)
+<Multi_key> <Multi_key> <r> <a> <i> <n> <b> <o> <w> : "🌈"  # RAINBOW
+<Multi_key> <Multi_key> <u> <m> <b> <r> <e> <l> <l> <a> : "☂️"  # UMBRELLA (emoji presentation)
+<Multi_key> <Multi_key> <e> <a> <r> <t> <h> : "🌍"  # EARTH GLOBE EUROPE-AFRICA
+<Multi_key> <Multi_key> <f> <l> <o> <w> <e> <r> : "🌸"  # CHERRY BLOSSOM
+<Multi_key> <Multi_key> <r> <o> <s> <e> : "🌹"  # ROSE
+<Multi_key> <Multi_key> <t> <r> <e> <e> : "🌳"  # DECIDUOUS TREE
+<Multi_key> <Multi_key> <c> <a> <t> : "🐱"  # CAT FACE
+<Multi_key> <Multi_key> <d> <o> <g> : "🐶"  # DOG FACE
+<Multi_key> <Multi_key> <u> <n> <i> <c> <o> <r> <n> : "🦄"  # UNICORN FACE
+<Multi_key> <Multi_key> <p> <a> <n> <d> <a> : "🐼"  # PANDA FACE
+<Multi_key> <Multi_key> <p> <e> <n> <g> <u> <i> <n> : "🐧"  # PENGUIN
+<Multi_key> <Multi_key> <m> <o> <n> <k> <e> <y> : "🐒"  # MONKEY
+<Multi_key> <Multi_key> <b> <u> <g> : "🐛"  # BUG
+<Multi_key> <Multi_key> <b> <e> <e> : "🐝"  # HONEYBEE
+<Multi_key> <Multi_key> <s> <n> <a> <k> <e> : "🐍"  # SNAKE
+<Multi_key> <Multi_key> <f> <i> <s> <h> : "🐟"  # FISH
+<Multi_key> <Multi_key> <o> <c> <t> <o> <p> <u> <s> : "🐙"  # OCTOPUS
+
+# travel and places
+<Multi_key> <Multi_key> <c> <a> <r> : "🚗"  # AUTOMOBILE
+<Multi_key> <Multi_key> <b> <i> <k> <e> : "🚲"  # BICYCLE
+<Multi_key> <Multi_key> <p> <l> <a> <n> <e> : "✈️"  # AIRPLANE (emoji presentation)
+<Multi_key> <Multi_key> <h> <o> <u> <s> <e> : "🏠"  # HOUSE BUILDING

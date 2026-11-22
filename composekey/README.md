@@ -7,8 +7,10 @@ Canadian, and UK.
 The key sequences follow
 [Xlib](https://www.x.org/releases/current/doc/libX11/i18n/compose/en_US.UTF-8.html)
 for the en_US.UTF-8 locale: every Xlib sequence that can be typed on a US
-keyboard is built in. Where they disagree, the extension's original table
-wins.
+keyboard is built in. On top of that come emoticons (`:-)` → 🙂), arrows
+(`-->` → ⟶), sequences from pointless-xcompose and kragen/xcompose, and
+popular emoji by name (Compose Compose `fire` → 🔥). Where sources disagree,
+the extension's original table wins, then Xlib.
 
 ## Configuration
 
@@ -45,7 +47,7 @@ Sequences are grouped by where they come from. When two sources define the same
 sequence, the earlier group wins: the original table first, then X11, then the
 rest. A sequence that is complete but also starts a longer one (for example
 `:-` and `:-)`) waits for the next key; release or press Compose again to get
-the shorter one.
+the shorter one. "Compose Compose name" sequences need Compose pressed twice.
 
 The table is generated from `sequences/*.compose` by `tools/gen-sequences.py`;
 edit those files, not this list.
@@ -1920,4 +1922,142 @@ Output | Sequence | Comment
 ✔ | @@/ | HEAVY CHECK MARK
 ✗ | @X | BALLOT X
 ✘ | @@X | HEAVY BALLOT X
+
+### Emoji by name (Compose Compose name)
+
+Output | Sequence | Comment
+------ | -------- | -------
+😄 | Compose smile | GRINNING FACE WITH SMILING EYES
+😁 | Compose grin | BEAMING FACE WITH SMILING EYES
+😂 | Compose joy | FACE WITH TEARS OF JOY
+🤣 | Compose rofl | ROLLING ON THE FLOOR LAUGHING
+😉 | Compose wink | WINKING FACE
+😊 | Compose blush | SMILING FACE WITH SMILING EYES
+😍 | Compose hearteyes | SMILING FACE WITH HEART-SHAPED EYES
+😘 | Compose kiss | FACE THROWING A KISS
+😋 | Compose yum | FACE SAVOURING DELICIOUS FOOD
+😎 | Compose cool | SMILING FACE WITH SUNGLASSES
+🤔 | Compose think | THINKING FACE
+🤔 | Compose thinking | THINKING FACE
+😐 | Compose neutral | NEUTRAL FACE
+🙄 | Compose rolleyes | FACE WITH ROLLING EYES
+😏 | Compose smirk | SMIRKING FACE
+😞 | Compose sad | DISAPPOINTED FACE
+😢 | Compose cry | CRYING FACE
+😭 | Compose sob | LOUDLY CRYING FACE
+😠 | Compose angry | ANGRY FACE
+😡 | Compose rage | POUTING FACE
+😱 | Compose scream | FACE SCREAMING IN FEAR
+😅 | Compose sweat | SMILING FACE WITH OPEN MOUTH AND COLD SWEAT
+😌 | Compose relieved | RELIEVED FACE
+😪 | Compose sleepy | SLEEPY FACE
+😴 | Compose sleeping | SLEEPING FACE
+🤒 | Compose sick | FACE WITH THERMOMETER
+🤓 | Compose nerd | NERD FACE
+🥳 | Compose party | FACE WITH PARTY HORN AND PARTY HAT
+🤫 | Compose shush | FACE WITH FINGER COVERING CLOSED LIPS
+🤗 | Compose hug | HUGGING FACE
+😇 | Compose halo | SMILING FACE WITH HALO
+😈 | Compose devil | SMILING FACE WITH HORNS
+🙃 | Compose upsidedown | UPSIDE-DOWN FACE
+🤪 | Compose zany | GRINNING FACE WITH ONE LARGE AND ONE SMALL EYE
+🧐 | Compose monocle | FACE WITH MONOCLE
+🤦 | Compose facepalm | FACE PALM
+🤷 | Compose shrug | SHRUG
+💀 | Compose skull | SKULL
+💩 | Compose poop | PILE OF POO
+🤡 | Compose clown | CLOWN FACE
+👻 | Compose ghost | GHOST
+👽 | Compose alien | EXTRATERRESTRIAL ALIEN
+🤖 | Compose robot | ROBOT FACE
+🙈 | Compose seenoevil | SEE-NO-EVIL MONKEY
+👍 | Compose thumbsup | THUMBS UP SIGN
+👎 | Compose thumbsdown | THUMBS DOWN SIGN
+👌 | Compose ok | OK HAND SIGN
+👏 | Compose clap | CLAPPING HANDS SIGN
+🙏 | Compose pray | PERSON WITH FOLDED HANDS
+👋 | Compose wave | WAVING HAND SIGN
+💪 | Compose muscle | FLEXED BICEPS
+👊 | Compose fist | FISTED HAND SIGN
+✌️ | Compose victory | VICTORY HAND
+🤞 | Compose fingerscrossed | HAND WITH INDEX AND MIDDLE FINGERS CROSSED
+👉 | Compose point | WHITE RIGHT POINTING BACKHAND INDEX
+🤝 | Compose handshake | HANDSHAKE
+🙌 | Compose raisedhands | PERSON RAISING BOTH HANDS IN CELEBRATION
+❤️ | Compose heart | HEAVY BLACK HEART (emoji presentation)
+💕 | Compose hearts | TWO HEARTS
+💔 | Compose brokenheart | BROKEN HEART
+🔥 | Compose fire | FIRE
+⭐ | Compose star | WHITE MEDIUM STAR
+✨ | Compose sparkles | SPARKLES
+💯 | Compose 100 | HUNDRED POINTS SYMBOL
+✅ | Compose check | WHITE HEAVY CHECK MARK
+❌ | Compose cross | CROSS MARK
+⚠️ | Compose warning | WARNING SIGN (emoji presentation)
+❓ | Compose question | BLACK QUESTION MARK ORNAMENT
+❗ | Compose exclamation | HEAVY EXCLAMATION MARK SYMBOL
+💤 | Compose zzz | SLEEPING SYMBOL
+💥 | Compose boom | COLLISION SYMBOL
+🎉 | Compose tada | PARTY POPPER
+🎁 | Compose gift | WRAPPED PRESENT
+🎂 | Compose cake | BIRTHDAY CAKE
+🎈 | Compose balloon | BALLOON
+🏆 | Compose trophy | TROPHY
+🏅 | Compose medal | SPORTS MEDAL
+👀 | Compose eyes | EYES
+🚀 | Compose rocket | ROCKET
+💡 | Compose bulb | ELECTRIC LIGHT BULB
+🔔 | Compose bell | BELL
+🔒 | Compose lock | LOCK
+🔑 | Compose key | KEY
+💰 | Compose money | MONEY BAG
+📈 | Compose chart | CHART WITH UPWARDS TREND
+📅 | Compose calendar | CALENDAR
+📌 | Compose pin | PUSHPIN
+🔗 | Compose link | LINK SYMBOL
+📧 | Compose mail | E-MAIL SYMBOL
+📱 | Compose phone | MOBILE PHONE
+💻 | Compose laptop | PERSONAL COMPUTER
+🎵 | Compose music | MUSICAL NOTE
+🎮 | Compose game | VIDEO GAME
+📖 | Compose book | OPEN BOOK
+📷 | Compose camera | CAMERA
+⏳ | Compose hourglass | HOURGLASS WITH FLOWING SAND
+⏰ | Compose alarm | ALARM CLOCK
+☕ | Compose coffee | HOT BEVERAGE
+🍺 | Compose beer | BEER MUG
+🍷 | Compose wine | WINE GLASS
+🥂 | Compose cheers | CLINKING GLASSES
+🍕 | Compose pizza | SLICE OF PIZZA
+🌮 | Compose taco | TACO
+🍔 | Compose burger | HAMBURGER
+🍎 | Compose apple | RED APPLE
+🍌 | Compose banana | BANANA
+🥑 | Compose avocado | AVOCADO
+☀️ | Compose sun | BLACK SUN WITH RAYS (emoji presentation)
+🌙 | Compose moon | CRESCENT MOON
+☁️ | Compose cloud | CLOUD (emoji presentation)
+🌧️ | Compose rain | CLOUD WITH RAIN
+❄️ | Compose snow | SNOWFLAKE (emoji presentation)
+🌈 | Compose rainbow | RAINBOW
+☂️ | Compose umbrella | UMBRELLA (emoji presentation)
+🌍 | Compose earth | EARTH GLOBE EUROPE-AFRICA
+🌸 | Compose flower | CHERRY BLOSSOM
+🌹 | Compose rose | ROSE
+🌳 | Compose tree | DECIDUOUS TREE
+🐱 | Compose cat | CAT FACE
+🐶 | Compose dog | DOG FACE
+🦄 | Compose unicorn | UNICORN FACE
+🐼 | Compose panda | PANDA FACE
+🐧 | Compose penguin | PENGUIN
+🐒 | Compose monkey | MONKEY
+🐛 | Compose bug | BUG
+🐝 | Compose bee | HONEYBEE
+🐍 | Compose snake | SNAKE
+🐟 | Compose fish | FISH
+🐙 | Compose octopus | OCTOPUS
+🚗 | Compose car | AUTOMOBILE
+🚲 | Compose bike | BICYCLE
+✈️ | Compose plane | AIRPLANE (emoji presentation)
+🏠 | Compose house | HOUSE BUILDING
 <!-- END GENERATED -->
