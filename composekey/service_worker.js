@@ -1045,19 +1045,6 @@ class Modifiers {
   }
 }
 
-/**
- * Rebuilds a proper Modifiers class instance from a potential plain
- * object retrieved from storage.
- * @param {Object!} storedObj
- * @return {Modifiers!}
- */
-function rebuildModifiersFromStorage(storedObj) {
-  if (storedObj instanceof Modifiers) {
-    return storedObj;
-  } else {
-    return Object.assign(new Modifiers(), storedObj);
-  }
-}
 
 const modifiersAny = Object.freeze(new Modifiers());
 const modifiersNone = Object.freeze(Object.assign(new Modifiers(), {
@@ -1177,27 +1164,23 @@ class Result {
   }
 }
 
-/**
- * Rebuilds a proper Result class instance from a potential plain object
- * retrieved from storage.
- * @param {Object!} storedObj
- * @return {Result!}
- */
-function rebuildResultFromStorage(storedObj) {
-  if (storedObj instanceof Result) {
-    return storedObj;
-  } else {
-    return new Result(storedObj.string, storedObj.keysym);
-  }
-}
-
 class EventState {
   /**
    * @param {Modifiers!} mods
    * @param {boolean} builtin
    */
-  constructor(mods, builtin) {
+  constructor(mods, builtin, path = []) {
     this.mods = Object.freeze(mods);
+
+    /**
+     * Where this state sits in the tree: [keysym, index into nextKeys[keysym]]
+     * steps from the root. Only these paths are persisted across worker
+     * restarts (see setStates); the tree itself is re-parsed on start-up.
+     * Persisting the tree meant serialising the whole table on every
+     * keystroke, at a cost proportional to its size.
+     * @type {!Array<!Array<string|number>>}
+     */
+    this.path = path;
 
     /** True if all sequences that pass through this state are built-in. */
     this.builtin = builtin;
@@ -1238,43 +1221,28 @@ class EventState {
       this.nextKeys[event.sym] = states;
     }
 
-    let state = new EventState(event.mods, builtin);
+    let state = new EventState(
+        event.mods, builtin, [...this.path, [event.sym, states.length]]);
     states.push(state);
     return state;
   }
 }
 
 /**
- * Rebuilds a proper EventState class instance from a potential plain
- * object retrieved from storage. Storage only allows for serialized
- * JSON, you see.
- * @param {Object!} storedObj
- * @return {EventState!}
+ * Finds the state at `path` (see EventState.path) below `root`.
+ * @param {EventState!} root
+ * @param {*} path as read back from storage
+ * @return {?EventState} null if the path does not exist in this tree.
  */
-function rebuildEventStateFromStorage(storedObj) {
-  if (storedObj instanceof EventState) {
-    return storedObj;
-  } else {
-    // Make sure the mods and result fields are classes as well (if need
-    // be).
-    if (!(storedObj.mods instanceof Modifiers)) {
-      storedObj.mods = rebuildModifiersFromStorage(storedObj.mods);
-    }
-
-    if (storedObj.result !== null && !(storedObj.result instanceof Result)) {
-      storedObj.result = rebuildResultFromStorage(storedObj.result);
-    }
-
-    // Also, the nextKeys object. That one requires recursion.
-    for (const [key, states] of Object.entries(storedObj.nextKeys)) {
-      for (const state of states) {
-        rebuildEventStateFromStorage(state);
-      }
-    }
-
-    return Object.assign(
-        new EventState(storedObj.mods, storedObj.builtin), storedObj);
+function stateAtPath(root, path) {
+  if (!Array.isArray(path)) return null;
+  let state = root;
+  for (const step of path) {
+    const next = Array.isArray(step) ? state.nextKeys[step[0]] : undefined;
+    state = next ? next[step[1]] : undefined;
+    if (!(state instanceof EventState)) return null;
   }
+  return state;
 }
 
 /**
@@ -1568,9 +1536,6 @@ function setComposeFile(content) {
   storeComposeFile(content);
 
   const parsed = parseComposeFile(content);
-
-  // The parsed EventState tree is just cached in session storage.
-  chrome.storage.session.set({'rootState': parsed.root});
   rootState = parsed.root;
   composeFile = content;
   fileStatus.warnings = parsed.warnings;
@@ -1649,26 +1614,31 @@ function clearComposeFile() {
  * initPromise has already loaded composeFile with the right precedence
  * (sync, then local, then the default).
  */
-function loadComposeFileAtStartup() {
+function loadComposeFileAtStartup(savedPaths) {
   const parsed = parseComposeFile(composeFile);
   rootState = parsed.root;
   fileStatus = {warnings: parsed.warnings, errors: parsed.errors};
-  chrome.storage.session.set({'rootState': parsed.root});
-  // Keep a composition that survived the restart; otherwise point at the
-  // freshly parsed tree (on a first start, states is still the empty default).
-  if (!composing) {
-    setStates([rootState]);
+
+  // Resume a composition that survived the restart, if its saved positions
+  // still exist in the tree; otherwise start from the root.
+  const resumed = (composing && Array.isArray(savedPaths)) ?
+      savedPaths.map((p) => stateAtPath(rootState, p)) : [];
+  if (resumed.length > 0 && resumed.every((s) => s !== null)) {
+    states = resumed;
+  } else {
+    states = [rootState];
+    composing = false;
   }
   console.log(
       'Loaded compose file (%d characters).', lengthInCodepoints(composeFile));
 }
 
 /**
- * Sets the current states.
+ * Sets the current states. Only their tree paths are persisted.
  * @param {Array<EventState!>!} value
  */
 function setStates(value) {
-  chrome.storage.session.set({'states': value});
+  chrome.storage.session.set({'statePaths': value.map((s) => s.path)});
   states = value;
 }
 
@@ -1780,8 +1750,7 @@ const initPromise =
 
           return chrome.storage.session.get({
             'keyDownSuppressed': [],
-            'rootState': new EventState(modifiersAny),
-            'states': undefined,
+            'statePaths': null,
             'composing': false,
             'composeOnKeyUp': false,
             'contextID': 0
@@ -1793,24 +1762,13 @@ const initPromise =
           composing = options.composing;
           composeOnKeyUp = options.composeOnKeyUp;
 
-          rootState = rebuildEventStateFromStorage(options.rootState);
-          if (options.states === undefined) {
-            states = [rootState];
-          } else {
-            const fetchedStates = options.states;
-            states = [];
-
-            for (const state of fetchedStates) {
-              states.push(rebuildEventStateFromStorage(state));
-            }
-          }
+          // Parsed here, inside initPromise, so no listener can see a
+          // half-initialised tree.
+          loadComposeFileAtStartup(options.statePaths);
         });
 
-// Registered at top level, before any event can arrive, so it runs before the
-// initPromise continuations that event listeners add. (Must come after the
-// `const initPromise` declaration above: referencing it earlier at top level
-// throws a ReferenceError.)
-initPromise.then(loadComposeFileAtStartup);
+// Whole-tree copies written by earlier versions; no longer read.
+chrome.storage.session.remove(['rootState', 'states']);
 
 // Listen for config updates from the options page.
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
