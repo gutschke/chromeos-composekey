@@ -1781,7 +1781,13 @@ let states = [];
 const initPromise =
     chrome.storage.sync
         .get(
-            {'key': 'AltRight', 'composeFile': null, 'keepModifier': true})
+            // keepModifier defaults to false, as it did through v1.8
+            // (`localStorage.getItem('keepModifier') == "true"`). With true,
+            // holding Compose while typing the sequence cannot work: the held
+            // key reaches the app as Alt and the next key cancels compose. The
+            // MV3 port flipped this default, and could not migrate the old
+            // localStorage value, so every user lost hold-to-compose.
+            {'key': 'AltRight', 'composeFile': null, 'keepModifier': false})
         .then((options) => {
           composeKey = options.key;
           keepModifier = options.keepModifier;
