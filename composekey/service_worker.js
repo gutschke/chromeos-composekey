@@ -1068,14 +1068,42 @@ const modifiersNone = Object.freeze(Object.assign(new Modifiers(), {
   capsLock: false,
 }));
 
+/**
+ * The input context (text field) that composed text is committed to, or 0 if
+ * none is focused.
+ *
+ * This must be persisted, not just kept in a global: Chrome stops an idle
+ * service worker and starts a fresh one for the next key event, but does not
+ * repeat onFocus for a field that is still focused. A worker that only kept
+ * contextID in memory would wake up with 0, swallow the compose sequence and
+ * commit nothing: compose quietly stops working until something (such as
+ * switching input methods) fires onFocus again.
+ * @type {number}
+ */
 let contextID = 0;
+
+/**
+ * @param {number} value
+ */
+function setContextID(value) {
+  chrome.storage.session.set({'contextID': value});
+  contextID = value;
+}
+
+// Wait for initPromise so that (a) resetState() never runs against a
+// not-yet-loaded rootState when an onFocus is what woke the worker, and (b) the
+// contextID restored from storage cannot overwrite the one this event sets.
 chrome.input.ime.onFocus.addListener((context) => {
-  resetState();
-  contextID = context.contextID;
+  initPromise.then(() => {
+    resetState();
+    setContextID(context.contextID);
+  });
 });
 chrome.input.ime.onBlur.addListener(() => {
-  resetState();
-  contextID = 0;
+  initPromise.then(() => {
+    resetState();
+    setContextID(0);
+  });
 });
 
 class Result {
@@ -1776,10 +1804,12 @@ const initPromise =
             'rootState': new EventState(modifiersAny),
             'states': undefined,
             'composing': false,
-            'composeOnKeyUp': false
+            'composeOnKeyUp': false,
+            'contextID': 0
           });
         })
         .then((options) => {
+          contextID = options.contextID;
           keyDownSuppressed = new Set(options.keyDownSuppressed);
           composing = options.composing;
           composeOnKeyUp = options.composeOnKeyUp;
