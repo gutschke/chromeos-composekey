@@ -1435,8 +1435,11 @@ function parseSequence(line) {
   let events = [{mods: event.mods, sym: event.sym}];
 
   let match;
-  while (
-      !(match = /^\s*:\s*(?:"([^"]*)"\s*)?(\w+)?\s*(?:#\s*.*)?$/.exec(rest))) {
+  // The result string may contain \" and \\ (X11's own Compose file uses
+  // both, e.g. for the backslash and quotation-mark results); [^"]* used to
+  // stop at the first \" and keep \\ as two characters.
+  while (!(match = /^\s*:\s*(?:"((?:[^"\\]|\\.)*)"\s*)?(\w+)?\s*(?:#\s*.*)?$/
+               .exec(rest))) {
     event = parseEvent(rest);
     rest = event.rest;
     events.push({mods: event.mods, sym: event.sym});
@@ -1451,7 +1454,9 @@ function parseSequence(line) {
   if (string) {
     // Convert octal and hex escapes to the corresponding Unicode strings.
     string = string.replace(
-        /\\(?:(?:0x([0-9a-fA-F]+))|([0-7]+))/g, (match, hex, octal) => {
+        /\\(?:(?:0?x([0-9a-fA-F]+))|([0-7]{1,3})|(.))/g,
+        (match, hex, octal, other) => {
+          if (other !== undefined) return other;  // \\ -> \, \" -> "
           return String.fromCodePoint(
               octal ? parseInt(octal, 8) : parseInt(hex, 16));
         });
