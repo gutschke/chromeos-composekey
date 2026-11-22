@@ -26,6 +26,18 @@ sequences in the extension's Options page.
 3. You can abort compose mode any time after entering the mode by pressing the
    Escape key.
 
+### Holding vs. tapping Compose
+
+You can tap Compose and then type the sequence, or hold Compose down while
+typing it. Holding needs "Keep modifier" switched off in the options (the
+default).
+
+Known problem: while right Alt is held, ChromeOS acts on its own Alt shortcuts
+before the extension sees the key, even though the extension suppresses it.
+For example Alt + `-` minimizes the window, which also ends the composition.
+Sequences containing such keys (`-`, `=`, `[`, `]`, and possibly digits) only
+work in tap mode.
+
 ## Full list of built-in sequences
 
 Output | Sequence | Comment

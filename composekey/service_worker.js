@@ -1671,6 +1671,32 @@ function setComposeOnKeyUp(value) {
 }
 
 /**
+ * True between a keydown of the Compose key and its keyup; see the auto-repeat
+ * handling in the key event listener.
+ * @param {boolean} value
+ */
+function setComposeKeyDown(value) {
+  if (composeKeyDown === value) return;
+  chrome.storage.session.set({'composeKeyDown': value});
+  composeKeyDown = value;
+}
+
+/**
+ * For a Compose key that is a modifier, whether keyData says that modifier is
+ * held; null when the event cannot tell (the Compose key is not a modifier).
+ * @param {string} code KeyboardEvent.code of the Compose key
+ * @param {Object!} keyData
+ * @return {?boolean}
+ */
+function modifierFlagOf(code, keyData) {
+  if (code.startsWith('Alt')) return !!keyData.altKey;
+  if (code.startsWith('Control')) return !!keyData.ctrlKey;
+  if (code.startsWith('Shift')) return !!keyData.shiftKey;
+  if (code.startsWith('Meta') || code.startsWith('OS')) return !!keyData.metaKey;
+  return null;
+}
+
+/**
  * Resets all internal state flags.
  * @return {Promise<void>!}
  */
@@ -1679,6 +1705,7 @@ function resetState() {
   setComposing(false);
   setKeyDownSuppressed(new Set());
   setComposeOnKeyUp(false);
+  setComposeKeyDown(false);
 }
 
 /**
@@ -1706,6 +1733,7 @@ const modifierKeys = Object.freeze(new Set([
 let composeFile;
 let composeKey;
 let composeOnKeyUp = false;
+let composeKeyDown = false;
 let composing;
 let keepModifier;
 let keyDownSuppressed = new Set();
@@ -1755,11 +1783,13 @@ const initPromise =
             'statePaths': null,
             'composing': false,
             'composeOnKeyUp': false,
+            'composeKeyDown': false,
             'contextID': 0
           });
         })
         .then((options) => {
           contextID = options.contextID;
+          composeKeyDown = options.composeKeyDown;
           keyDownSuppressed = new Set(options.keyDownSuppressed);
           composing = options.composing;
           composeOnKeyUp = options.composeOnKeyUp;
@@ -1885,11 +1915,33 @@ chrome.input.ime.onKeyEvent.addListener((engineID, keyData, requestId) => {
     let isModifier = modifierKeys.has(key);
     const isLock = isModifier && key.endsWith('Lock');
 
+    // A held key auto-repeats on ChromeOS: keydown after keydown, with no
+    // `repeat` flag on the event. Each repeat of the
+    // Compose key used to count as a fresh press, toggling compose on and off,
+    // so hold-to-compose only worked if the sequence was typed before
+    // repeating began. Repeats now get the same answer as the first keydown
+    // and are otherwise ignored.
+    //
+    // If the keyup is ever lost, composeKeyDown would stay set and every
+    // later press would look like a repeat, leaving compose dead. So it is
+    // also cleared on focus changes (resetState), and by any other key that
+    // arrives without the Compose key's modifier flag.
+    if (composeKeyDown && keyData.code != composeKey &&
+        modifierFlagOf(composeKey, keyData) === false) {
+      setComposeKeyDown(false);
+    }
+
     let isComposeEvent = false;
     if (keyData.code == composeKey) {
       if (keyData.type == 'keyup') {
+        setComposeKeyDown(false);
         isComposeEvent = composeOnKeyUp;
+      } else if (composeKeyDown) {
+        keyEventHandled(
+            requestId, keyDownSuppressed.has(key) ? suppress : propagate);
+        return;
       } else {
+        setComposeKeyDown(true);
         if (isModifier && keepModifier) {
           composeOnKeyUp = true;
           // Propagate the modifier event so that the key will correctly modify
