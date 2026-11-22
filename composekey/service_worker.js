@@ -1271,12 +1271,15 @@ function addSequence(root, sequence) {
         nextPrefixStates.push(candidate);
         if (candidate.builtin || !candidate.result) continue;
 
+        // A shorter sequence that is a prefix of this one is kept: the key
+        // handler waits for the next key to decide between them (see
+        // `held`). It used to be suppressed here.
         let str = candidate.result.keysym;
         if (candidate.result.string !== null) {
           str = '“' + candidate.result.string + '”';
         }
-        warning = 'Suppressed existing sequence with result (' + str + ').';
-        candidate.result = null;
+        warning = 'Sequence extends an existing one (' + str +
+            '); that one now waits for the next key before committing.';
       }
     }
     prefixStates = nextPrefixStates;
@@ -1290,7 +1293,8 @@ function addSequence(root, sequence) {
       if (state !== finalState && !state.builtin) {
         console.warn(
             'New sequence is a prefix of existing sequence(s):', state);
-        warning = 'New sequence is a prefix of existing sequence(s).';
+        warning = 'New sequence is a prefix of existing sequence(s); it ' +
+            'waits for the next key before committing.';
         break;
       }
     }
@@ -1706,6 +1710,7 @@ function resetState() {
   setKeyDownSuppressed(new Set());
   setComposeOnKeyUp(false);
   setComposeKeyDown(false);
+  setHeld(null);
 }
 
 /**
@@ -1784,12 +1789,14 @@ const initPromise =
             'composing': false,
             'composeOnKeyUp': false,
             'composeKeyDown': false,
+            'held': null,
             'contextID': 0
           });
         })
         .then((options) => {
           contextID = options.contextID;
           composeKeyDown = options.composeKeyDown;
+          held = options.held;
           keyDownSuppressed = new Set(options.keyDownSuppressed);
           composing = options.composing;
           composeOnKeyUp = options.composeOnKeyUp;
@@ -1851,6 +1858,66 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 /**
+ * A result held back because its sequence is complete but also the start of a
+ * longer one (e.g. ":-" → ÷ while ":-)" → 🙂 exists): {path, tail}, where path
+ * locates its state in the tree and tail is what has been typed since. Kept
+ * until the longer sequence completes (dropped) or fails (held result + tail
+ * committed: longest match, then the rest as typed). Persisted, so it survives
+ * a worker restart.
+ *
+ * This cannot be derived from `states` alone. Once the input moves more
+ * than one key past the held point (e.g. "|B" ฿ → "|BD" on the way to "|BDM"),
+ * the current states no longer carry the result; deriving it from them
+ * would lose both the ฿ and the keys typed after it.
+ * @type {?{path: !Array, tail: string}}
+ */
+let held = null;
+
+/** @param {?{path: !Array, tail: string}} value */
+function setHeld(value) {
+  chrome.storage.session.set({'held': value});
+  held = value;
+}
+
+/** @return {?{result: !Result, tail: string}} */
+function heldResult() {
+  if (held === null) return null;
+  const state = stateAtPath(rootState, held.path);
+  return state && state.result ? {result: state.result, tail: held.tail} : null;
+}
+
+/**
+ * Commits a held result, the keys typed after it, and `extra`, in one call
+ * where possible.
+ */
+function commitHeld(h, extra, keyData) {
+  if (h.result.string !== null) {
+    new Result(h.result.string + h.tail + extra, null).send(keyData);
+  } else {
+    h.result.send(keyData);
+    if (h.tail + extra) new Result(h.tail + extra, null).send(keyData);
+  }
+}
+
+/**
+ * @param {Array<EventState!>!} candidates
+ * @return {boolean} True if any candidate can still be extended.
+ */
+function canContinue(candidates) {
+  return candidates.some((c) => Object.keys(c.nextKeys).length > 0);
+}
+
+/**
+ * True if the key produces a single character that can be committed as text.
+ * Alt is allowed, since in hold-to-compose mode every key arrives with Alt.
+ * @param {Object!} keyData
+ * @return {boolean}
+ */
+function isPrintable(keyData) {
+  return [...keyData.key].length == 1 && !keyData.ctrlKey && !keyData.metaKey;
+}
+
+/**
  * Opt-in debug log of every key event and what was done with it, for
  * diagnosing behaviour that only shows on real hardware. OFF by default, since
  * it records keystrokes. To enable, in the service worker's DevTools console:
@@ -1892,11 +1959,13 @@ chrome.input.ime.onKeyEvent.addListener((engineID, keyData, requestId) => {
     const propagate = false;
 
     if (debugLog) {
+      const h = heldResult();
       dbg(keyData.type, JSON.stringify(keyData.key), keyData.code,
           'alt=' + keyData.altKey, 'altgr=' + keyData.altgrKey,
           'ctrl=' + keyData.ctrlKey, 'shift=' + keyData.shiftKey,
           'repeat=' + keyData.repeat, '| composing=' + composing,
           'candidates=' + states.length,
+          'held=' + (h ? JSON.stringify(h.result.string + '|' + h.tail) : 'none'),
           '| composeKey=' + composeKey, 'keepModifier=' + keepModifier,
           'composeOnKeyUp=' + composeOnKeyUp);
     }
@@ -1957,6 +2026,18 @@ chrome.input.ime.onKeyEvent.addListener((engineID, keyData, requestId) => {
     }
 
     if (keyData.type == 'keyup' && !isComposeEvent) {
+      // Hold-to-compose: releasing the Compose key settles a pending
+      // ambiguous sequence. (In tap mode the release comes before any
+      // sequence key, when nothing can be pending yet.)
+      if (keyData.code == composeKey && composing) {
+        const h = heldResult();
+        if (h !== null) {
+          commitHeld(h, '', keyData);
+          setStates([rootState]);
+          setComposing(false);
+          setHeld(null);
+        }
+      }
       if (keyDownSuppressed.has(key)) {
         keyDownSuppressed.delete(key);
         keyEventHandled(requestId, suppress);
@@ -1990,9 +2071,41 @@ chrome.input.ime.onKeyEvent.addListener((engineID, keyData, requestId) => {
           return;
         }
 
+        // The key ends the composition. If a complete-but-ambiguous sequence
+        // was waiting, this key decides that it is wanted after all.
+        const h = heldResult();
         setStates([rootState]);
         setComposing(false);
+        setHeld(null);
+        if (h !== null && key != 'Escape') {
+          if (isComposeEvent) {
+            // Compose pressed again: commit, and consume the Compose key.
+            commitHeld(h, '', keyData);
+          } else if (isPrintable(keyData)) {
+            // Commit everything in one call. Committing the held text and
+            // letting the key through separately could reach the app in the
+            // wrong order (cf. https://crbug.com/826884).
+            keyEventHandled(requestId, suppress);
+            commitHeld(h, key, keyData);
+          } else {
+            // Enter, Tab, arrows...: commit, then let the key act normally.
+            // (The order has been checked on ChromeOS for Enter.)
+            commitHeld(h, '', keyData);
+            keyEventHandled(requestId, propagate);
+            return;
+          }
+        }
         break;
+      }
+
+      if (finalResult !== null && canContinue(nextStates)) {
+        // Complete, but a longer sequence is still possible: hold this result
+        // and wait.
+        const holder = nextStates.filter((c) => c.result).pop();
+        setHeld({path: holder.path, tail: ''});
+        setStates(nextStates);
+        setComposing(true);
+        continue;
       }
 
       if (finalResult !== null) {
@@ -2005,9 +2118,16 @@ chrome.input.ime.onKeyEvent.addListener((engineID, keyData, requestId) => {
         finalResult.send(keyData);
         setStates([rootState]);
         setComposing(false);
+        setHeld(null);
         continue;
       }
 
+      // Moving further past a held result: remember what was typed since, so
+      // that if the longer sequence then fails, the held result and these
+      // keys are committed rather than lost.
+      if (held !== null && !isComposeEvent) {
+        setHeld({path: held.path, tail: held.tail + (isPrintable(keyData) ? key : '')});
+      }
       setStates(nextStates);
       setComposing(true);
     }
