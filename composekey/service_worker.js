@@ -1120,6 +1120,8 @@ class Result {
    * @param {{extensionId: string, keyCode: number, type: string}} keyData
    */
   send(keyData) {
+    dbg('   commit', JSON.stringify(this.string), 'keysym=' + this.keysym,
+        'contextID=' + contextID);
     if (this.string !== null && contextID !== 0) {
       chrome.input.ime.commitText(
           {
@@ -1818,12 +1820,56 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
+/**
+ * Opt-in debug log of every key event and what was done with it, for
+ * diagnosing behaviour that only shows on real hardware. OFF by default, since
+ * it records keystrokes. To enable, in the service worker's DevTools console:
+ *     chrome.storage.local.set({debugLog: true})
+ * and `false` to disable again. Takes effect immediately.
+ */
+let debugLog = false;
+chrome.storage.local.get({'debugLog': false}).then((o) => {
+  debugLog = o.debugLog;
+});
+if (chrome.storage.onChanged) {
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area == 'local' && changes.debugLog) {
+      debugLog = !!changes.debugLog.newValue;
+    }
+  });
+}
+
+/** @param {...*} args */
+function dbg(...args) {
+  if (debugLog) console.log('[composekey]', ...args);
+}
+
+/**
+ * chrome.input.ime.keyEventHandled, logged.
+ * @param {string} requestId
+ * @param {boolean} handled true = suppressed, false = passed to the app
+ */
+function keyEventHandled(requestId, handled) {
+  dbg('   ->', handled ? 'suppressed' : 'passed through');
+  chrome.input.ime.keyEventHandled(requestId, handled);
+}
+
 chrome.input.ime.onKeyEvent.addListener((engineID, keyData, requestId) => {
   // WAIT! First, make sure we've got all the settings in place before we do any
   // processing.
   initPromise.then(() => {
     const suppress = true;
     const propagate = false;
+
+    if (debugLog) {
+      dbg(keyData.type, JSON.stringify(keyData.key), keyData.code,
+          'alt=' + keyData.altKey, 'altgr=' + keyData.altgrKey,
+          'ctrl=' + keyData.ctrlKey, 'shift=' + keyData.shiftKey,
+          'repeat=' + keyData.repeat, '| composing=' + composing,
+          'candidates=' + states.length,
+          '| composeKey=' + composeKey, 'keepModifier=' + keepModifier,
+          'composeOnKeyUp=' + composeOnKeyUp);
+    }
 
     const key = keyData.key;
 
@@ -1848,7 +1894,7 @@ chrome.input.ime.onKeyEvent.addListener((engineID, keyData, requestId) => {
           composeOnKeyUp = true;
           // Propagate the modifier event so that the key will correctly modify
           // other keystrokes.
-          chrome.input.ime.keyEventHandled(requestId, propagate);
+          keyEventHandled(requestId, propagate);
           return;
         }
         isComposeEvent = true;
@@ -1861,10 +1907,10 @@ chrome.input.ime.onKeyEvent.addListener((engineID, keyData, requestId) => {
     if (keyData.type == 'keyup' && !isComposeEvent) {
       if (keyDownSuppressed.has(key)) {
         keyDownSuppressed.delete(key);
-        chrome.input.ime.keyEventHandled(requestId, suppress);
+        keyEventHandled(requestId, suppress);
         return;
       }
-      chrome.input.ime.keyEventHandled(requestId, propagate);
+      keyEventHandled(requestId, propagate);
       return;
     }
 
@@ -1888,7 +1934,7 @@ chrome.input.ime.onKeyEvent.addListener((engineID, keyData, requestId) => {
         // consumed any keystrokes yet, or the key is a modifier for the next
         // keystroke, propagate it; otherwise, suppress it as normal.
         if (!composing || isModifier) {
-          chrome.input.ime.keyEventHandled(requestId, propagate);
+          keyEventHandled(requestId, propagate);
           return;
         }
 
@@ -1901,7 +1947,7 @@ chrome.input.ime.onKeyEvent.addListener((engineID, keyData, requestId) => {
         // Work around https://crbug.com/826884: suppress the keystroke
         // before calling commitText instead of waiting until we return.
         if (!isModifier || isLock) {
-          chrome.input.ime.keyEventHandled(requestId, true);
+          keyEventHandled(requestId, true);
         }
 
         finalResult.send(keyData);
@@ -1915,14 +1961,14 @@ chrome.input.ime.onKeyEvent.addListener((engineID, keyData, requestId) => {
     }
 
     if (isModifier && !isLock) {
-      chrome.input.ime.keyEventHandled(requestId, propagate);
+      keyEventHandled(requestId, propagate);
       return;
     }
 
     if (keyData.type == 'keydown') {
       keyDownSuppressed.add(key);
     }
-    chrome.input.ime.keyEventHandled(requestId, suppress);
+    keyEventHandled(requestId, suppress);
     return;
   });
 
