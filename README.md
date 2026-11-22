@@ -1,73 +1,62 @@
-# Extra Keyboards for Chrome OS
+# Compose Key for ChromeOS
 
-A collection of extra keyboard layouts and input methods for Chrome OS.
+A Compose key for ChromeOS: press right Alt, then a short sequence such as
+`o o` for °, `' e` for é or `:-)` for 🙂.
 
-## Installation
+This is a fork of Google's
+[extra-keyboards-for-chrome-os](https://github.com/google/extra-keyboards-for-chrome-os),
+reduced to its Compose key extension. Compared with upstream:
 
-### GitHub
+- Compose keeps working after ChromeOS has stopped and restarted the
+  extension's service worker. Upstream it could stop working without any
+  error until the input method was switched away and back.
+- Compose can be held down while typing a sequence, or tapped first. Holding
+  works again with the default settings, and is not upset by auto-repeat.
+- About 2000 built-in sequences instead of 600: every X11 sequence that can be
+  typed on a US keyboard, emoticons, arrows, a selection from other XCompose
+  collections, and popular emoji by name (Compose Compose `fire` for 🔥).
+- A sequence may be the start of a longer one (`:-` ÷ and `:-)` 🙂); the
+  shorter one then waits for the next key.
+- Custom compose files too large for Chrome sync are no longer replaced by the
+  default file.
 
-1. Open a new tab and go to chrome://extensions.
-1. Toggle "Developer mode" on (it is in the top right corner of the extensions
-   page).
-1. Click "Load unpacked extensions...".
-1. Pick the directory containing the manifest for the extension you want to
-   enable and click "Open".
-1. Go to chrome://settings/languages.
-1. Add the relevant language, e.g. French for the bepo keyboard layout.
-1. Select the relevant keyboard layout and input method.
-1. Optionally, remove any keyboard layouts or input methods that are no longer
-   required.
+See [composekey/README.md](composekey/README.md) for how to use it and for the
+full list of sequences.
 
-### Chrome Web Store
+## Installing
 
-Several of the extensions are available on the [Chrome Web Store](http://chrome.google.com/webstore/).
+The extension is not in the Chrome Web Store; load it unpacked.
 
-- [ComposeKey](https://chrome.google.com/webstore/detail/composekey/iijdllfdmhbmlmnbcohgbfagfibpbgba)
-- [UK Extended](https://chrome.google.com/webstore/detail/uk-extended/pkbdliadhfopgfdhbldifaakplenbpnd)
-- [Programmer Dvorak](https://chrome.google.com/webstore/detail/programmer-dvorak/mogcmmflienoigckdgnkkkafbgkaecbj)
-- [Polish Dvorak](https://chrome.google.com/webstore/detail/polish-dvorak/gikieikejljogkfjbijjplfhbmhbmfkf)
-- [Swedish Dvorak](https://chrome.google.com/webstore/detail/svorak/ijimhcgeahpgfdcgaheadagkjkiibcnj)
-- [Dvorak left-handed](https://chrome.google.com/webstore/detail/dvorak-left/daedidciajfkjpjfmailopfppehmdlkn)
-- [Dvorak right-handed](https://chrome.google.com/webstore/detail/dvorak-right/ibmblmkjihglholefminaiddohamopnn)
-- [BÉPO](https://chrome.google.com/webstore/detail/b%C3%A9po/pgiknkjjcfcalehnoedjngelcgopgkgc)
-- [Lushootseed](https://chrome.google.com/webstore/detail/lushootseed/bdcecklhaeiniooomgajkefmnghopnpk)
-- [UK Colemak](https://chrome.google.com/webstore/detail/nionfllpgckhdmcecikpfkonedlmlnop) (published by third party)
+1. Download this repository (Code, Download ZIP) and unpack it somewhere under
+   My Files, where it can stay: ChromeOS loads the extension from there.
+2. Open `chrome://extensions` and switch on Developer mode.
+3. Click "Load unpacked" and choose the `composekey` folder.
+4. If you have the Web Store version of ComposeKey installed, turn it off.
+5. In Settings, under Keyboard and inputs, Input (the wording varies between
+   ChromeOS versions), add "Compose Key (US)" or the variant for your layout,
+   and switch to it.
 
-## For development
+After updating the files, click the reload icon on the extension's card in
+`chrome://extensions`.
 
-1. Go to chrome://extensions.
-2. Click on "Load unpacked extensions...".
-3. Pick the directory containing the manifest for the extension you want to
-enable.
+## Development
 
-## How to Use
+- Tests: `cd composekey && node --test test/*.test.js` (tested with Node 22).
+- The built-in table is generated: edit `composekey/sequences/*.compose`, then
+  run `composekey/tools/gen-sequences.py build`.
+- `composekey/tools/export-extension DEST` copies just the extension's files to
+  DEST, for loading unpacked.
 
-After enabling multiple keyboard layouts an icon will appear in the system tray
-with an abbreviation for the *language* of the currently enabled layout. If
-your default layout is the standard US keyboard with the English layout, the
-text will read "US". Any other layout also using the English language will read
-"EN". This can lead to confusion if there are multiple layouts enabled for the
-same language.
+## Branches
 
-Once you have loaded and enabled the extension you can select a specific layout
-or cycle through the available layouts in a few ways.
+- `main`: this branch, the Compose key extension on its own.
+- `composekey`: the same changes on top of upstream's `master`, touching
+  nothing but `composekey/`, so that they could be offered upstream. Changes
+  for upstream need Google's Contributor License Agreement.
+- `master`: upstream, unchanged.
 
-### Selecting
+## Licence
 
-- Click the time on the menu bar.
-- Click the button labeled "Keyboard" and select the desired layout.
-
-### Cycling
-
-1. Press `Ctrl+Shift+Space` to cycle through the enabled keyboard layouts.
-1. Press `Ctrl+Space` to toggle between the most recently used keyboard layouts.
-
-## Known Limitations
-
-- These extensions are **not** allowed on the login/lock screen.
-- These extensions are **not** allowed on password fields.
-
-## Contributing
-
-If you would like to create a new layout or modify an existing one, please see
-the [Contributing](CONTRIBUTING.md) documentation.
+Apache License 2.0, like upstream; see [LICENSE](LICENSE). Where the built-in
+sequences come from, and under what terms, is stated at the top of each file
+in `composekey/sequences/`.
