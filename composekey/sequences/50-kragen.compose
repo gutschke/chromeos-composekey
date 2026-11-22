@@ -1,0 +1,73 @@
+# Title: Picked from kragen/xcompose
+# Source: https://github.com/kragen/xcompose, file dotXCompose at commit
+#   2131a4712910a0df23be46bdfae5ff812dd295a9 (2026-06-17).
+# Licence: none stated (kragen/xcompose issue #16, open since 2015). Included
+#   regardless, as a small, hand-picked subset.
+# Selection: sequences/50-kragen.picks. Lowest priority but WinCompose.
+# Imported by tools/gen-sequences.py: 65 sequences; skipped {'untypeable': 70, 'not Compose-prefixed': 0, 'modifiers': 0, 'unparsed': 0}
+
+<Multi_key> <minus> <M> : "—"  # EM DASH
+<Multi_key> <minus> <N> : "–"  # EN DASH
+<Multi_key> <6> <apostrophe> : "‘"  # LEFT SINGLE QUOTATION MARK (high 6)
+<Multi_key> <6> <quotedbl> : "“"  # LEFT DOUBLE QUOTATION MARK (66)
+<Multi_key> <9> <apostrophe> : "’"  # RIGHT SINGLE QUOTATION MARK (high 9)
+<Multi_key> <9> <quotedbl> : "”"  # RIGHT DOUBLE QUOTATION MARK (99)
+<Multi_key> <i> <n> : "∈"  # ELEMENT OF
+<Multi_key> <exclam> <i> <n> : "∉"  # NOT AN ELEMENT OF
+<Multi_key> <c> <b> <r> <t> : "∛"  # CUBE ROOT
+<Multi_key> <Multi_key> <asterisk> <o> : "∘"  # RING OPERATOR (function composition)
+<Multi_key> <Multi_key> <asterisk> <period> : "⋅"  # DOT OPERATOR (dot product)
+<Multi_key> <Multi_key> <a> <l> <e> <p> <h> : "ℵ"  # ALEF SYMBOL
+<Multi_key> <Multi_key> <h> <b> <a> <r> : "ℏ"  # PLANCK CONSTANT OVER TWO PI
+<Multi_key> <asterisk> <b> : "β"  # GREEK SMALL LETTER BETA
+<Multi_key> <asterisk> <c> : "ψ"  # GREEK SMALL LETTER PSI
+<Multi_key> <asterisk> <d> : "δ"  # GREEK SMALL LETTER DELTA
+<Multi_key> <asterisk> <e> : "ε"  # GREEK SMALL LETTER EPSILON
+<Multi_key> <asterisk> <f> : "φ"  # GREEK SMALL LETTER PHI
+<Multi_key> <asterisk> <g> : "γ"  # GREEK SMALL LETTER GAMMA
+<Multi_key> <asterisk> <h> : "η"  # GREEK SMALL LETTER ΕΤΑ
+<Multi_key> <asterisk> <i> : "ι"  # GREEK SMALL LETTER ΙΟΤΑ
+<Multi_key> <asterisk> <j> : "ξ"  # GREEK SMALL LETTER XI
+<Multi_key> <asterisk> <k> : "κ"  # GREEK SMALL LETTER KAPPA
+<Multi_key> <asterisk> <l> : "λ"  # GREEK SMALL LETTER LAMBDA
+<Multi_key> <asterisk> <m> : "μ"  # GREEK SMALL LETTER MU
+<Multi_key> <asterisk> <n> : "ν"  # GREEK SMALL LETTER NU
+<Multi_key> <asterisk> <p> : "π"  # GREEK SMALL LETTER PI
+<Multi_key> <asterisk> <r> : "ρ"  # GREEK SMALL LETTER RHO
+<Multi_key> <asterisk> <s> : "σ"  # GREEK SMALL LETTER SIGMA
+<Multi_key> <asterisk> <t> : "τ"  # GREEK SMALL LETTER TAU
+<Multi_key> <asterisk> <v> : "ω"  # GREEK SMALL LETTER OMEGA
+<Multi_key> <asterisk> <w> : "ς"  # GREEK SMALL LETTER FINAL SIGMA
+<Multi_key> <asterisk> <y> : "υ"  # GREEK SMALL LETTER UPSILON
+<Multi_key> <asterisk> <z> : "ζ"  # GREEK SMALL LETTER ZETA
+<Multi_key> <asterisk> <B> : "Β"  # GREEK CAPITAL LETTER BETA
+<Multi_key> <asterisk> <C> : "Ψ"  # GREEK CAPITAL LETTER PSI
+<Multi_key> <asterisk> <D> : "Δ"  # GREEK CAPITAL LETTER DELTA
+<Multi_key> <asterisk> <E> : "Ε"  # GREEK CAPITAL LETTER EPSILON
+<Multi_key> <asterisk> <F> : "Φ"  # GREEK CAPITAL LETTER PHI
+<Multi_key> <asterisk> <G> : "Γ"  # GREEK CAPITAL LETTER GAMMA
+<Multi_key> <asterisk> <H> : "Η"  # GREEK CAPITAL LETTER ΕΤΑ
+<Multi_key> <asterisk> <I> : "Ι"  # GREEK CAPITAL LETTER ΙΟΤΑ
+<Multi_key> <asterisk> <J> : "Ξ"  # GREEK CAPITAL LETTER XI
+<Multi_key> <asterisk> <K> : "Κ"  # GREEK CAPITAL LETTER KAPPA
+<Multi_key> <asterisk> <L> : "Λ"  # GREEK CAPITAL LETTER LAMBDA
+<Multi_key> <asterisk> <M> : "Μ"  # GREEK CAPITAL LETTER MU
+<Multi_key> <asterisk> <N> : "Ν"  # GREEK CAPITAL LETTER NU
+<Multi_key> <asterisk> <O> : "Ο"  # GREEK CAPITAL LETTER OMICRON
+<Multi_key> <asterisk> <P> : "Π"  # GREEK CAPITAL LETTER PI
+<Multi_key> <asterisk> <R> : "Ρ"  # GREEK CAPITAL LETTER RHO
+<Multi_key> <asterisk> <S> : "Σ"  # GREEK CAPITAL LETTER SIGMA
+<Multi_key> <asterisk> <T> : "Τ"  # GREEK CAPITAL LETTER TAU
+<Multi_key> <asterisk> <V> : "Ω"  # GREEK CAPITAL LETTER OMEGA
+<Multi_key> <asterisk> <X> : "Χ"  # GREEK CAPITAL LETTER CHI
+<Multi_key> <asterisk> <Y> : "Υ"  # GREEK CAPITAL LETTER UPSILON
+<Multi_key> <asterisk> <Z> : "Ζ"  # GREEK CAPITAL LETTER ZETA
+<Multi_key> <Multi_key> <p> <e> <a> <c> <e> : "☮"  # PEACE SYMBOL
+<Multi_key> <Multi_key> <y> <y> : "☯"  # YIN YANG
+<Multi_key> <Multi_key> <t> <e> <l> : "☎"  # BLACK TELEPHONE
+<Multi_key> <Multi_key> <t> <e> <a> : "☕"  # HOT BEVERAGE
+<Multi_key> <Multi_key> <c> <h> <k> : "☑"  # BALLOT BOX WITH CHECK
+<Multi_key> <at> <slash> : "✓"  # CHECK MARK
+<Multi_key> <at> <at> <slash> : "✔"  # HEAVY CHECK MARK
+<Multi_key> <at> <X> : "✗"  # BALLOT X
+<Multi_key> <at> <at> <X> : "✘"  # HEAVY BALLOT X

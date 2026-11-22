@@ -1,0 +1,80 @@
+# Sequences picked from kragen/xcompose for 50-kragen.compose.
+# One per line, as typed after Compose ("Compose " = a further press of it).
+# Criteria: practical and guessable; nothing that changes or delays an
+# existing sequence; no combining marks, IPA, word expansions or emoji
+# (WinCompose's emoji names cover those). Re-run the import after editing.
+
+# Dashes and typographic quotes
+-M  # em dash
+-N  # – en dash
+6'  # ‘
+9'  # ’
+6"  # “
+9"  # ”
+
+# Check marks and crosses
+@/   # ✓
+@@/  # ✔
+@X   # ✗
+@@X  # ✘
+
+# Maths and letterlike
+in     # ∈
+!in    # ∉
+cbrt   # ∛
+Compose *o  # ∘ ring operator
+Compose *.  # ⋅ dot operator
+Compose aleph  # ℵ
+Compose hbar   # ℏ
+
+# Named symbols
+Compose peace  # ☮
+Compose yy     # ☯
+Compose tea    # ☕
+Compose tel    # ☎
+Compose chk    # ☑
+
+# Greek letters (classic Greek-keyboard mapping; *a *o *u are taken by X11)
+*b
+*c
+*d
+*e
+*f
+*g
+*h
+*i
+*j
+*k
+*l
+*m
+*n
+*p
+*r
+*s
+*t
+*v
+*w
+*y
+*z
+*B
+*C
+*D
+*E
+*F
+*G
+*H
+*I
+*J
+*K
+*L
+*M
+*N
+*O
+*P
+*R
+*S
+*T
+*V
+*X
+*Y
+*Z
