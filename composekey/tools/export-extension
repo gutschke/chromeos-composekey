@@ -1,0 +1,31 @@
+#!/bin/sh
+# Copy the loadable extension (working tree, not just the last commit) into
+# DEST, e.g. a folder ChromeOS can "Load unpacked" from. Usage:
+#     tools/export-extension DEST
+#
+# Only files git tracks under composekey/ are copied, minus test/, tools/ and sequences/,
+# so stray editor files never end up in the extension; files are compared
+# afterwards so a partial copy (e.g. a share that went away) is reported, not
+# silently loaded. DEST is replaced wholesale: removed files must not linger.
+set -eu
+dest=${1:?usage: $0 DEST}
+here=$(cd "$(dirname "$0")/.." && pwd)        # .../composekey
+repo=$(git -C "$here" rev-parse --show-toplevel)
+
+files=$(git -C "$repo" ls-files -- composekey | sed -n 's|^composekey/||p' |
+        grep -Ev '^(test|tools|sequences)/')
+[ -n "$files" ] || { echo "$0: no tracked files found" >&2; exit 1; }
+
+tmp="$dest.tmp.$$"
+rm -rf "$tmp"; mkdir -p "$tmp"
+for f in $files; do
+  mkdir -p "$tmp/$(dirname "$f")"
+  cp -p "$here/$f" "$tmp/$f"
+done
+rm -rf "$dest"; mv "$tmp" "$dest"
+
+bad=0
+for f in $files; do cmp -s "$here/$f" "$dest/$f" || { echo "DIFFERS: $f" >&2; bad=1; }; done
+[ $bad -eq 0 ] || exit 1
+dirty=$(git -C "$repo" status --porcelain -- composekey | grep -Ev ' composekey/(test|tools|sequences)/' || true)
+echo "exported $(echo "$files" | wc -l) files to $dest from $(git -C "$repo" rev-parse --short HEAD)${dirty:+ + uncommitted changes}"
