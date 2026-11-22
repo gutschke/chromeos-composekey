@@ -43,7 +43,9 @@ work in tap mode.
 
 Sequences are grouped by where they come from. When two sources define the same
 sequence, the earlier group wins: the original table first, then X11, then the
-rest.
+rest. A sequence that is complete but also starts a longer one (for example
+`:-` and `:-)`) waits for the next key; release or press Compose again to get
+the shorter one.
 
 The table is generated from `sequences/*.compose` by `tools/gen-sequences.py`;
 edit those files, not this list.
@@ -1276,4 +1278,45 @@ j́ | j' | LATIN SMALL LETTER J plus COMBINING ACUTE
 ⍭ | &#124;~ | &#124; ~ APL FUNCTIONAL SYMBOL STILE TILDE
 ⍭ | ~&#124; | ~ &#124; APL FUNCTIONAL SYMBOL STILE TILDE
 ⍮ | ;\_ | ; _ APL FUNCTIONAL SYMBOL SEMICOLON UNDERBAR
+
+### Additions: emoticons and arrows
+
+Output | Sequence | Comment
+------ | -------- | -------
+🙂 | :-) | SLIGHTLY SMILING FACE
+🙁 | :-( | SLIGHTLY FROWNING FACE
+😃 | :-D | SMILING FACE WITH OPEN MOUTH
+😃 | :D | SMILING FACE WITH OPEN MOUTH
+😛 | :-P | FACE WITH STUCK-OUT TONGUE
+😛 | :P | FACE WITH STUCK-OUT TONGUE
+😛 | :-p | FACE WITH STUCK-OUT TONGUE
+😮 | :-O | FACE WITH OPEN MOUTH
+😮 | :-o | FACE WITH OPEN MOUTH
+😐 | :-&#124; | NEUTRAL FACE
+😕 | :-/ | CONFUSED FACE
+😘 | :-\* | FACE THROWING A KISS
+😢 | :'( | CRYING FACE
+😢 | :'-( | CRYING FACE
+😉 | ;-) | WINKING FACE
+😉 | ;) | WINKING FACE
+😎 | B-) | SMILING FACE WITH SUNGLASSES
+😎 | 8-) | SMILING FACE WITH SUNGLASSES
+😠 | >:( | ANGRY FACE
+😠 | >:-( | ANGRY FACE
+😊 | ^\_^ | SMILING FACE WITH SMILING EYES
+😑 | -\_- | EXPRESSIONLESS FACE
+😭 | T\_T | LOUDLY CRYING FACE
+😣 | >\_< | PERSEVERING FACE
+😳 | o\_O | FLUSHED FACE
+😳 | O\_o | FLUSHED FACE
+😆 | xD | SMILING FACE WITH OPEN MOUTH AND TIGHTLY-CLOSED EYES
+😆 | XD | SMILING FACE WITH OPEN MOUTH AND TIGHTLY-CLOSED EYES
+💔 | </3 | BROKEN HEART
+⟶ | --> | LONG RIGHTWARDS ARROW
+⟵ | <-- | LONG LEFTWARDS ARROW
+↔ | <-> | LEFT RIGHT ARROW
+⟹ | ==> | LONG RIGHTWARDS DOUBLE ARROW
+⟸ | <== | LONG LEFTWARDS DOUBLE ARROW
+⇔ | <=> | LEFT RIGHT DOUBLE ARROW
+≠ | != | NOT EQUAL TO
 <!-- END GENERATED -->

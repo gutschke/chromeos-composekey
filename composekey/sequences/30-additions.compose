@@ -1,0 +1,52 @@
+# Title: Additions: emoticons and arrows
+# Written for this extension; no upstream source defines them.
+# Licence: Apache-2.0 (the extension's own).
+#
+# Emoticons give the colourful emoji, which is what people expect today.
+# Several of these start with a sequence that is complete on its own
+# (":-" is ÷, "<-" is ←, "<=" is ≤, "o_" is ō): the shorter one then waits
+# for the next key, see README. Where X11 already defines the short form
+# (":)" ☺, ":(" ☹, "<3" ♥), X11 wins; the nose forms below are new.
+
+# Smileys
+<Multi_key> <colon> <minus> <parenright>  : "🙂"  # SLIGHTLY SMILING FACE
+<Multi_key> <colon> <minus> <parenleft>   : "🙁"  # SLIGHTLY FROWNING FACE
+<Multi_key> <colon> <minus> <D>           : "😃"  # SMILING FACE WITH OPEN MOUTH
+<Multi_key> <colon> <D>                   : "😃"  # SMILING FACE WITH OPEN MOUTH
+<Multi_key> <colon> <minus> <P>           : "😛"  # FACE WITH STUCK-OUT TONGUE
+<Multi_key> <colon> <P>                   : "😛"  # FACE WITH STUCK-OUT TONGUE
+<Multi_key> <colon> <minus> <p>           : "😛"  # FACE WITH STUCK-OUT TONGUE
+<Multi_key> <colon> <minus> <O>           : "😮"  # FACE WITH OPEN MOUTH
+<Multi_key> <colon> <minus> <o>           : "😮"  # FACE WITH OPEN MOUTH
+<Multi_key> <colon> <minus> <bar>         : "😐"  # NEUTRAL FACE
+<Multi_key> <colon> <minus> <slash>       : "😕"  # CONFUSED FACE
+<Multi_key> <colon> <minus> <asterisk>    : "😘"  # FACE THROWING A KISS
+<Multi_key> <colon> <apostrophe> <parenleft>           : "😢"  # CRYING FACE
+<Multi_key> <colon> <apostrophe> <minus> <parenleft>   : "😢"  # CRYING FACE
+<Multi_key> <semicolon> <minus> <parenright>  : "😉"  # WINKING FACE
+<Multi_key> <semicolon> <parenright>          : "😉"  # WINKING FACE
+<Multi_key> <B> <minus> <parenright>      : "😎"  # SMILING FACE WITH SUNGLASSES
+<Multi_key> <8> <minus> <parenright>      : "😎"  # SMILING FACE WITH SUNGLASSES
+<Multi_key> <greater> <colon> <parenleft> : "😠"  # ANGRY FACE
+<Multi_key> <greater> <colon> <minus> <parenleft> : "😠"  # ANGRY FACE
+<Multi_key> <asciicircum> <underscore> <asciicircum> : "😊"  # SMILING FACE WITH SMILING EYES
+<Multi_key> <minus> <underscore> <minus>  : "😑"  # EXPRESSIONLESS FACE
+<Multi_key> <T> <underscore> <T>          : "😭"  # LOUDLY CRYING FACE
+<Multi_key> <greater> <underscore> <less> : "😣"  # PERSEVERING FACE
+<Multi_key> <o> <underscore> <O>          : "😳"  # FLUSHED FACE
+<Multi_key> <O> <underscore> <o>          : "😳"  # FLUSHED FACE
+<Multi_key> <x> <D>                       : "😆"  # SMILING FACE WITH OPEN MOUTH AND TIGHTLY-CLOSED EYES
+<Multi_key> <X> <D>                       : "😆"  # SMILING FACE WITH OPEN MOUTH AND TIGHTLY-CLOSED EYES
+<Multi_key> <less> <slash> <3>            : "💔"  # BROKEN HEART
+
+# Arrows: long forms and two-headed ones
+<Multi_key> <minus> <minus> <greater>     : "⟶"  # LONG RIGHTWARDS ARROW
+<Multi_key> <less> <minus> <minus>        : "⟵"  # LONG LEFTWARDS ARROW
+<Multi_key> <less> <minus> <greater>      : "↔"  # LEFT RIGHT ARROW
+<Multi_key> <equal> <equal> <greater>     : "⟹"  # LONG RIGHTWARDS DOUBLE ARROW
+<Multi_key> <less> <equal> <equal>        : "⟸"  # LONG LEFTWARDS DOUBLE ARROW
+<Multi_key> <less> <equal> <greater>      : "⇔"  # LEFT RIGHT DOUBLE ARROW
+
+# Operators people type as ASCII digraphs
+<Multi_key> <exclam> <equal>              : "≠"  # NOT EQUAL TO
+<Multi_key> <asciitilde> <asciitilde>     : "≈"  # ALMOST EQUAL TO
