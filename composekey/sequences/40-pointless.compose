@@ -1,0 +1,583 @@
+# Title: From pointless-xcompose
+# Source: https://github.com/rrthomas/pointless-xcompose, file `xcompose` at
+#   commit e8c1edc2a21a56fe034ccc7954c4ff92aa288f30 (2025-09-26).
+# Licence: public domain (the repository's doc/license.txt reads "Public domain.").
+# Only Compose-prefixed sequences whose keys a US keyboard can type are kept.
+# Lower priority than the original table, X11 and our additions: its 32
+# deliberate overrides of X11 sequences (e.g. "<>" -> ↔) therefore do not apply.
+# Imported by tools/gen-sequences.py: 574 sequences; skipped {'untypeable': 22, 'not Compose-prefixed': 0, 'modifiers': 0, 'unparsed': 0}
+
+<Multi_key> <less> <greater> : "↔"  # INTENTIONAL CONFLICT
+<Multi_key> <asciicircum> <bar> : "↑"
+<Multi_key> <bar> <asciicircum> : "↑"
+<Multi_key> <v> <bar> : "↓"
+<Multi_key> <bar> <v> : "↓"
+<Multi_key> <bar> <less> <minus> : "↚"  # LEFTWARDS ARROW WITH STROKE
+<Multi_key> <bar> <minus> <greater> : "↛"  # RIGHTWARDS ARROW WITH STROKE
+<Multi_key> <bar> <less> <greater> : "↮"  # LEFT RIGHT ARROW WITH STROKE
+<Multi_key> <less> <v> : "↵"  # DOWNWARDS ARROW WITH CORNER LEFTWARDS
+<Multi_key> <minus> <less> : "←"  # LEFTWARDS ARROW
+<Multi_key> <minus> <asciicircum> : "↑"  # UPWARDS ARROW (INTENTIONAL CONFLICT)
+<Multi_key> <minus> <v> : "↓"  # DOWNWARDS ARROW
+<Multi_key> <asciicircum> <v> : "↕"  # UP DOWN ARROW (kragen's)
+<Multi_key> <asciicircum> <ampersand> <v> : "⇵"  # DOWNWARDS ARROW LEFTWARDS OF UPWARDS ARROW
+<Multi_key> <less> <o> : "⟲"  # ANTICLOCKWISE GAPPED CIRCLE ARROW
+<Multi_key> <greater> <o> : "⟳"  # CLOCKWISE GAPPED CIRCLE ARROW (INTENTIONAL CONFLICT)
+<Multi_key> <greater> <c> : "↻"  # CLOCKWISE OPEN CIRCLE ARROW
+<Multi_key> <less> <asciitilde> : "⇜"  # LEFTWARDS SQUIGGLE ARROW
+<Multi_key> <greater> <asciitilde> : "⇝"  # RIGHTWARDS SQUIGGLE ARROW
+<Multi_key> <less> <bar> : "⇤"  # LEFTWARDS ARROW TO BAR
+<Multi_key> <greater> <bar> : "⇥"  # RIGHTWARDS ARROW TO BAR
+<Multi_key> <equal> <greater> : "⇒"  # RIGHTWARDS DOUBLE ARROW
+<Multi_key> <equal> <less> : "⇐"  # LEFTWARDS DOUBLE ARROW
+<Multi_key> <i> <f> <f> : "⇔"  # LEFT RIGHT DOUBLE ARROW
+<Multi_key> <equal> <asciicircum> <asciicircum> : "⇑"  # UPWARDS DOUBLE ARROW
+<Multi_key> <equal> <v> <v> : "⇓"  # DOWNWARDS DOUBLE ARROW
+<Multi_key> <equal> <asciicircum> <v> : "⇕"  # UP DOWN DOUBLE ARROW
+<Multi_key> <equal> <v> <less> : "⏎"  # RETURN SYMBOL
+<Multi_key> <asterisk> <asterisk> : "•"  # BULLET
+<Multi_key> <asterisk> <o> : "◦"  # WHITE BULLET
+<Multi_key> <asterisk> <greater> : "‣"  # TRIANGULAR BULLET
+<Multi_key> <asterisk> <minus> : "⁃"  # HYPHEN BULLET
+<Multi_key> <asterisk> <parenleft> : "⁌"  # LEFTWARDS BULLET
+<Multi_key> <asterisk> <parenright> : "⁍"  # RIGHTWARDS BULLET
+<Multi_key> <exclam> <asterisk> : "◘"  # INVERSE BULLET
+<Multi_key> <asterisk> <at> : "◉"  # FISHEYE
+<Multi_key> <asciitilde> <minus> : "〰"  # WAVY DASH (~~ is ≈)
+<Multi_key> <2> <exclam> : "‼"  # DOUBLE EXCLAMATION MARK
+<Multi_key> <2> <question> : "⁇"  # DOUBLE QUESTION MARK
+<Multi_key> <minus> <period> : "‐"  # hyhpen
+<Multi_key> <minus> <numbersign> : "‒"  # figure dash
+<Multi_key> <minus> <minus> <underscore> : "―"  # horizontal bar
+<Multi_key> <bar> <bar> : "‖"  # DOUBLE VERTICAL LINE
+<Multi_key> <minus> <asciitilde> : "⁓"  # SWUNG DASH
+<Multi_key> <V> <V> : "✓"  # CHECK MARK
+<Multi_key> <X> <X> : "✗"  # BALLOT X — <x> <x> taken by Xorg for multiply
+<Multi_key> <V> <underscore> : "✔"  # HEAVY CHECK MARK
+<Multi_key> <X> <underscore> : "✘"  # HEAVY BALLOT X
+<Multi_key> <bracketleft> <1> <bracketright> : "⑴"  # PARENTHESIZED DIGIT ONE
+<Multi_key> <bracketleft> <2> <bracketright> : "⑵"  # PARENTHESIZED DIGIT TWO
+<Multi_key> <bracketleft> <3> <bracketright> : "⑶"  # PARENTHESIZED DIGIT THREE
+<Multi_key> <bracketleft> <4> <bracketright> : "⑷"  # ⋮
+<Multi_key> <bracketleft> <5> <bracketright> : "⑸"
+<Multi_key> <bracketleft> <6> <bracketright> : "⑹"
+<Multi_key> <bracketleft> <7> <bracketright> : "⑺"
+<Multi_key> <bracketleft> <8> <bracketright> : "⑻"
+<Multi_key> <bracketleft> <9> <bracketright> : "⑼"
+<Multi_key> <bracketleft> <1> <0> <bracketright> : "⑽"
+<Multi_key> <bracketleft> <1> <1> <bracketright> : "⑾"
+<Multi_key> <bracketleft> <1> <2> <bracketright> : "⑿"
+<Multi_key> <bracketleft> <1> <3> <bracketright> : "⒀"
+<Multi_key> <bracketleft> <1> <4> <bracketright> : "⒁"
+<Multi_key> <bracketleft> <1> <5> <bracketright> : "⒂"
+<Multi_key> <bracketleft> <1> <6> <bracketright> : "⒃"
+<Multi_key> <bracketleft> <1> <7> <bracketright> : "⒄"
+<Multi_key> <bracketleft> <1> <8> <bracketright> : "⒅"
+<Multi_key> <bracketleft> <1> <9> <bracketright> : "⒆"
+<Multi_key> <bracketleft> <2> <0> <bracketright> : "⒇"
+<Multi_key> <bracketleft> <a> <bracketright> : "⒜"  # PARENTHESIZED LATIN SMALL LETTER A
+<Multi_key> <bracketleft> <b> <bracketright> : "⒝"  # PARENTHESIZED LATIN SMALL LETTER B
+<Multi_key> <bracketleft> <c> <bracketright> : "⒞"  # ⋮
+<Multi_key> <bracketleft> <d> <bracketright> : "⒟"
+<Multi_key> <bracketleft> <e> <bracketright> : "⒠"
+<Multi_key> <bracketleft> <f> <bracketright> : "⒡"
+<Multi_key> <bracketleft> <g> <bracketright> : "⒢"
+<Multi_key> <bracketleft> <h> <bracketright> : "⒣"
+<Multi_key> <bracketleft> <i> <bracketright> : "⒤"
+<Multi_key> <bracketleft> <j> <bracketright> : "⒥"
+<Multi_key> <bracketleft> <k> <bracketright> : "⒦"
+<Multi_key> <bracketleft> <l> <bracketright> : "⒧"
+<Multi_key> <bracketleft> <m> <bracketright> : "⒨"
+<Multi_key> <bracketleft> <n> <bracketright> : "⒩"
+<Multi_key> <bracketleft> <o> <bracketright> : "⒪"
+<Multi_key> <bracketleft> <p> <bracketright> : "⒫"
+<Multi_key> <bracketleft> <q> <bracketright> : "⒬"
+<Multi_key> <bracketleft> <r> <bracketright> : "⒭"
+<Multi_key> <bracketleft> <s> <bracketright> : "⒮"
+<Multi_key> <bracketleft> <t> <bracketright> : "⒯"
+<Multi_key> <bracketleft> <u> <bracketright> : "⒰"
+<Multi_key> <bracketleft> <v> <bracketright> : "⒱"
+<Multi_key> <bracketleft> <w> <bracketright> : "⒲"
+<Multi_key> <bracketleft> <x> <bracketright> : "⒳"
+<Multi_key> <bracketleft> <y> <bracketright> : "⒴"
+<Multi_key> <bracketleft> <z> <bracketright> : "⒵"
+<Multi_key> <1> <period> : "⒈"  # DIGIT ONE FULL STOP
+<Multi_key> <2> <period> : "⒉"  # DIGIT TWO FULL STOP
+<Multi_key> <3> <period> : "⒊"  # ⋮
+<Multi_key> <4> <period> : "⒋"
+<Multi_key> <5> <period> : "⒌"
+<Multi_key> <6> <period> : "⒍"
+<Multi_key> <7> <period> : "⒎"
+<Multi_key> <8> <period> : "⒏"
+<Multi_key> <9> <period> : "⒐"
+<Multi_key> <1> <0> <period> : "⒑"
+<Multi_key> <exclam> <parenleft> <0> <parenright> : "⓿"  # NEGATIVE CIRCLED DIGIT ZERO
+<Multi_key> <exclam> <parenleft> <1> <parenright> : "❶"  # DINGBAT NEGATIVE CIRCLED DIGIT ONE
+<Multi_key> <exclam> <parenleft> <2> <parenright> : "❷"  # DINGBAT NEGATIVE CIRCLED DIGIT TWO
+<Multi_key> <exclam> <parenleft> <3> <parenright> : "❸"  # ⋮
+<Multi_key> <exclam> <parenleft> <4> <parenright> : "❹"
+<Multi_key> <exclam> <parenleft> <5> <parenright> : "❺"
+<Multi_key> <exclam> <parenleft> <6> <parenright> : "❻"
+<Multi_key> <exclam> <parenleft> <7> <parenright> : "❼"
+<Multi_key> <exclam> <parenleft> <8> <parenright> : "❽"
+<Multi_key> <exclam> <parenleft> <9> <parenright> : "❾"
+<Multi_key> <exclam> <parenleft> <1> <0> <parenright> : "❿"  # DINGBAT NEGATIVE CIRCLED NUMBER TEN
+<Multi_key> <exclam> <parenleft> <1> <1> <parenright> : "⓫"  # NEGATIVE CIRCLED NUMBER ELEVEN
+<Multi_key> <exclam> <parenleft> <1> <2> <parenright> : "⓬"  # ⋮
+<Multi_key> <exclam> <parenleft> <1> <3> <parenright> : "⓭"
+<Multi_key> <exclam> <parenleft> <1> <4> <parenright> : "⓮"
+<Multi_key> <exclam> <parenleft> <1> <5> <parenright> : "⓯"
+<Multi_key> <exclam> <parenleft> <1> <6> <parenright> : "⓰"
+<Multi_key> <exclam> <parenleft> <1> <7> <parenright> : "⓱"
+<Multi_key> <exclam> <parenleft> <1> <8> <parenright> : "⓲"
+<Multi_key> <exclam> <parenleft> <1> <9> <parenright> : "⓳"
+<Multi_key> <exclam> <parenleft> <2> <0> <parenright> : "⓴"
+<Multi_key> <1> <slash> <4> : "¼"  # VULGAR FRACTION ONE QUARTER
+<Multi_key> <1> <slash> <2> : "½"  # VULGAR FRACTION ONE HALF
+<Multi_key> <3> <slash> <4> : "¾"  # VULGAR FRACTION THREE QUARTERS
+<Multi_key> <1> <slash> <3> : "⅓"  # VULGAR FRACTION ONE THIRD
+<Multi_key> <2> <slash> <3> : "⅔"  # VULGAR FRACTION TWO THIRDS
+<Multi_key> <1> <slash> <5> : "⅕"  # VULGAR FRACTION ONE FIFTH
+<Multi_key> <2> <slash> <5> : "⅖"  # VULGAR FRACTION TWO FIFTHS
+<Multi_key> <3> <slash> <5> : "⅗"  # VULGAR FRACTION THREE FIFTHS
+<Multi_key> <4> <slash> <5> : "⅘"  # VULGAR FRACTION FOUR FIFTHS
+<Multi_key> <1> <slash> <6> : "⅙"  # VULGAR FRACTION ONE SIXTH
+<Multi_key> <5> <slash> <6> : "⅚"  # VULGAR FRACTION FIVE SIXTHS
+<Multi_key> <1> <slash> <8> : "⅛"  # VULGAR FRACTION ONE EIGHTH
+<Multi_key> <3> <slash> <8> : "⅜"  # VULGAR FRACTION THREE EIGHTHS
+<Multi_key> <5> <slash> <8> : "⅝"  # VULGAR FRACTION FIVE EIGHTHS
+<Multi_key> <7> <slash> <8> : "⅞"  # VULGAR FRACTION SEVEN EIGHTHS
+<Multi_key> <W> <W> : "Ƿ"  # Wynn
+<Multi_key> <w> <w> : "ƿ"  # wynn
+<Multi_key> <Y> <Y> : "Ȝ"  # Yogh
+<Multi_key> <y> <y> : "ȝ"  # yogh
+<Multi_key> <minus> <a> : "ā"  # LATIN SMALL LETTER A WITH MACRON (INTENTIONAL CONFLICT)
+<Multi_key> <a> <minus> : "ā"  # LATIN SMALL LETTER A WITH MACRON (INTENTIONAL CONFLICT)
+<Multi_key> <minus> <Y> : "Ȳ"  # LATIN CAPITAL LETTER Y WITH MACRON (INTENTIONAL CONFLICT)
+<Multi_key> <minus> <y> : "ȳ"  # LATIN SMALL LETTER Y WITH MACRON (INTENTIONAL CONFLICT)
+<Multi_key> <minus> <G> : "Ḡ"  # LATIN CAPITAL LETTER G WITH MACRON
+<Multi_key> <minus> <g> : "ḡ"  # LATIN SMALL LETTER G WITH MACRON
+<Multi_key> <n> <b> <s> <p> : " "  # NO-BREAK SPACE
+<Multi_key> <space> <n> : " "  # EN SPACE
+<Multi_key> <space> <m> : " "  # EM SPACE
+<Multi_key> <space> <3> : " "  # THREE-PER-EM SPACE
+<Multi_key> <space> <4> : " "  # FOUR-PER-EM SPACE
+<Multi_key> <space> <6> : " "  # SIX-PER-EM SPACE
+<Multi_key> <space> <numbersign> : " "  # FIGURE SPACE
+<Multi_key> <space> <t> : " "  # THIN SPACE
+<Multi_key> <space> <h> : " "  # HAIR SPACE
+<Multi_key> <space> <bar> : " "  # HAIR SPACE
+<Multi_key> <space> <0> : "​"  # ZERO WIDTH SPACE
+<Multi_key> <space> <N> <J> : "‌"  # ZERO WIDTH NON-JOINER
+<Multi_key> <space> <W> <J> : "‍"  # ZERO WIDTH JOINER
+<Multi_key> <w> <j> : "⁠"  # WORD JOINER
+<Multi_key> <l> <r> <m> : "‎"  # LEFT TO RIGHT MARK
+<Multi_key> <r> <l> <m> : "‏"  # RIGHT TO LEFT MARK
+<Multi_key> <l> <r> <e> : "‪"  # LEFT TO RIGHT EMBEDDING
+<Multi_key> <r> <l> <e> : "‫"  # RIGHT TO LEFT EMBEDDING
+<Multi_key> <p> <d> <f> : "‬"  # POP DIRECTIONAL FORMATTING
+<Multi_key> <l> <r> <o> : "‭"  # LEFT TO RIGHT OVERRIDE
+<Multi_key> <r> <l> <o> : "‮"  # RIGHT TO LEFT OVERRIDE
+<Multi_key> <m> <m> : "−"  # MINUS SIGN
+<Multi_key> <slash> <slash> : "∕"  # DIVISION SLASH (INTENTIONAL CONFLICT)
+<Multi_key> <slash> <period> : "⁄"  # FRACTION SLASH
+<Multi_key> <exclam> <equal> : "≠"  # NOT EQUAL TO
+<Multi_key> <asciitilde> <equal> : "≅"  # APPROXIMATELY EQUAL TO
+<Multi_key> <slash> <less> : "≮"  # NOT LESS THAN (INTENTIONAL CONFLICT)
+<Multi_key> <slash> <greater> : "≯"  # NOT GREATER THAN
+<Multi_key> <asciitilde> <asciitilde> : "≈"  # ALMOST EQUAL TO
+<Multi_key> <E> <E> : "∈"  # ELEMENT OF
+<Multi_key> <slash> <E> <E> : "∉"  # NOT AN ELEMENT OF
+<Multi_key> <braceleft> <parenleft> : "⊂"  # SUBSET OF
+<Multi_key> <braceleft> <parenright> : "⊃"  # SUPERSET OF
+<Multi_key> <exclam> <braceleft> <parenleft> : "⊄"  # NOT A SUBSET OF
+<Multi_key> <braceleft> <equal> <parenleft> : "⊆"  # SUBSET OF OR EQUAL TO
+<Multi_key> <braceleft> <equal> <parenright> : "⊇"  # SUPERSET OF OR EQUAL TO
+<Multi_key> <braceleft> <asciicircum> : "∩"  # INTERSECTION
+<Multi_key> <braceleft> <U> : "∪"  # UNION
+<Multi_key> <bracketleft> <bracketright> : "∎"  # END OF PROOF (INTENTIONAL CONFLICT)
+<Multi_key> <percent> <O> : "‱"  # PER MYRIAD SIGN
+<Multi_key> <space> <comma> : "⁣"  # INVISIBLE COMMA (INTENTIONAL CONFLICT)
+<Multi_key> <H> <less> : "❮"  # HEAVY LEFT-POINTING ANGLE QUOTATION MARK ORNAMENT
+<Multi_key> <H> <greater> : "❯"  # HEAVY RIGHT-POINTING ANGLE QUOTATION MARK ORNAMENT
+<Multi_key> <v> <period> <period> : "⋮"  # VERTICAL ELLIPSIS
+<Multi_key> <period> <slash> <period> : "⋰"  # UP RIGHT DIAGONAL ELLIPSIS
+<Multi_key> <period> <backslash> <period> : "⋱"  # DOWN RIGHT DIAGONAL ELLIPSIS
+<Multi_key> <backslash> <space> : "␣"  # OPEN BOX
+<Multi_key> <colon> <colon> : "⸪"  # TWO DOTS OVER ONE DOT
+<Multi_key> <colon> <plus> : "⸭"  # FIVE DOTS MARK
+<Multi_key> <plus> <colon> : "⸭"  # FIVE DOTS MARK
+<Multi_key> <plus> <bar> : "†"  # DAGGER
+<Multi_key> <plus> <plus> : "‡"  # DOUBLE DAGGER (INTENTIONAL CONFLICT)
+<Multi_key> <asterisk> <3> : "⁂"  # ASTERISM
+<Multi_key> <quotedbl> <parenleft> : "‟"  # DOUBLE HIGH-REVERSED-9
+<Multi_key> <parenleft> <quotedbl> : "‟"  # DOUBLE HIGH-REVERSED-9
+<Multi_key> <quotedbl> <quotedbl> : "〃"  # DITTO MARK (INTENTIONAL CONFLICT)
+<Multi_key> <greater> <period> : "›"  # SINGLE RIGHT-POINTING ANGLE QUOTATION MARK
+<Multi_key> <less> <period> : "‹"  # SINGLE LEFT-POINTING ANGLE QUOTATION MARK
+<Multi_key> <equal> <period> <equal> : "⸎"  # EDITORIAL CORONIS
+<Multi_key> <apostrophe> <apostrophe> : "’"  # RIGHT SINGLE QUOTATION MARK (INTENTIONAL CONFLICT)
+<Multi_key> <s> <c> : "§"  # SECTION SIGN
+<Multi_key> <m> <i> <n> : "′"
+<Multi_key> <s> <e> <c> : "″"
+<Multi_key> <i> <n> <f> : "∞"
+<Multi_key> <p> <a> <l> <m> : "⸙"  # PALM BRANCH
+<Multi_key> <F> <less> : "☚"  # BLACK LEFT POINTING INDEX
+<Multi_key> <F> <greater> : "☛"  # BLACK RIGHT POINTING INDEX
+<Multi_key> <f> <less> : "☜"  # WHITE LEFT POINTING INDEX
+<Multi_key> <f> <asciicircum> : "☝"  # WHITE UP POINTING INDEX
+<Multi_key> <f> <greater> : "☞"  # WHITE RIGHT POINTING INDEX
+<Multi_key> <f> <v> : "☟"  # WHITE DOWN POINTING INDEX
+<Multi_key> <f> <w> : "✍"  # WRITING HAND
+<Multi_key> <f> <p> <v> : "✎"  # LOWER RIGHT PENCIL
+<Multi_key> <f> <p> <greater> : "✏"  # PENCIL
+<Multi_key> <f> <p> <asciicircum> : "✐"  # UPPER RIGHT PENCIL
+<Multi_key> <s> <t> : "ﬆ"  # LATIN SMALL LIGATURE ST
+<Multi_key> <f> <t> : "ﬅ"  # LATIN SMALL LIGATURE LONG S T
+<Multi_key> <E> <less> : "Ǝ"  # LATIN CAPITAL LETTER REVERSED E (INTENTIONAL CONFLICT)
+<Multi_key> <e> <less> : "ɘ"  # LATIN SMALL LETTER REVERSED E (INTENTIONAL CONFLICT)
+<Multi_key> <o> <ampersand> <o> : "ꝏ"  # LATIN SMALL LETTER OO
+<Multi_key> <O> <ampersand> <O> : "Ꝏ"  # LATIN CAPITAL LETTER OO
+<Multi_key> <E> <ampersand> <T> : "Ꝫ"  # LATIN CAPITAL LETTER ET
+<Multi_key> <e> <ampersand> <t> : "ꝫ"  # LATIN SMALL LETTER ET
+<Multi_key> <P> <less> : "ꟼ"  # LATIN EPIGRAPHIC LETTER REVERSED P
+<Multi_key> <M> <W> : "ꟽ"  # LATIN EPIGRAPHIC LETTER INVERTED M
+<Multi_key> <I> <bar> : "ꟾ"  # LATIN EPIGRAPHIC LETTER I LONGA
+<Multi_key> <M> <slash> : "ꟿ"  # LATIN EPIGRAPHIC LETTER ARCHAIC M
+<Multi_key> <less> <exclam> <greater> : "≸"  # NEITHER LESS-THAN NOR GREATER-THAN
+<Multi_key> <plus> <less> : "≪"  # MUCH LESS-THAN
+<Multi_key> <plus> <greater> : "≫"  # MUCH GREATER-THAN
+<Multi_key> <3> <greater> : "⋙"  # VERY MUCH GREATER-THAN
+<Multi_key> <3> <less> : "⋘"  # VERY MUCH LESS-THAN
+<Multi_key> <n> <i> : "∋"  # CONTAINS AS MEMBER  (I hope this doesn't conflict)
+<Multi_key> <slash> <n> <i> : "∌"  # DOES NOT CONTAIN AS MEMBER
+<Multi_key> <equal> <question> : "≟"  # QUESTIONED EQUAL TO
+<Multi_key> <equal> <equal> : "≡"  # IDENTICAL TO
+<Multi_key> <colon> <equal> : "≔"  # COLON EQUALS
+<Multi_key> <equal> <colon> : "≕"  # EQUALS COLON
+<Multi_key> <equal> <bar> <equal> : "≢"  # NOT IDENTICAL TO
+<Multi_key> <minus> <plus> : "∓"  # MINUS OR PLUS SIGN (INTENTIONAL CONFLICT)
+<Multi_key> <s> <q> : "√"  # SQUARE ROOT
+<Multi_key> <3> <s> <q> : "∛"  # CUBE ROOT
+<Multi_key> <4> <s> <q> : "∜"  # FOURTH ROOT
+<Multi_key> <slash> <backslash> : "∧"  # LOGICAL AND
+<Multi_key> <backslash> <slash> : "∨"  # LOGICAL OR
+<Multi_key> <backslash> <underscore> <slash> : "⊻"  # XOR
+<Multi_key> <asterisk> <x> : "⨯"  # CROSS PRODUCT
+<Multi_key> <asterisk> <period> : "⋅"  # DOT OPERATOR (dot product)
+<Multi_key> <0> <slash> : "∅"  # EMPTY SET
+<Multi_key> <slash> <0> : "∅"  # EMPTY SET
+<Multi_key> <less> <E> : "∃"  # THERE EXISTS (INTENTIONAL CONFLICT)
+<Multi_key> <exclam> <less> <E> <E> : "∄"  # THERE DOES NOT EXIST
+<Multi_key> <A> <A> : "∀"  # FOR ALL (INTENTIONAL CONFLICT)
+<Multi_key> <Q> <E> <D> : "∎"  # END OF PROOF
+<Multi_key> <a> <l> <e> <f> : "ℵ"  # ALEF SYMBOL
+<Multi_key> <parenleft> <plus> <parenright> : "⊕"  # CIRCLED PLUS
+<Multi_key> <parenleft> <x> <x> <parenright> : "⊗"  # CIRCLED TIMES
+<Multi_key> <parenleft> <slash> <parenright> : "⊘"  # CIRCLED DIVISION SLASH
+<Multi_key> <parenright> <underscore> : "⟌"  # LONG DIVISION
+<Multi_key> <period> <quotedbl> : "∴"  # THEREFORE
+<Multi_key> <quotedbl> <period> : "∵"  # BECAUSE
+<Multi_key> <a> <minus> : "ª"  # FEMININE ORDINAL INDICATOR (INTENTIONAL CONFLICT)
+<Multi_key> <o> <minus> : "º"  # MASCULINE ORDINAL INDICATOR (INTENTIONAL CONFLICT)
+<Multi_key> <s> <u> <m> : "∑"  # N-ARY SUMMATION
+<Multi_key> <i> <n> <t> : "∫"  # INTEGRAL
+<Multi_key> <u> <i> <n> <t> : "⨛"  # UPPER INTEGRAL
+<Multi_key> <l> <i> <n> <t> : "⨜"  # LOWER INTEGRAL
+<Multi_key> <i> <i> <n> <t> : "∬"  # DOUBLE INTEGRAL
+<Multi_key> <i> <i> <i> <n> <t> : "∭"  # TRIPLE INTEGRAL
+<Multi_key> <o> <i> <n> <t> : "∮"  # CONTOUR INTEGRAL
+<Multi_key> <p> <i> <n> <t> : "⨕"  # SEMICIRCULAR POLE INTEGRAL
+<Multi_key> <c> <P> <i> <n> <t> : "⨓"  # INTEGRAL AROUND POINT
+<Multi_key> <o> <i> <i> <n> <t> : "∯"  # SURFACE INTEGRAL
+<Multi_key> <g> <i> <n> <t> : "⨘"  # GEOMETRIC INTEGRAL
+<Multi_key> <s> <i> <n> <t> : "⨋"  # SUM/INTEGRAL
+<Multi_key> <d> <e> <l> : "∇"  # NABLA
+<Multi_key> <p> <a> <r> <t> : "∂"  # PARTIAL DIFFERENTIAL
+<Multi_key> <asciicircum> <greater> : "⃗"  # COMBINING RIGHT ARROW ABOVE (vector)
+<Multi_key> <bar> <C> : "ℂ"  # DOUBLE-STRUCK CAPITAL C (set of complex numbers) (INTENTIONAL CONFLICT)
+<Multi_key> <bar> <N> : "ℕ"  # DOUBLE-STRUCK CAPITAL N (natural number)
+<Multi_key> <bar> <P> : "ℙ"  # DOUBLE-STRUCK CAPITAL P
+<Multi_key> <bar> <Q> : "ℚ"  # DOUBLE-STRUCK CAPITAL Q (set of rational numbers)
+<Multi_key> <bar> <R> : "ℝ"  # DOUBLE-STRUCK CAPITAL R (set of real numbers)
+<Multi_key> <bar> <Z> : "ℤ"  # DOUBLE-STRUCK CAPITAL Z (set of integers)
+<Multi_key> <bar> <H> : "ℍ"  # DOUBLE-STRUCK CAPITAL H
+<Multi_key> <bar> <e> : "ⅇ"  # DOUBLE-STRUCK ITALIC SMALL E
+<Multi_key> <bar> <i> : "ⅈ"  # DOUBLE-STRUCK ITALIC SMALL I
+<Multi_key> <bar> <j> : "ⅉ"  # DOUBLE-STRUCK ITALIC SMALL J
+<Multi_key> <bar> <asterisk> <p> : "ℼ"  # DOUBLE-STRUCK SMALL PI
+<Multi_key> <bar> <asterisk> <P> : "ℿ"  # DOUBLE-STRUCK CAPITAL PI
+<Multi_key> <bar> <asterisk> <S> : "⅀"  # DOUBLE-STRUCK N-ARY SUMMATION
+<Multi_key> <bar> <braceleft> : "⦃"  # LEFT WHITE CURLY BRACKET
+<Multi_key> <bar> <braceright> : "⦄"  # RIGHT WHITE CURLY BRACKET
+<Multi_key> <S> <parenleft> : "⟅"  # LEFT S-SHAPED BAG DELIMITER
+<Multi_key> <S> <parenright> : "⟆"  # RIGHT S-SHAPED BAG DELIMITER
+<Multi_key> <less> <parenleft> : "〈"  # LEFT-POINTING ANGLE BRACKET
+<Multi_key> <greater> <parenright> : "〉"  # RIGHT-POINTING ANGLE BRACKET
+<Multi_key> <parenleft> <ampersand> <parenleft> : "⸨"  # LEFT DOUBLE PARENTHESIS
+<Multi_key> <parenright> <ampersand> <parenright> : "⸩"  # RIGHT DOUBLE PARENTHESIS
+<Multi_key> <2> <parenleft> : "⸨"  # LEFT DOUBLE PARENTHESIS
+<Multi_key> <2> <parenright> : "⸩"  # RIGHT DOUBLE PARENTHESIS
+<Multi_key> <Z> <parenleft> : "༼"  # TIBETAN MARK ANG KHANG GYON
+<Multi_key> <Z> <parenright> : "༽"  # TIBETAN MARK ANG KHANG GYAS
+<Multi_key> <L> <bracketleft> : "⌊"  # LEFT FLOOR
+<Multi_key> <L> <bracketright> : "⌋"  # RIGHT FLOOR
+<Multi_key> <7> <bracketleft> : "⌈"  # LEFT CEILING
+<Multi_key> <7> <bracketright> : "⌉"  # RIGHT CEILING
+<Multi_key> <7> <asciicircum> <bracketleft> : "⸢"  # TOP LEFT HALF BRACKET
+<Multi_key> <7> <asciicircum> <bracketright> : "⸣"  # TOP RIGHT HALF BRACKET
+<Multi_key> <L> <underscore> <bracketleft> : "⸤"  # BOTTOM LEFT HALF BRACKET
+<Multi_key> <L> <underscore> <bracketright> : "⸥"  # BOTTOM RIGHT HALF BRACKET
+<Multi_key> <bracketleft> <bracketleft> : "⊏"  # SQUARE IMAGE OF
+<Multi_key> <bracketleft> <equal> : "⊑"  # SQUARE IMAGE OF OR EQUAL TO
+<Multi_key> <bracketleft> <underscore> : "⊑"  # SQUARE IMAGE OF OR EQUAL TO
+<Multi_key> <bracketright> <bracketright> : "⊐"  # SQUARE ORIGINAL OF
+<Multi_key> <bracketright> <equal> : "⊒"  # SQUARE ORIGINAL OF OR EQUAL TO
+<Multi_key> <bracketright> <underscore> : "⊒"  # SQUARE ORIGINAL OF OR EQUAL TO
+<Multi_key> <l> <l> : "ℓ"  # SCRIPT SMALL L
+<Multi_key> <underscore> <bar> <underscore> : "⊥"  # UP TACK (bottom) or should we use U27C2 PERPENDICULAR?
+<Multi_key> <underscore> <i> : "ᵢ"  # LATIN SUBSCRIPT SMALL LETTER I (INTENTIONAL CONFLICT)
+<Multi_key> <underscore> <u> : "ᵤ"  # LATIN SUBSCRIPT SMALL LETTER U (INTENTIONAL CONFLICT)
+<Multi_key> <underscore> <o> : "ₒ"  # LATIN SUBSCRIPT SMALL LETTER O (INTENTIONAL CONFLICT)
+<Multi_key> <underscore> <x> : "ₓ"  # LATIN SUBSCRIPT SMALL LETTER X
+<Multi_key> <underscore> <j> : "ⱼ"  # LATIN SUBSCRIPT SMALL LETTER J
+<Multi_key> <underscore> <k> : "ₖ"  # LATIN SUBSCRIPT SMALL LETTER K
+<Multi_key> <underscore> <m> : "ₘ"  # LATIN SUBSCRIPT SMALL LETTER M
+<Multi_key> <underscore> <n> : "ₙ"  # LATIN SUBSCRIPT SMALL LETTER N
+<Multi_key> <underscore> <minus> : "₋"  # SUBSCRIPT MINUS
+<Multi_key> <percent> <1> : "ⅰ"  # SMALL ROMAN NUMERAL ONE
+<Multi_key> <percent> <2> : "ⅱ"  # SMALL ROMAN NUMERAL TWO
+<Multi_key> <percent> <3> : "ⅲ"  # SMALL ROMAN NUMERAL THREE
+<Multi_key> <percent> <4> : "ⅳ"  # SMALL ROMAN NUMERAL FOUR
+<Multi_key> <percent> <5> : "ⅴ"  # SMALL ROMAN NUMERAL FIVE
+<Multi_key> <percent> <6> : "ⅵ"  # SMALL ROMAN NUMERAL SIX
+<Multi_key> <percent> <7> : "ⅶ"  # SMALL ROMAN NUMERAL SEVEN
+<Multi_key> <percent> <8> : "ⅷ"  # SMALL ROMAN NUMERAL EIGHT
+<Multi_key> <percent> <9> : "ⅸ"  # SMALL ROMAN NUMERAL NINE
+<Multi_key> <percent> <x> : "ⅹ"  # SMALL ROMAN NUMERAL TEN
+<Multi_key> <percent> <underscore> <1> : "ⅺ"  # SMALL ROMAN NUMERAL ELEVEN
+<Multi_key> <percent> <underscore> <2> : "ⅻ"  # SMALL ROMAN NUMERAL TWELVE
+<Multi_key> <percent> <l> : "ⅼ"  # SMALL ROMAN NUMERAL FIFTY
+<Multi_key> <percent> <c> : "ⅽ"  # SMALL ROMAN NUMERAL ONE HUNDRED
+<Multi_key> <percent> <d> : "ⅾ"  # SMALL ROMAN NUMERAL FIVE HUNDRED
+<Multi_key> <percent> <m> : "ⅿ"  # SMALL ROMAN NUMERAL ONE THOUSAND
+<Multi_key> <percent> <0> <1> : "Ⅰ"  # ROMAN NUMERAL ONE
+<Multi_key> <percent> <0> <2> : "Ⅱ"  # ROMAN NUMERAL TWO
+<Multi_key> <percent> <0> <3> : "Ⅲ"  # ROMAN NUMERAL THREE
+<Multi_key> <percent> <0> <4> : "Ⅳ"  # ROMAN NUMERAL FOUR
+<Multi_key> <percent> <0> <5> : "Ⅴ"  # ROMAN NUMERAL FIVE
+<Multi_key> <percent> <0> <6> : "Ⅵ"  # ROMAN NUMERAL SIX
+<Multi_key> <percent> <0> <7> : "Ⅶ"  # ROMAN NUMERAL SEVEN
+<Multi_key> <percent> <0> <8> : "Ⅷ"  # ROMAN NUMERAL EIGHT
+<Multi_key> <percent> <0> <9> : "Ⅸ"  # ROMAN NUMERAL NINE
+<Multi_key> <percent> <0> <x> : "Ⅹ"  # ROMAN NUMERAL TEN
+<Multi_key> <percent> <underscore> <0> <1> : "Ⅺ"  # ROMAN NUMERAL ELEVEL
+<Multi_key> <percent> <underscore> <0> <2> : "Ⅻ"  # ROMAN NUMERAL TWELVE
+<Multi_key> <percent> <0> <l> : "Ⅼ"  # ROMAN NUMERAL FIFTY
+<Multi_key> <percent> <0> <c> : "Ⅽ"  # ROMAN NUMERAL ONE HUNDRED
+<Multi_key> <percent> <0> <d> : "Ⅾ"  # ROMAN NUMERAL FIVE HUNDRED
+<Multi_key> <percent> <0> <m> : "Ⅿ"  # ROMAN NUMERAL ONE THOUSAND
+<Multi_key> <percent> <X> : "Ⅹ"  # ROMAN NUMERAL TEN
+<Multi_key> <percent> <L> : "Ⅼ"  # ROMAN NUMERAL FIFTY
+<Multi_key> <percent> <C> : "Ⅽ"  # ROMAN NUMERAL ONE HUNDRED
+<Multi_key> <percent> <D> : "Ⅾ"  # ROMAN NUMERAL FIVE HUNDRED
+<Multi_key> <percent> <M> : "Ⅿ"  # ROMAN NUMERAL ONE THOUSAND
+<Multi_key> <parenleft> <colon> : "☻"  # BLACK SMILING FACE
+<Multi_key> <colon> <asciitilde> : "⍨"  # APL FUNCTIONAL SYMBOL TILDE DIAERESIS
+<Multi_key> <colon> <bar> : "⸚"  # HYPHEN WITH DIAERESIS
+<Multi_key> <O> <period> <O> : "Ꙭ"  # CYRILLIC CAPITAL LETTER DOUBLE MONOCULAR O * used in the dual of words based on the root for 'eye'
+<Multi_key> <o> <period> <o> : "ꙭ"  # CYRILLIC SMALL LETTER DOUBLE MONOCULAR O
+<Multi_key> <O> <colon> : "Ꙫ"  # CYRILLIC CAPITAL LETTER BINOCULAR O * used in the dual of words based on the root for 'eye'
+<Multi_key> <o> <colon> : "ꙫ"  # CYRILLIC SMALL LETTER BINOCULAR O
+<Multi_key> <o> <plus> : "ꙮ"  # CYRILLIC LETTER MULTIOCULAR O * used in the epithet 'many-eyed'
+<Multi_key> <o> <3> : "߷"  # NKO SYMBOL GBAKURUNEN
+<Multi_key> <question> <less> : "⸮"  # REVERSED QUESTION MARK
+<Multi_key> <question> <ampersand> <exclam> : "⁈"  # QUESTION EXCLAMATION MARK
+<Multi_key> <exclam> <ampersand> <question> : "⁉"  # EXCLAMATION QUESTION MARK
+<Multi_key> <2> <colon> : "∷"  # PROPORTION -- not strictly 2 times COLON
+<Multi_key> <semicolon> <less> : "⁏"  # REVERSED SEMICOLON
+<Multi_key> <3> <3> : "♣"  # BLACK CLUB SUIT
+<Multi_key> <D> <greater> : "♢"  # WHITE DIAMOND SUIT (<> is ↔)
+<Multi_key> <3> <minus> : "♠"  # BLACK SPADE SUIT
+<Multi_key> <E> <greater> : "♡"  # WHITE HEART SUIT (INTENTIONAL CONFLICT)
+<Multi_key> <p> <c> : "☮"  # PEACE SYMBOL
+<Multi_key> <exclam> <less> <3> : "❣"  # HEAVY HEART EXCLAMATION MARK ORNAMENT
+<Multi_key> <less> <f> <3> : "❦"  # FLORAL HEART
+<Multi_key> <less> <f> <less> <3> : "❧"  # ROTATED FLORAL HEART BULLET
+<Multi_key> <greater> <f> <less> <3> : "☙"  # REVERSED ROTATED FLORAL HEART BULLET
+<Multi_key> <t> <e> <l> : "☎"  # BLACK TELEPHONE
+<Multi_key> <t> <e> <a> : "☕"  # HOT BEVERAGE
+<Multi_key> <bracketleft> <space> <bracketright> : "☐"  # BALLOT BOX
+<Multi_key> <f> <d> <l> : "⚜"  # FLEUR-DE-LIS
+<Multi_key> <a> <t> <o> <m> : "⚛"  # ATOM SYMBOL
+<Multi_key> <slash> <exclam> <backslash> : "⚠"  # WARNING SIGN
+<Multi_key> <exclam> <asciicircum> : "⚠"  # WARNING SIGN  (INTENTIONAL CONFLICT)
+<Multi_key> <z> <a> <p> : "⚡"  # HIGH VOLTAGE SIGN
+<Multi_key> <r> <a> <d> : "☢"  # RADIOACTIVE SIGN
+<Multi_key> <b> <h> : "☣"  # BIOHAZARD SIGN
+<Multi_key> <p> <l> <a> <n> <e> : "✈"  # AIRPLANE
+<Multi_key> <m> <a> <i> <l> : "✉"  # ENVELOPE
+<Multi_key> <w> <h> <l> <c> <h> : "♿"  # WHEELCHAIR SYMBOL
+<Multi_key> <m> <e> <d> : "☤"  # CADEUCEUS
+<Multi_key> <1> <m> <e> <d> : "⚕"  # STAFF OF AESCULAPIUS
+<Multi_key> <O> <X> : "☠"  # SKULL AND CROSSBONES (INTENTIONAL CONFLICT)
+<Multi_key> <k> <b> <d> : "⌨"  # KEYBOARD
+<Multi_key> <equal> <minus> : "☞"  # WHITE RIGHT POINTING INDEX
+<Multi_key> <minus> <equal> : "☜"  # WHITE LEFT POINTING INDEX
+<Multi_key> <asterisk> <0> : "☆"  # WHITE STAR (INTENTIONAL CONFLICT)
+<Multi_key> <2> <asterisk> : "⁑"  # TWO ASTERISKS ALIGNED VERTICALLY
+<Multi_key> <asterisk> <4> : "✢"  # FOUR TEARDROP-SPOKED ASTERISK
+<Multi_key> <asterisk> <6> : "✡"  # STAR OF DAVID
+<Multi_key> <asterisk> <numbersign> : "✯"  # PINWHEEL STAR
+<Multi_key> <asterisk> <exclam> : "✱"  # HEAVY ASTERISK
+<Multi_key> <at> <numbersign> : "⌘"  # PLACE OF INTEREST SIGN
+<Multi_key> <grave> <minus> <apostrophe> : "⚞"  # THREE LINES CONVERGING RIGHT
+<Multi_key> <apostrophe> <minus> <grave> : "⚟"  # THREE LINES CONVERGING LEFT
+<Multi_key> <w> <a> <i> <t> : "⌛"  # HOURGLASS
+<Multi_key> <t> <i> <m> <e> : "⌚"  # WATCH
+<Multi_key> <parenleft> <parenright> : "◌"  # DOTTED CIRCLE
+<Multi_key> <k> <s> : "ʘ"  # LATIN LETTER BILABIAL CLICK (kiss sound)
+<Multi_key> <asciicircum> <asciicircum> <i> : "ⁱ"  # SUPERSCRIPT I
+<Multi_key> <asciicircum> <asciicircum> <n> : "ⁿ"  # SUPERSCRIPT N
+<Multi_key> <asciicircum> <question> <period> : "ˀ"  # MODIFIER LETTER GLOTTAL STOP
+<Multi_key> <asciicircum> <question> <parenleft> : "ˁ"  # MODIFIER LETTER REVERSED GLOTTAL STOP
+<Multi_key> <s> <h> : "ʃ"  # LATIN SMALL LETTER ESH
+<Multi_key> <z> <h> : "ʒ"  # LATIN SMALL LETTER EZH
+<Multi_key> <l> <h> : "ɬ"  # LATIN SMALL LETTER L WITH BELT
+<Multi_key> <l> <3> : "ɮ"  # LATIN SMALL LETTER LEZH
+<Multi_key> <question> <period> : "ʔ"  # LATIN LETTER GLOTTAL STOP
+<Multi_key> <question> <parenleft> : "ʕ"  # LATIN LETTER PHARYNGEAL VOICED FRICATIVE
+<Multi_key> <question> <v> : "ʖ"  # LATIN LETTER INVERTED GLOTTAL STOP
+<Multi_key> <question> <minus> : "ʡ"  # LATIN LETTER GLOTTAL STOP WITH STROKE
+<Multi_key> <question> <braceleft> : "ʢ"  # LATIN LETTER REVERSED GLOTTAL STOP WITH STROKE
+<Multi_key> <p> <h> : "ɸ"  # LATIN SMALL LETTER PHI
+<Multi_key> <i> <h> : "ɪ"  # LATIN LETTER SMALL CAPITAL I
+<Multi_key> <u> <h> : "ʊ"  # LATIN SMALL LETTER UPSILON
+<Multi_key> <a> <h> : "ɑ"  # LATIN SMALL LETTER ALPHA
+<Multi_key> <e> <r> : "ɚ"  # LATIN SMALL LETTER SCHWA WITH HOOK
+<Multi_key> <o> <parenright> : "ɔ"  # LATIN SMALL LETTER OPEN O
+<Multi_key> <O> <parenright> : "Ɔ"  # LATIN CAPITAL LETTER OPEN O
+<Multi_key> <e> <h> : "ɛ"  # LATIN SMALL LETTER OPEN E
+<Multi_key> <bar> <apostrophe> : "ˈ"  # MODIFIER LETTER VERTICAL LINE
+<Multi_key> <bar> <comma> : "ˌ"  # MODIFIER LETTER LOW VERTICAL LINE
+<Multi_key> <bar> <underscore> : "̩"  # COMBINING VERTICAL LINE BELOW
+<Multi_key> <backslash> <underscore> <bar> : "̩"  # COMBINING VERTICAL LINE BELOW
+<Multi_key> <r> <r> : "ɹ"  # LATIN SMALL LETTER TURNED R: voiced alveolar approximant (American English (at least) R)
+<Multi_key> <r> <d> : "ɾ"  # LATIN SMALL LETTER R WITH FISHHOOK: voiced alveolar flap or tap (American English intervocalic allophone of d, or Spanish r)
+<Multi_key> <a> <a> : "ɐ"  # LATIN SMALL LETTER TURNED A (INTENTIONAL CONFLICT)
+<Multi_key> <g> <h> : "ɣ"  # LATIN SMALL LETTER GAMMA
+<Multi_key> <a> <i> <n> : "ᴥ"  # LATIN LETTER AIN
+<Multi_key> <d> <comma> : "ɖ"  # LATIN SMALL LETTER D WITH TAIL (INTENTIONAL CONFLICT)
+<Multi_key> <l> <comma> : "ɭ"  # LATIN SMALL LETTER L WITH RETROFLEX HOOK (INTENTIONAL CONFLICT)
+<Multi_key> <n> <comma> : "ɳ"  # LATIN SMALL LETTER N WITH RETROFLEX HOOK (INTENTIONAL CONFLICT)
+<Multi_key> <s> <comma> : "ʂ"  # LATIN SMALL LETTER S WITH HOOK (INTENTIONAL CONFLICT)
+<Multi_key> <t> <comma> : "ʈ"  # LATIN SMALL LETTER T WITH RETROFLEX HOOK (INTENTIONAL CONFLICT)
+<Multi_key> <z> <comma> : "ʐ"  # LATIN SMALL LETTER Z WITH RETROFLEX HOOK
+<Multi_key> <f> <comma> : "ƒ"  # LATIN SMALL LETTER F WITH HOOK
+<Multi_key> <b> <apostrophe> : "ɓ"  # LATIN SMALL LETTER B WITH HOOK
+<Multi_key> <d> <apostrophe> : "ɗ"  # LATIN SMALL LETTER D WITH HOOK
+<Multi_key> <g> <apostrophe> : "ɠ"  # LATIN SMALL LETTER G WITH HOOK
+<Multi_key> <g> <g> : "ɡ"  # LATIN SMALL LETTER SCRIPT G
+<Multi_key> <h> <apostrophe> : "ɦ"  # LATIN SMALL LETTER H WITH HOOK
+<Multi_key> <G> <apostrophe> : "ʛ"  # LATIN LETTER SMALL CAPITAL G WITH HOOK
+<Multi_key> <R> <x> : "℞"  # PRESCRIPTION TAKE
+<Multi_key> <o> <z> <period> : "℥"  # OUNCE SIGN
+<Multi_key> <numbersign> <G> : "𝄞"  # MUSICAL SYMBOL G CLEF
+<Multi_key> <numbersign> <F> : "𝄢"  # MUSICAL SYMBOL F CLEF
+<Multi_key> <numbersign> <C> : "𝄡"  # MUSICAL SYMBOL C CLEF
+<Multi_key> <numbersign> <b> : "♭"  # MUSIC FLAT SIGN
+<Multi_key> <numbersign> <numbersign> : "♯"  # MUSIC SHARP SIGN
+<Multi_key> <bracketleft> <A> <S> <bracketright> : "🂡"  # PLAYING CARD ACE OF SPADES
+<Multi_key> <bracketleft> <2> <S> <bracketright> : "🂢"  # PLAYING CARD TWO OF SPADES
+<Multi_key> <bracketleft> <3> <S> <bracketright> : "🂣"  # PLAYING CARD THREE OF SPADES
+<Multi_key> <bracketleft> <4> <S> <bracketright> : "🂤"  # PLAYING CARD FOUR OF SPADES
+<Multi_key> <bracketleft> <5> <S> <bracketright> : "🂥"  # PLAYING CARD FIVE OF SPADES
+<Multi_key> <bracketleft> <6> <S> <bracketright> : "🂦"  # PLAYING CARD SIX OF SPADES
+<Multi_key> <bracketleft> <7> <S> <bracketright> : "🂧"  # PLAYING CARD SEVEN OF SPADES
+<Multi_key> <bracketleft> <8> <S> <bracketright> : "🂨"  # PLAYING CARD EIGHT OF SPADES
+<Multi_key> <bracketleft> <9> <S> <bracketright> : "🂩"  # PLAYING CARD NINE OF SPADES
+<Multi_key> <bracketleft> <T> <S> <bracketright> : "🂪"  # PLAYING CARD TEN OF SPADES
+<Multi_key> <bracketleft> <J> <S> <bracketright> : "🂫"  # PLAYING CARD JACK OF SPADES
+<Multi_key> <bracketleft> <N> <S> <bracketright> : "🂬"  # PLAYING CARD KNIGHT OF SPADES
+<Multi_key> <bracketleft> <Q> <S> <bracketright> : "🂭"  # PLAYING CARD QUEEN OF SPADES
+<Multi_key> <bracketleft> <K> <S> <bracketright> : "🂮"  # PLAYING CARD KING OF SPADES
+<Multi_key> <bracketleft> <A> <H> <bracketright> : "🂱"  # PLAYING CARD ACE OF HEARTS
+<Multi_key> <bracketleft> <2> <H> <bracketright> : "🂲"  # PLAYING CARD TWO OF HEARTS
+<Multi_key> <bracketleft> <3> <H> <bracketright> : "🂳"  # PLAYING CARD THREE OF HEARTS
+<Multi_key> <bracketleft> <4> <H> <bracketright> : "🂴"  # PLAYING CARD FOUR OF HEARTS
+<Multi_key> <bracketleft> <5> <H> <bracketright> : "🂵"  # PLAYING CARD FIVE OF HEARTS
+<Multi_key> <bracketleft> <6> <H> <bracketright> : "🂶"  # PLAYING CARD SIX OF HEARTS
+<Multi_key> <bracketleft> <7> <H> <bracketright> : "🂷"  # PLAYING CARD SEVEN OF HEARTS
+<Multi_key> <bracketleft> <8> <H> <bracketright> : "🂸"  # PLAYING CARD EIGHT OF HEARTS
+<Multi_key> <bracketleft> <9> <H> <bracketright> : "🂹"  # PLAYING CARD NINE OF HEARTS
+<Multi_key> <bracketleft> <T> <H> <bracketright> : "🂺"  # PLAYING CARD TEN OF HEARTS
+<Multi_key> <bracketleft> <J> <H> <bracketright> : "🂻"  # PLAYING CARD JACK OF HEARTS
+<Multi_key> <bracketleft> <N> <H> <bracketright> : "🂼"  # PLAYING CARD KNIGHT OF HEARTS
+<Multi_key> <bracketleft> <Q> <H> <bracketright> : "🂽"  # PLAYING CARD QUEEN OF HEARTS
+<Multi_key> <bracketleft> <K> <H> <bracketright> : "🂾"  # PLAYING CARD KING OF HEARTS
+<Multi_key> <bracketleft> <A> <D> <bracketright> : "🃁"  # PLAYING CARD ACE OF DIAMONDS
+<Multi_key> <bracketleft> <2> <D> <bracketright> : "🃂"  # PLAYING CARD TWO OF DIAMONDS
+<Multi_key> <bracketleft> <3> <D> <bracketright> : "🃃"  # PLAYING CARD THREE OF DIAMONDS
+<Multi_key> <bracketleft> <4> <D> <bracketright> : "🃄"  # PLAYING CARD FOUR OF DIAMONDS
+<Multi_key> <bracketleft> <5> <D> <bracketright> : "🃅"  # PLAYING CARD FIVE OF DIAMONDS
+<Multi_key> <bracketleft> <6> <D> <bracketright> : "🃆"  # PLAYING CARD SIX OF DIAMONDS
+<Multi_key> <bracketleft> <7> <D> <bracketright> : "🃇"  # PLAYING CARD SEVEN OF DIAMONDS
+<Multi_key> <bracketleft> <8> <D> <bracketright> : "🃈"  # PLAYING CARD EIGHT OF DIAMONDS
+<Multi_key> <bracketleft> <9> <D> <bracketright> : "🃉"  # PLAYING CARD NINE OF DIAMONDS
+<Multi_key> <bracketleft> <T> <D> <bracketright> : "🃊"  # PLAYING CARD TEN OF DIAMONDS
+<Multi_key> <bracketleft> <J> <D> <bracketright> : "🃋"  # PLAYING CARD JACK OF DIAMONDS
+<Multi_key> <bracketleft> <N> <D> <bracketright> : "🃌"  # PLAYING CARD KNIGHT OF DIAMONDS
+<Multi_key> <bracketleft> <Q> <D> <bracketright> : "🃍"  # PLAYING CARD QUEEN OF DIAMONDS
+<Multi_key> <bracketleft> <K> <D> <bracketright> : "🃎"  # PLAYING CARD KING OF DIAMONDS
+<Multi_key> <bracketleft> <A> <C> <bracketright> : "🃑"  # PLAYING CARD ACE OF CLUBS
+<Multi_key> <bracketleft> <2> <C> <bracketright> : "🃒"  # PLAYING CARD TWO OF CLUBS
+<Multi_key> <bracketleft> <3> <C> <bracketright> : "🃓"  # PLAYING CARD THREE OF CLUBS
+<Multi_key> <bracketleft> <4> <C> <bracketright> : "🃔"  # PLAYING CARD FOUR OF CLUBS
+<Multi_key> <bracketleft> <5> <C> <bracketright> : "🃕"  # PLAYING CARD FIVE OF CLUBS
+<Multi_key> <bracketleft> <6> <C> <bracketright> : "🃖"  # PLAYING CARD SIX OF CLUBS
+<Multi_key> <bracketleft> <7> <C> <bracketright> : "🃗"  # PLAYING CARD SEVEN OF CLUBS
+<Multi_key> <bracketleft> <8> <C> <bracketright> : "🃘"  # PLAYING CARD EIGHT OF CLUBS
+<Multi_key> <bracketleft> <9> <C> <bracketright> : "🃙"  # PLAYING CARD NINE OF CLUBS
+<Multi_key> <bracketleft> <T> <C> <bracketright> : "🃚"  # PLAYING CARD TEN OF CLUBS
+<Multi_key> <bracketleft> <J> <C> <bracketright> : "🃛"  # PLAYING CARD JACK OF CLUBS
+<Multi_key> <bracketleft> <N> <C> <bracketright> : "🃜"  # PLAYING CARD KNIGHT OF CLUBS
+<Multi_key> <bracketleft> <Q> <C> <bracketright> : "🃝"  # PLAYING CARD QUEEN OF CLUBS
+<Multi_key> <bracketleft> <K> <C> <bracketright> : "🃞"  # PLAYING CARD KING OF CLUBS
+<Multi_key> <bracketleft> <C> <B> <bracketright> : "🂠"  # PLAYING CARD BACK
+<Multi_key> <bracketleft> <B> <J> <bracketright> : "🃏"  # PLAYING CARD BLACK JOKER
+<Multi_key> <bracketleft> <W> <J> <bracketright> : "🃟"  # PLAYING CARD WHITE JOKER
+<Multi_key> <bar> <W> <K> : "♔"  # WHITE CHESS KING
+<Multi_key> <bar> <W> <Q> : "♕"  # WHITE CHESS QUEEN
+<Multi_key> <bar> <W> <R> : "♖"  # WHITE CHESS ROOK
+<Multi_key> <bar> <W> <B> : "♗"  # WHITE CHESS BISHOP
+<Multi_key> <bar> <W> <N> : "♘"  # WHITE CHESS KNIGHT
+<Multi_key> <bar> <W> <P> : "♙"  # WHITE CHESS PAWN
+<Multi_key> <bar> <B> <K> : "♚"  # BLACK CHESS KING
+<Multi_key> <bar> <B> <Q> : "♛"  # BLACK CHESS QUEEN
+<Multi_key> <bar> <B> <R> : "♜"  # BLACK CHESS ROOK
+<Multi_key> <bar> <B> <B> : "♝"  # BLACK CHESS BISHOP
+<Multi_key> <bar> <B> <N> : "♞"  # BLACK CHESS KNIGHT
+<Multi_key> <bar> <B> <P> : "♟"  # BLACK CHESS PAWN
+<Multi_key> <bar> <W> <D> <M> : "⛀"  # WHITE DRAUGHTS MAN
+<Multi_key> <bar> <W> <D> <K> : "⛁"  # WHITE DRAUGHTS KING
+<Multi_key> <bar> <B> <D> <M> : "⛂"  # BLACK DRAUGHTS MAN
+<Multi_key> <bar> <B> <D> <K> : "⛃"  # BLACK DRAUGHTS KING
+<Multi_key> <bar> <W> <S> : "☖"  # WHITE SHOGI PIECE
+<Multi_key> <bar> <B> <S> : "☗"  # BLACK SHOGI PIECE
+<Multi_key> <bar> <less> <W> <S> : "⛉"  # TURNED WHITE SHOGI PIECE
+<Multi_key> <bar> <less> <B> <S> : "⛊"  # TURNED BLACK SHOGI PIECE
+<Multi_key> <d> <e> <g> <C> : "℃"  # DEGREE CELSIUS
+<Multi_key> <d> <e> <g> <F> : "℉"  # DEGREE FAHRENHEIT
+<Multi_key> <i> <d> <e> <a> : "💡"  # ELECTRIC LIGHT BULB
+<Multi_key> <a> <n> <g> <e> <r> : "💢"  # ANGER SYMBOL
+<Multi_key> <z> <z> <z> : "💤"  # SLEEPING SYMBOL
+<Multi_key> <p> <o> <w> : "💥"  # COLLISION SYMBOL
+<Multi_key> <s> <w> <e> <a> <t> : "💦"  # SPLASHING SWEAT SYMBOL
+<Multi_key> <d> <r> <o> <p> : "💧"  # DROPLET
+<Multi_key> <z> <i> <p> : "💨"  # DASH SYMBOL
+<Multi_key> <p> <o> <o> : "💩"  # PILE OF POO
+<Multi_key> <dollar> <b> <a> <g> : "💰"  # MONEY BAG
+<Multi_key> <b> <d> <a> <y> : "🎂"  # BIRTHDAY CAKE
+<Multi_key> <A> <O> <K> : "👌"  # OK HAND SIGN
+<Multi_key> <k> <i> <s> <s> : "💋"  # KISS MARK
+<Multi_key> <greater> <less> : "◊"  # INTENTIONAL CONFLICT
