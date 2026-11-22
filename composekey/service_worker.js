@@ -1548,19 +1548,6 @@ let onComposeKeyLoaded = null;
 const defaultComposeFile = 'include "%L"\n';
 
 /**
- * The current raw compose file in XCompose format.
- * @return {Promise<string>!}
- */
-async function getComposeFile() {
-  // The contents of the compose file are either stored in sync or local, with
-  // sync taking precedence. If it's not in either, we use a default compose
-  // file.
-  return (await chrome.storage.sync.get('composeFile')).composeFile ??
-      await chrome.storage.local.get({'composeFile': defaultComposeFile})
-          .composeFile;
-}
-
-/**
  * Sets the contents of the compose file (to local or sync storage) and parses
  * it into the root state (to session storage).
  * @param {string} content
@@ -1642,53 +1629,34 @@ function clearComposeFile() {
   console.log('Compose file reset to default.');
 }
 
-/** @type {function(string)} */
-let onComposeFileLoaded = null;
-
 /**
- * Loads a compose file into local storage.
+ * Parses the stored compose file into rootState when the worker starts.
+ *
+ * This does not go through setComposeFile(), which the previous
+ * start-up code did. A worker start is not a settings change, and Chrome starts
+ * workers all the time (after every idle shutdown):
+ *  - setComposeFile() calls resetState(), which abandoned any composition in
+ *    progress whenever the worker had been stopped mid-sequence;
+ *  - it re-stored the file to sync storage on every start; and the old
+ *    fallback path re-read *sync* instead of local, so a compose file too large
+ *    for sync (kept in local storage) was replaced by the default file on the
+ *    next start, and the default then won from sync for good.
+ * initPromise has already loaded composeFile with the right precedence
+ * (sync, then local, then the default).
  */
-async function loadLocalComposeFile() {
-  const composeFile = await chrome.storage.sync.get('composeFile');
-  let content = composeFile.composeFile;
-  if (content == null) {
-    setComposeFile(defaultComposeFile);
-  } else {
-    console.log(
-        'Loaded compose file from local storage (%d characters).',
-        lengthInCodepoints(content));
-    setComposeFile(content);
+function loadComposeFileAtStartup() {
+  const parsed = parseComposeFile(composeFile);
+  rootState = parsed.root;
+  fileStatus = {warnings: parsed.warnings, errors: parsed.errors};
+  chrome.storage.session.set({'rootState': parsed.root});
+  // Keep a composition that survived the restart; otherwise point at the
+  // freshly parsed tree (on a first start, states is still the empty default).
+  if (!composing) {
+    setStates([rootState]);
   }
-
-  if (onComposeFileLoaded) {
-    onComposeFileLoaded(await getComposeFile());
-  }
-}
-
-chrome.storage.sync.get('composeFile', async (stored) => {
-  if (chrome.runtime.lastError) {
-    console.warn(
-        'Failed to load compose file from Chrome sync:',
-        chrome.runtime.lastError);
-    loadLocalComposeFile();
-    return;
-  }
-  if (!stored.composeFile) {
-    loadLocalComposeFile();
-    return;
-  }
-
-  setComposeFile(stored.composeFile);
-  const composeFile = await getComposeFile();
   console.log(
-      'Loaded compose file from Chrome sync (%d characters).',
-      lengthInCodepoints(composeFile));
-
-  if (onComposeFileLoaded) {
-    onComposeFileLoaded(composeFile);
-  }
-});
-
+      'Loaded compose file (%d characters).', lengthInCodepoints(composeFile));
+}
 
 /**
  * Sets the current states.
@@ -1832,6 +1800,12 @@ const initPromise =
             }
           }
         });
+
+// Registered at top level, before any event can arrive, so it runs before the
+// initPromise continuations that event listeners add. (Must come after the
+// `const initPromise` declaration above: referencing it earlier at top level
+// throws a ReferenceError.)
+initPromise.then(loadComposeFileAtStartup);
 
 // Listen for config updates from the options page.
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
