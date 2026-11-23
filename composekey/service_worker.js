@@ -2436,6 +2436,207 @@ const modifiersNone = Object.freeze(Object.assign(new Modifiers(), {
   capsLock: false,
 }));
 
+/*
+ * Event log: what happened recently, always on, so that a problem can be looked
+ * at after it occurred (options page, "Event log").
+ *
+ * It never records which key was pressed or what was composed, only times,
+ * kinds of keys and what was done with them.
+ *
+ * Cost: on the key path, one small array is stored in a ring buffer; no storage
+ * and no I/O. Chrome stops an idle worker after about 30 seconds and would take
+ * the buffer with it, so once nothing has happened for LOG_FLUSH_MS, it is
+ * copied to chrome.storage.session, which is memory in the browser process and
+ * never written to disk. The log is lost when the browser or the extension
+ * restarts.
+ *
+ * Entries are [time, kind, ...], see formatLogEntry(). Every field is a number,
+ * boolean, null or fixed string, except for error messages.
+ */
+const LOG_SIZE = 2000;
+const LOG_FLUSH_MS = 2000;
+const eventLog = new Array(LOG_SIZE).fill(null);
+let logCount = 0;         // entries ever written by this worker
+let logFlushedCount = 0;  // value of logCount at the last flush
+let logTimer = null;
+let logLastTime = 0;
+let logEarlier = null;    // entries of earlier workers, once read from storage
+
+/** @param {Array!} entry @return {Array!} the entry, which may be amended */
+function logEntry(entry) {
+  eventLog[logCount++ % LOG_SIZE] = entry;
+  logLastTime = entry[0];
+  // One timer per burst of events, not one per event.
+  if (logTimer === null) logTimer = setTimeout(logIdleCheck, LOG_FLUSH_MS);
+  return entry;
+}
+
+/** @param {string} kind @param {...*} args @return {Array!} */
+function logEvent(kind, ...args) {
+  return logEntry([Date.now(), kind, ...args]);
+}
+
+function logIdleCheck() {
+  const idle = Date.now() - logLastTime;
+  if (idle >= 0 && idle < LOG_FLUSH_MS) {
+    logTimer = setTimeout(logIdleCheck, LOG_FLUSH_MS - idle);
+    return;
+  }
+  logTimer = null;
+  flushLog();
+}
+
+/** @return {Array<Array!>!} this worker's entries, oldest first */
+function ownLogEntries() {
+  if (logCount <= LOG_SIZE) return eventLog.slice(0, logCount);
+  const start = logCount % LOG_SIZE;
+  return eventLog.slice(start).concat(eventLog.slice(0, start));
+}
+
+/**
+ * All entries, including those of earlier workers. Those are only read here,
+ * when somebody needs them, so that they do not delay the start of a worker.
+ * @return {Promise<Array<Array!>!>!}
+ */
+async function allLogEntries() {
+  if (logEarlier === null) {
+    const stored = await chrome.storage.session.get({'eventLog': '[]'});
+    // Somebody else may have finished first, and then flushed.
+    if (logEarlier === null) {
+      try {
+        logEarlier = JSON.parse(stored.eventLog);
+      } catch (e) {
+        logEarlier = [];
+      }
+    }
+  }
+  return logEarlier.concat(ownLogEntries()).slice(-LOG_SIZE);
+}
+
+async function flushLog() {
+  if (logCount === logFlushedCount) return;
+  try {
+    const entries = await allLogEntries();
+    logFlushedCount = logCount;
+    await chrome.storage.session.set({'eventLog': JSON.stringify(entries)});
+  } catch (e) {
+    // Diagnostics must never get in the way.
+    console.warn('Could not save the event log:', e);
+  }
+}
+
+async function clearLog() {
+  eventLog.fill(null);
+  logCount = logFlushedCount = 0;
+  logEarlier = [];
+  await chrome.storage.session.remove('eventLog');
+}
+
+/** @param {number} t @return {string} local time with milliseconds */
+function logTime(t) {
+  const d = new Date(t);
+  const pad = (n, w) => String(n).padStart(w, '0');
+  return pad(d.getHours(), 2) + ':' + pad(d.getMinutes(), 2) + ':' +
+      pad(d.getSeconds(), 2) + '.' + pad(d.getMilliseconds(), 3);
+}
+
+/** @param {Array!} e @return {string} */
+function formatLogEntry(e) {
+  const [, kind, ...a] = e;
+  switch (kind) {
+    case 'key': {
+      const [type, keyClass, flags, delay, handled] = a;
+      const answer = delay === null ?
+          'NOT ANSWERED' :
+          (handled ? 'suppressed' : 'passed') + ' after ' + delay + ' ms';
+      return `${type.padEnd(7)} ${keyClass.padEnd(8)} ${answer}` +
+          (flags ? '  ' + flags : '');
+    }
+    case 'focus':
+    case 'blur':
+      return `${kind.toUpperCase()} context ${a[0]}, keys in flight: ${a[1]}` +
+          (a[2] ? ', COMPOSITION ABANDONED' : '') +
+          (a[3] ? `, type ${a[3]}` : '');
+    case 'commit':
+      return `commit ${a[0]}, context ${a[1]}, ` +
+          (a[2] === null ? 'NOT CONFIRMED' : `confirmed after ${a[2]} ms`) +
+          (a[3] ? ', ERROR: ' + a[3] : '');
+    default:
+      return kind + (a.length ? ' ' + a.join(' ') : '');
+  }
+}
+
+/** @param {Array<Array!>!} entries @return {string} */
+function formatLog(entries) {
+  const keys = entries.filter((e) => e[1] == 'key');
+  const delays = keys.map((e) => e[5]).filter((d) => d !== null)
+                     .sort((x, y) => x - y);
+  const count = (f) => entries.filter(f).length;
+  const lines = [
+    `${entries.length} events, ${keys.length} key events; no keys recorded.`,
+    'answer time: ' + (delays.length ?
+        `median ${delays[delays.length >> 1]} ms, ` +
+        `longest ${delays[delays.length - 1]} ms` : 'none'),
+    `not answered: ${keys.length - delays.length}`,
+    `focus changes: ${count((e) => e[1] == 'focus' || e[1] == 'blur')}, ` +
+        'with keys in flight: ' +
+        count((e) => (e[1] == 'focus' || e[1] == 'blur') && e[3] > 0),
+    `worker starts: ${count((e) => e[1] == 'start')}`,
+    `commits: ${count((e) => e[1] == 'commit')}, ` +
+        `failed: ${count((e) => e[1] == 'commit' && e[5])}`,
+    '',
+    'time          since previous',
+  ];
+  let previous = null;
+  for (const e of entries) {
+    const gap = previous === null ? '' : `+${e[0] - previous}`;
+    lines.push(`${logTime(e[0])} ${gap.padStart(7)}  ${formatLogEntry(e)}`);
+    previous = e[0];
+  }
+  return lines.join('\n') + '\n';
+}
+
+logEvent('start');
+
+/**
+ * Key events that have not been answered yet: request ID to log entry.
+ * @type {Map<string, Array!>!}
+ */
+const unansweredKeys = new Map();
+
+/** Keys currently down, by code; in memory only. */
+const keysDown = new Set();
+
+/**
+ * Logs a key event, not which key it was.
+ * @param {Object!} keyData
+ * @param {string} requestId
+ */
+function logKey(keyData, requestId) {
+  const entry = logEvent('key', keyData.type, 'unknown', '', null, null);
+  unansweredKeys.set(requestId, entry);
+
+  let flags = '';
+  if (keyData.type == 'keydown') {
+    if (keysDown.has(keyData.code)) flags += 'repeat ';
+    keysDown.add(keyData.code);
+  } else if (!keysDown.delete(keyData.code)) {
+    flags += 'no-keydown ';  // it went elsewhere, or was lost
+  }
+  if (keyData.altKey) flags += 'alt ';
+  if (keyData.ctrlKey) flags += 'ctrl ';
+  if (composing) flags += 'composing ';
+  if (held !== null) flags += 'held ';
+  entry[4] = flags.trim();
+
+  // A worker that has only just started does not know its settings yet.
+  if (composeKey !== undefined) {
+    entry[3] = keyData.code == composeKey ? 'compose' :
+        modifierKeys.has(keyData.key) ? 'modifier' :
+        [...String(keyData.key)].length == 1 ? 'char' : 'other';
+  }
+}
+
 /**
  * The input context (text field) that composed text is committed to, or 0 if
  * none is focused.
@@ -2462,13 +2663,19 @@ function setContextID(value) {
 // not-yet-loaded rootState when an onFocus is what woke the worker, and (b) the
 // contextID restored from storage cannot overwrite the one this event sets.
 chrome.input.ime.onFocus.addListener((context) => {
+  const entry = logEvent(
+      'focus', context.contextID, unansweredKeys.size, false, context.type);
   initPromise.then(() => {
+    entry[4] = composing;
     resetState();
     setContextID(context.contextID);
   });
 });
-chrome.input.ime.onBlur.addListener(() => {
+chrome.input.ime.onBlur.addListener((blurredID) => {
+  const entry = logEvent('blur', blurredID, unansweredKeys.size, false, null);
+  keysDown.clear();
   initPromise.then(() => {
+    entry[4] = composing;
     resetState();
     setContextID(0);
   });
@@ -2503,13 +2710,24 @@ class Result {
   send(keyData) {
     dbg('   commit', JSON.stringify(this.string), 'keysym=' + this.keysym,
         'contextID=' + contextID);
-    if (this.string !== null && contextID !== 0) {
+    const asText = this.string !== null && contextID !== 0;
+    const entry = logEvent(
+        'commit', asText ? 'text' : this.keysym !== null ? 'keysym' : 'NOTHING',
+        contextID, null, null);
+    const done = () => {
+      entry[4] = Date.now() - entry[0];
+      if (chrome.runtime.lastError) {
+        entry[5] = String(chrome.runtime.lastError.message);
+      }
+    };
+    if (asText) {
       chrome.input.ime.commitText(
           {
             contextID: contextID,
             text: this.string,
           },
           () => {
+            done();
             if (chrome.runtime.lastError) {
               console.error('Error committing text:', chrome.runtime.lastError);
             }
@@ -2539,6 +2757,7 @@ class Result {
           keyData: [down, up],
         },
         () => {
+          done();
           if (chrome.runtime.lastError) {
             console.error(
                 'Error sending key events:', chrome.runtime.lastError);
@@ -3187,7 +3406,9 @@ const initPromise =
 
           // Parsed here, inside initPromise, so no listener can see a
           // half-initialised tree.
+          const parseStart = Date.now();
           loadComposeFileAtStartup(options.statePaths);
+          logEvent('ready', `(parsing took ${Date.now() - parseStart} ms)`);
         });
 
 // Whole-tree copies written by earlier versions; no longer read.
@@ -3227,6 +3448,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
       setComposeFile(message.data);
       sendResponse({result: 'OK'});
+      return true;
+    }
+    case 'getLog': {
+      allLogEntries().then(
+          (entries) => sendResponse({log: formatLog(entries)}),
+          (error) => sendResponse({error: String(error)}));
+      return true;
+    }
+    case 'clearLog': {
+      clearLog().then(() => sendResponse({result: 'OK'}));
       return true;
     }
     case 'clearComposeFile': {
@@ -3312,9 +3543,12 @@ let debugLog = false;
 chrome.storage.local.get({'debugLog': false}).then((o) => {
   debugLog = o.debugLog;
 });
-if (chrome.storage.onChanged) {
-  chrome.storage.onChanged.addListener((changes, area) => {
-    if (area == 'local' && changes.debugLog) {
+// Only for this area: a listener on chrome.storage.onChanged would be called for
+// (and wake the worker for) everything the worker itself puts in session
+// storage.
+if (chrome.storage.local.onChanged) {
+  chrome.storage.local.onChanged.addListener((changes) => {
+    if (changes.debugLog) {
       debugLog = !!changes.debugLog.newValue;
     }
   });
@@ -3326,16 +3560,24 @@ function dbg(...args) {
 }
 
 /**
- * chrome.input.ime.keyEventHandled, logged.
+ * chrome.input.ime.keyEventHandled, logged. Only the first answer to a key event
+ * is sent: the event listener answers early where it has to (see
+ * https://crbug.com/826884), and Chrome reports a second answer as an error.
  * @param {string} requestId
  * @param {boolean} handled true = suppressed, false = passed to the app
  */
 function keyEventHandled(requestId, handled) {
+  const entry = unansweredKeys.get(requestId);
+  if (entry === undefined) return;
+  unansweredKeys.delete(requestId);
+  entry[5] = Date.now() - entry[0];
+  entry[6] = handled;
   dbg('   ->', handled ? 'suppressed' : 'passed through');
   chrome.input.ime.keyEventHandled(requestId, handled);
 }
 
 chrome.input.ime.onKeyEvent.addListener((engineID, keyData, requestId) => {
+  logKey(keyData, requestId);
   // WAIT! First, make sure we've got all the settings in place before we do any
   // processing.
   initPromise.then(() => {
@@ -3422,11 +3664,15 @@ chrome.input.ime.onKeyEvent.addListener((engineID, keyData, requestId) => {
           setHeld(null);
         }
       }
-      if (keyDownSuppressed.has(key)) {
-        keyDownSuppressed.delete(key);
-        keyEventHandled(requestId, suppress);
-        return;
-      }
+      // Never suppress a release, not even that of a key whose press was
+      // suppressed. For the windows of Linux and Android apps, ChromeOS
+      // (exo::Keyboard) keeps its own list of pressed keys, and ignores a press
+      // of a key that is on it. It adds a key even if the input method consumed
+      // the press, but never sees a release that the input method consumes. So
+      // the key stayed on the list, and the next press of every key used in a
+      // composition was lost. A release of a consumed press that is passed
+      // through only updates the list; the app does not see it.
+      keyDownSuppressed.delete(key);
       keyEventHandled(requestId, propagate);
       return;
     }
@@ -3526,6 +3772,9 @@ chrome.input.ime.onKeyEvent.addListener((engineID, keyData, requestId) => {
     }
     keyEventHandled(requestId, suppress);
     return;
+  }).catch((error) => {
+    logEvent('EXCEPTION', String(error));
+    throw error;
   });
 
   return;
