@@ -3422,11 +3422,15 @@ chrome.input.ime.onKeyEvent.addListener((engineID, keyData, requestId) => {
           setHeld(null);
         }
       }
-      if (keyDownSuppressed.has(key)) {
-        keyDownSuppressed.delete(key);
-        keyEventHandled(requestId, suppress);
-        return;
-      }
+      // Never suppress a release, not even that of a key whose press was
+      // suppressed. For the windows of Linux and Android apps, ChromeOS
+      // (exo::Keyboard) keeps its own list of pressed keys, and ignores a press
+      // of a key that is on it. It adds a key even if the input method consumed
+      // the press, but never sees a release that the input method consumes. So
+      // the key stayed on the list, and the next press of every key used in a
+      // composition was lost. A release of a consumed press that is passed
+      // through only updates the list; the app does not see it.
+      keyDownSuppressed.delete(key);
       keyEventHandled(requestId, propagate);
       return;
     }
