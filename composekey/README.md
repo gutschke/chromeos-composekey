@@ -41,6 +41,20 @@ For example Alt + `-` minimizes the window, which also ends the composition.
 Sequences containing such keys (`-`, `=`, `[`, `]`, and possibly digits) only
 work in tap mode.
 
+## Event log
+
+The options page shows the last 2000 events the extension has seen, so that a
+problem can be looked at after it has happened: when each key came, what kind of
+key it was (a character, a modifier, the Compose key), how long the answer took,
+focus changes, commits and their errors, and restarts of the service worker. It
+does not contain which keys were pressed or what was composed. It is always on
+and kept in memory only, so it is gone after a restart of the browser or a reload
+of the extension.
+
+To record the keys themselves, run
+`chrome.storage.local.set({debugLog: true})` in the service worker's console;
+they are then logged to that console until it is set to `false`.
+
 ## Full list of built-in sequences
 
 Sequences are grouped by where they come from. When two sources define the same

@@ -142,6 +142,20 @@
       </div>
     </section>
 
+    <section>
+      Event log:
+      <button id="showLog">Show</button>
+      <button id="saveLog">Save to file</button>
+      <button id="clearLog">Clear</button>
+      <p>
+        The last 2000 events the extension has seen, for finding out why typing
+        was slow or a key got lost. It contains times and what was done with
+        each key, but not which keys were pressed or what was composed. It is
+        kept in memory and is gone after a restart of the browser.
+      </p>
+      <textarea id="log" cols=100 rows=25 readonly wrap="off"></textarea>
+    </section>
+
     <script src="options.js"></script>
   </body>
 </html>

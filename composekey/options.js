@@ -235,3 +235,34 @@ async function updateComposeFileStatus() {
     warnings.style.display = 'block';
   }
 }
+
+/**
+ * @return {Promise<string>!} the event log as text
+ */
+async function getLog() {
+  const response = await chrome.runtime.sendMessage({command: 'getLog'});
+  return response.log ?? 'Error: ' + response.error;
+}
+
+document.getElementById('showLog')
+  .addEventListener('click', async () => {
+    const elem = document.getElementById('log');
+    elem.value = await getLog();
+    elem.scrollTop = elem.scrollHeight;
+  }, {passive: true});
+
+document.getElementById('saveLog')
+  .addEventListener('click', async () => {
+    const a = document.createElement('a');
+    a.href = window.URL.createObjectURL(
+        new Blob([await getLog()], {type: 'text/plain'}));
+    a.download = 'composekey-log.txt';
+    a.click();
+    window.URL.revokeObjectURL(a.href);
+  }, {passive: true});
+
+document.getElementById('clearLog')
+  .addEventListener('click', async () => {
+    await chrome.runtime.sendMessage({command: 'clearLog'});
+    document.getElementById('log').value = '';
+  }, {passive: true});
