@@ -147,23 +147,29 @@
         format.
       </p>
       <p>
-        Files smaller than 8KB will be synchronized across devices.
+        Files up to about 8&nbsp;KB are synchronized across devices
+        (characters outside ASCII take several bytes each). A larger file is
+        kept on this device only.
       </p>
-      <p>
       <p>
         <code>include "%L"</code> includes the built-in sequences;
         otherwise, they will be omitted.
       </p>
       <p>
-        The shortest matching sequence applies.
-        If multiple sequences match, the last one wins.
-        If a new sequence contains a previously-defined sequence as an
-        <em>exact</em> prefix (including modifiers),
-        the previous sequence is suppressed.
+        If a sequence is defined more than once, the last definition wins, so
+        your own lines after <code>include "%L"</code> replace built-in ones.
       </p>
       <p>
-        Sequences with unsupported output keysyms will be dropped
-        unless the result also specifies a string.
+        A sequence may be the start of a longer one, such as
+        <code>&lt;Multi_key&gt; &lt;x&gt; &lt;y&gt;</code> and
+        <code>&lt;Multi_key&gt; &lt;x&gt; &lt;y&gt; &lt;z&gt;</code>.
+        Both work: the shorter one's result is shown underlined until the
+        next key, or until the delay chosen above.
+      </p>
+      <p>
+        A result given only as a keysym, such as <code>Tab</code>, is sent as
+        that key, and a keysym Chrome does not know may do nothing. Give the
+        result as a string in quotes to be sure of the text.
       </p>
       <div id="errors"></div>
       <div id="warnings"></div>

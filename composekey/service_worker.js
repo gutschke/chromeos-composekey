@@ -3036,8 +3036,9 @@ function stateAtPath(root, path) {
 }
 
 /**
- * Adds the given sequence to root, pruning out the results of any existing
- * sequences that are an exact prefix of the new sequence.
+ * Adds the given sequence to root. A shorter sequence that is a prefix of it
+ * (or that it is a prefix of) keeps its result; the key handler waits for the
+ * next key to tell them apart. The return value warns about such overlaps.
  * @param {EventState!} root
  * @param {{
  *   events: Array<{mods: Modifiers!, sym: string}>!,
