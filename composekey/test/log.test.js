@@ -48,7 +48,7 @@ const getLog = async (s) => (await send(s, 'getLog')).log;
 
 test('the log shows keys, commits and focus changes', async () => {
   const s = await session();
-  await s.type('oo');
+  await s.type('"a');
   s.worker.blur();
   await s.settle();
   const log = await getLog(s);
@@ -73,7 +73,7 @@ test('the log does not say which keys were pressed or composed', async () => {
   };
   // Remove times; what remains must not depend on the keys.
   const strip = (t) => t.replace(/\d+/g, '#').replace(/ +\+# */g, ' ');
-  assert.equal(strip(await dump('oo', 'qjz')), strip(await dump("'e", 'xvk')));
+  assert.equal(strip(await dump("'a", 'qjz')), strip(await dump("'e", 'xvk')));
 });
 
 test('a focus change with a key in flight, and an abandoned composition', async () => {
@@ -96,13 +96,13 @@ test('a commit without an input context is visible', async () => {
   const s = await session();
   s.worker.blur();
   await s.settle();
-  await s.type('oo');
+  await s.type('"a');
   assert.match(await getLog(s), /commit NOTHING, context 0, NOT CONFIRMED/);
 });
 
 test('the log survives a worker restart, once flushed', async () => {
   const s = await session();
-  await s.type('oo');
+  await s.type('"a');
   await sleep(FLUSH);
   s.start();
   await s.settle();
@@ -146,12 +146,12 @@ test('only the newest entries are kept, and clear empties the log', async () => 
 
 test('every key event is answered exactly once', async () => {
   const s = await session();
-  for (const seq of ['oo', "'e", ':-)', ':-', '']) {
+  for (const seq of ['"a', "'e", ':-)', ':-', '']) {
     await s.type(seq);
     await s.tap('x');
     await s.tapNamed('Enter');
   }
-  await s.holdType('oo');
+  await s.holdType('"a');
   for (const [id, r] of s.replies) assert.equal(r.length, 1, `request ${id}: ${r}`);
   assert.deepEqual(s.rec.unanswered(), []);
 });

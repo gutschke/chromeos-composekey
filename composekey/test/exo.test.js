@@ -78,14 +78,18 @@ async function plain(s, text) {
   for (const c of text) await s.tap(c);
 }
 
-for (const [name, compose, expected] of [
-  ['tap', (s) => s.type('oo'), '°'],
+for (const [name, compose, expected, after = 'the quick brown fox', committedAfter] of [
+  ['tap', (s) => s.type('"a'), 'ä'],
   ['tap, shifted key', (s) => s.type('"a'), 'ä'],
-  ['Compose Compose name', async (s) => { await s.compose(); await s.type('fire'); }, '🔥'],
-  ['hold', (s) => s.holdType('oo'), '°'],
-  ['hold with auto-repeat', (s) => s.holdType('oo', {repeats: 5}), '°'],
+  ['Compose Compose name', async (s) => {
+    await s.compose(); await s.type('fire');
+  }, '🔥'],
+  ['hold', (s) => s.holdType('"a'), 'ä'],
+  ['hold with auto-repeat', (s) => s.holdType('"a', {repeats: 5}), 'ä'],
   ['cancelled', async (s) => { await s.type('o'); await s.tapNamed('Escape'); }, undefined],
-  ['mismatch', (s) => s.type('oq'), undefined],
+  // A sequence that matches nothing is kept, underlined; the next key
+  // commits it plus that key as text ("oqt"), so the app sees "he quick...".
+  ['mismatch', (s) => s.type('oq'), undefined, 'he quick brown fox', 'oqt'],
 ]) {
   test('no key is lost after a composition: ' + name, async () => {
     const s = await session();
@@ -100,7 +104,8 @@ for (const [name, compose, expected] of [
         'the app sees nothing of the sequence');
     s.exo.events = [];
     await plain(s, 'the quick brown fox');
-    assert.equal(s.exo.text(), 'the quick brown fox', 'after');
+    assert.equal(s.exo.text(), after, 'after');
+    if (committedAfter) assert.equal(s.rec.commits.at(-1).text, committedAfter);
     assert.deepEqual(s.rec.errors, []);
   });
 }

@@ -11,8 +11,8 @@ const {Session} = require('./harness');
 // Default settings (nothing stored): hold-to-compose must work, as in v1.8.
 test('hold, default settings', async () => {
   const s = await session(undefined);
-  await s.holdType('oo');
-  assert.deepEqual(s.rec.commits.map((c) => c.text), ['°']);
+  await s.holdType('"a');
+  assert.deepEqual(s.rec.commits.map((c) => c.text), ['ä']);
 });
 
 // Held right Alt auto-repeats on ChromeOS; each repeat used to toggle compose
@@ -20,8 +20,8 @@ test('hold, default settings', async () => {
 for (const repeats of [1, 2, 7]) {
   test(`hold with ${repeats} auto-repeat(s) of the Compose key`, async () => {
     const s = await session(undefined);
-    await s.holdType('oo', {repeats});
-    assert.deepEqual(s.rec.commits.map((c) => c.text), ['°']);
+    await s.holdType('"a', {repeats});
+    assert.deepEqual(s.rec.commits.map((c) => c.text), ['ä']);
     assert.deepEqual(s.rec.unanswered(), []);
   });
 }
@@ -33,8 +33,8 @@ test('a lost Compose keyup does not leave compose dead', async () => {
   s.worker.keyEvent('keydown', 'Alt', 'AltRight', {alt: true});
   await s.settle(5);
   await s.tapNamed('Escape');            // cancels, and arrives with alt=false
-  await s.type('oo');                    // a normal tap sequence afterwards
-  assert.deepEqual(s.rec.commits.map((c) => c.text), ['°']);
+  await s.type('"a');                    // a normal tap sequence afterwards
+  assert.deepEqual(s.rec.commits.map((c) => c.text), ['ä']);
 });
 
 test('a lost Compose keyup is forgotten on focus change', async () => {
@@ -42,18 +42,21 @@ test('a lost Compose keyup is forgotten on focus change', async () => {
   s.worker.keyEvent('keydown', 'Alt', 'AltRight', {alt: true});
   await s.settle(5);
   s.worker.blur(); await s.settle(); s.worker.focus(); await s.settle();
-  await s.type('oo');
-  assert.deepEqual(s.rec.commits.map((c) => c.text), ['°']);
+  await s.type('"a');
+  assert.deepEqual(s.rec.commits.map((c) => c.text), ['ä']);
 });
 
 // A second Compose press (not an auto-repeat) used to cancel; it now starts an
 // emoji name ("Compose Compose fire" → 🔥, sequences/60-emoji.compose).
-test('tap Compose twice then a name gives the emoji', async () => {
+test('tap Compose twice then a name, then Space, gives the emoji', async () => {
+  // A name that could still grow counts when it ends (Space, Enter, ...).
   const s = await session(undefined);
   await s.compose();
   await s.compose();
-  for (const ch of 'fire') await s.tap(ch);
-  assert.deepEqual(s.rec.commits.map((c) => c.text), ['\u{1F525}']);
+  for (const ch of 'heart') await s.tap(ch);
+  assert.deepEqual(s.rec.commits, [], 'heart waits: hearts, heart eyes');
+  await s.tap(' ');
+  assert.deepEqual(s.rec.commits.map((c) => c.text), ['❤️ ']);
 });
 
 test('hold: Compose, release, Compose again, then a name', async () => {
@@ -97,8 +100,8 @@ async function session(keepModifier) {
 for (const keepModifier of [true, false]) {
   test(`tap, keepModifier=${keepModifier}`, async () => {
     const s = await session(keepModifier);
-    await s.type('oo');
-    assert.deepEqual(s.rec.commits.map((c) => c.text), ['°']);
+    await s.type('"a');
+    assert.deepEqual(s.rec.commits.map((c) => c.text), ['ä']);
   });
 
   // With keepModifier=true (upstream's default) the AltRight keydown is passed
@@ -109,7 +112,7 @@ for (const keepModifier of [true, false]) {
     todo: keepModifier ? 'hold needs keepModifier=false' : false,
   }, async () => {
     const s = await session(keepModifier);
-    await s.holdType('oo');
-    assert.deepEqual(s.rec.commits.map((c) => c.text), ['°']);
+    await s.holdType('"a');
+    assert.deepEqual(s.rec.commits.map((c) => c.text), ['ä']);
   });
 }

@@ -22,6 +22,7 @@ const FILE = [
   '<Multi_key> <colon> <minus> : "÷"',
   '<Multi_key> <colon> <minus> <parenright> : "\u{1F642}"',
   '<Multi_key> <o> <o> : "°"',
+  '<Multi_key> <exclam> <exclam> : "¡"',
   // Extension more than one key past the ambiguous point ("|B" is ฿).
   '<Multi_key> <bar> <B> : "฿"',
   '<Multi_key> <bar> <B> <D> <M> : "⛂"',
@@ -92,13 +93,22 @@ test('tap: Escape cancels pending', async () => {
   assert.deepEqual(texts(s), []);
 });
 
+test('tap: "Esc" (ChromeOS\'s name for it) cancels pending too', async () => {
+  const s = await session();
+  await s.type(':-');
+  await s.tap('Esc', {code: 'Escape'});
+  clean(s);
+  assert.deepEqual(texts(s), []);
+});
+
 test('tap: Enter commits pending, then passes through', async () => {
+  // ÷ is on screen while it waits, so Enter after it means Enter.
   const s = await session();
   await s.type(':-');
   await s.tapNamed('Enter');
   clean(s);
   assert.deepEqual(texts(s), ['÷']);
-  assert.equal(passedThrough(s, 'Enter'), true, 'Enter reaches the app');
+  assert.equal(passedThrough(s, 'Enter'), true);
 });
 
 test('hold: releasing Compose commits pending', async () => {
@@ -117,18 +127,18 @@ test('hold: longer sequence completes while held, release adds nothing', async (
 
 test('hold: non-ambiguous sequence commits before release', async () => {
   const s = await session();
-  await s.holdType('oo', {release: false});
-  assert.deepEqual(texts(s), ['°']);
+  await s.holdType('!!', {release: false});
+  assert.deepEqual(texts(s), ['¡']);
   await s.releaseCompose();
   clean(s);
-  assert.deepEqual(texts(s), ['°']);
+  assert.deepEqual(texts(s), ['¡']);
 });
 
 test('tap: non-ambiguous sequence still commits immediately', async () => {
   const s = await session();
-  await s.type('oo');
+  await s.type('!!');
   clean(s);
-  assert.deepEqual(texts(s), ['°']);
+  assert.deepEqual(texts(s), ['¡']);
 });
 
 test('two keys past the ambiguous point: longer sequence completes', async () => {

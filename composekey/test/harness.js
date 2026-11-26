@@ -20,6 +20,10 @@
  *    dispatch the triggering event right away, before any storage callback has
  *    run. Chrome does dispatch the waking event as soon as the script's
  *    top-level code has run; it does not wait for pending promises.
+ *  - Named keys: tapNamed() sends the web-standard name (ArrowDown, Escape),
+ *    but ChromeOS sends some old-style names ("Down" was seen on hardware;
+ *    "Esc" per https://crbug.com/826538). Tests for those use tap('Down',
+ *    {code: 'ArrowDown'}).
  *  - Key events carry key, code, type and the modifier flags. Chrome also
  *    sends fields this harness does not (extensionId, requestId in keyData).
  */
@@ -116,7 +120,13 @@ class Recorder {
     this.handled = new Map(); // requestId -> handled(bool)
     this.dispatched = [];     // requestIds we sent in
     this.lastKeydown = {};    // key -> requestId of its most recent keydown
+    this.events = new Map();  // requestId -> {type, key, ctrl}
+    this.timeline = [];       // commits and key answers, in the order made
     this.errors = [];         // console.error + unhandled rejections
+    this.ui = {               // candidate window and composition, as last set
+      visible: false, candidates: [], properties: {}, cursor: null,
+      composition: '', calls: [],
+    };
     this.storageLog = [];
   }
   unanswered() {
@@ -144,6 +154,7 @@ class Worker {
       onSurroundingTextChanged: makeEvent(),
       commitText: (params, cb) => {
         rec.commits.push({contextID: params.contextID, text: params.text});
+        rec.timeline.push({commit: params.text});
         if (cb) setTimeout(cb, 0);
       },
       sendKeyEvents: (params, cb) => {
@@ -152,6 +163,31 @@ class Worker {
       },
       keyEventHandled: (requestId, handled) => {
         rec.handled.set(requestId, handled);
+        rec.timeline.push({requestId, handled});
+      },
+      // Candidate window: the state a user would see is kept in rec.ui.
+      setCandidateWindowProperties: ({engineID, properties}) => {
+        rec.ui.calls.push(['props', properties]);
+        Object.assign(rec.ui.properties, properties);
+        if ('visible' in properties) rec.ui.visible = properties.visible;
+        return Promise.resolve(true);
+      },
+      setCandidates: ({contextID, candidates}) => {
+        rec.ui.calls.push(['candidates', candidates.length]);
+        rec.ui.candidates = candidates;
+        return Promise.resolve(true);
+      },
+      setCursorPosition: ({candidateID}) => {
+        rec.ui.cursor = candidateID;
+        return Promise.resolve(true);
+      },
+      setComposition: ({text}) => {
+        rec.ui.composition = text;
+        return Promise.resolve(true);
+      },
+      clearComposition: () => {
+        rec.ui.composition = '';
+        return Promise.resolve(true);
       },
     }, {
       get(target, prop) {
@@ -181,8 +217,21 @@ class Worker {
       chrome: this.chrome,
       console: opts.verbose ? console : quietConsole,
       setTimeout, clearTimeout, Promise, Object, JSON,
+      // As in a classic service worker: run each script in the same global
+      // scope, from the worker's own directory.
+      importScripts: (...files) => {
+        for (const f of files) {
+          const file = path.join(path.dirname(WORKER_PATH), f);
+          vm.runInContext(fs.readFileSync(file, 'utf8'), this.context, {filename: f});
+        }
+      },
     });
     vm.runInContext(WORKER_SOURCE, this.context, {filename: 'service_worker.js'});
+  }
+
+  /** Click a row of the candidate window. */
+  click(candidateID, button = 'left') {
+    this.fire('onCandidateClicked', 'compose_key', candidateID, button);
   }
 
   fire(eventName, ...args) {
@@ -202,6 +251,7 @@ class Worker {
     const requestId = String(nextRequestId++);
     this.rec.dispatched.push(requestId);
     if (type === 'keydown') this.rec.lastKeydown[key] = requestId;
+    this.rec.events.set(requestId, {type, key, ctrl: !!mods.ctrl});
     const keyData = {
       type, key, code,
       altKey: !!mods.alt, ctrlKey: !!mods.ctrl, shiftKey: !!mods.shift,
@@ -239,18 +289,18 @@ class Session {
    * wrapped in real ShiftLeft keydown/keyup events, as on hardware, because
    * the Shift events themselves must not disturb a pending sequence.
    */
-  async tap(key, {code, shift, alt} = {}) {
+  async tap(key, {code, shift, alt, ctrl} = {}) {
     code = code ?? keyToCode(key);
     if (shift) {
-      this.worker.keyEvent('keydown', 'Shift', 'ShiftLeft', {shift: true, alt});
+      this.worker.keyEvent('keydown', 'Shift', 'ShiftLeft', {shift: true, alt, ctrl});
       await this.settle(5);
     }
-    this.worker.keyEvent('keydown', key, code, {shift, alt});
+    this.worker.keyEvent('keydown', key, code, {shift, alt, ctrl});
     await this.settle(5);
-    this.worker.keyEvent('keyup', key, code, {shift, alt});
+    this.worker.keyEvent('keyup', key, code, {shift, alt, ctrl});
     await this.settle(5);
     if (shift) {
-      this.worker.keyEvent('keyup', 'Shift', 'ShiftLeft', {alt});
+      this.worker.keyEvent('keyup', 'Shift', 'ShiftLeft', {alt, ctrl});
       await this.settle(5);
     }
   }
@@ -260,11 +310,13 @@ class Session {
     this.storage.areas.sync.set('composeFile', text);
   }
 
-  /** Tap the Compose key (right Alt by default). */
-  async compose() {
-    this.worker.keyEvent('keydown', 'Alt', 'AltRight', {alt: true});
+  /** Tap the Compose key: right Alt, or the key with KeyboardEvent.code `code`. */
+  async compose(code = 'AltRight') {
+    const key = code.replace(/(Left|Right)$/, '');
+    const mod = {Alt: 'alt', Control: 'ctrl', Shift: 'shift'}[key];
+    this.worker.keyEvent('keydown', key, code, mod ? {[mod]: true} : {});
     await this.settle(5);
-    this.worker.keyEvent('keyup', 'Alt', 'AltRight', {});
+    this.worker.keyEvent('keyup', key, code, {});
     await this.settle(5);
   }
 

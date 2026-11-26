@@ -49,17 +49,28 @@ test('every v2.0 built-in sequence still gives the same output', async () => {
       src.replace('const builtinSequences =', '(').replace(/;\s*$/, '') + ')');
   const entries = Object.entries(old).map(([seq, out]) => [[...seq], out]);
   assert.equal(entries.length, 601);
+  // Except the ones changed or retired on purpose, which 00-fixes.compose
+  // and 00-retired.compose list: nothing may change by accident.
+  const deliberate = new Set(['00-fixes.compose', '00-retired.compose'].flatMap((f) =>
+      fs.readFileSync(path.join(ROOT, 'sequences', f), 'utf8').split('\n')
+          .filter((l) => l.startsWith('<Multi_key>'))
+          .map((l) => l.split(':')[0].split('#')[0].trim().replace(/\s+/g, ' '))));
+  const lhs = (seq) => '<Multi_key> ' + seq.map((c) => '<' + c + '>').join(' ');
   const s = await loaded();
+  const symsOf = (keys) => keys.map((k) => vm.runInContext(
+      `eventToSyms({key: ${JSON.stringify(k)}, location: 0})[0]`, s.worker.context));
   const got = lookUp(s, entries);
-  const bad = entries.filter((e, i) => got[i].string !== e[1])
-      .map((e, i) => `${JSON.stringify(e[0].join(''))}: want ${e[1]}`);
+  const bad = entries.filter((e, i) => got[i].string !== e[1] &&
+                                       !deliberate.has(lhs(symsOf(e[0]))))
+      .map((e) => `${JSON.stringify(e[0].join(''))}: want ${e[1]}`);
   assert.deepEqual(bad, []);
 });
 
 test('every generated entry reaches its own output', async () => {
   const s = await loaded();
+  // (Rows with no keys are typed by name: see finder.test.js.)
   const table = JSON.parse(JSON.stringify(
-      vm.runInContext('builtinSequences', s.worker.context)));
+      vm.runInContext('builtinSequences', s.worker.context))).filter((r) => r[0].length);
   assert.ok(table.length >= 601);
   const got = lookUp(s, table);
   const bad = [];
@@ -80,7 +91,9 @@ test('generated keys match the keysyms written in sequences/*.compose', async ()
   // character chosen by the generator.)
   const s = await loaded();
   const dir = path.join(ROOT, 'sequences');
-  const lines = fs.readdirSync(dir).filter((f) => f.endsWith('.compose')).sort()
+  // (00-retired.compose has left-hand sides only: sequences that are gone.)
+  const lines = fs.readdirSync(dir)
+      .filter((f) => f.endsWith('.compose') && f !== '00-retired.compose').sort()
       .flatMap((f) => fs.readFileSync(path.join(dir, f), 'utf8').split('\n'))
       .filter((l) => l.startsWith('<Multi_key>'));
   vm.runInContext(`globalThis.__syms = (lines, table) => {
@@ -91,7 +104,7 @@ test('generated keys match the keysyms written in sequences/*.compose', async ()
             {key: k, location: KBE_DOM_KEY_LOCATION_STANDARD}).join('+'))
         .join(' ')).filter((syms) => !fromSource.has(syms));
   };`, s.worker.context);
-  const table = vm.runInContext('builtinSequences', s.worker.context);
+  const table = vm.runInContext('builtinSequences.filter((r) => r[0].length)', s.worker.context);
   const missing = JSON.parse(JSON.stringify(s.worker.context.__syms(lines, table)));
   assert.deepEqual(missing.slice(0, 20), [], `${missing.length} entries`);
 });
@@ -131,5 +144,6 @@ test('the X11-style parser handles \\" and \\\\ in results', async () => {
   s.worker.focus(); await s.settle();
   await s.type('qq');
   await s.type('bb');
+  await s.tapNamed('Enter');  // b b waits: a name ("bbq") could follow
   assert.deepEqual(s.rec.commits.map((c) => c.text), ['"', '\\']);
 });

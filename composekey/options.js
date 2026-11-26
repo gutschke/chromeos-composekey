@@ -37,6 +37,13 @@ async function restore() {
     keepModifierElem.checked = response.keepModifier;
   }
 
+  const delay = response.finderDelayMs;
+  document.getElementById('finderPause').checked = delay >= 0;
+  document.getElementById('finderDelay').disabled = delay < 0;
+  if (delay >= 0) document.getElementById('finderDelay').value = String(delay);
+  document.getElementById('finderTab').checked = response.finderTab;
+  document.getElementById('finderCommitDelay').value = String(response.finderCommitDelayMs);
+
   let composeFileElem = document.getElementById('composeFile');
   if (composeFileElem.value != response.composeFile) {
     composeFileElem.value = response.composeFile;
@@ -84,6 +91,27 @@ document.getElementById('key')
 document.getElementById('keepModifier')
   .addEventListener('change', keyChanged, {passive: true});
 
+
+/**
+ * Stores the finder options on changes. A pause of -1 means "never".
+ */
+function finderChanged() {
+  const pause = document.getElementById('finderPause').checked;
+  const delay = document.getElementById('finderDelay');
+  delay.disabled = !pause;
+  chrome.runtime.sendMessage({
+    command: 'storeFinderOptions',
+    data: {
+      finderDelayMs: pause ? Number(delay.value) : -1,
+      finderTab: document.getElementById('finderTab').checked,
+      finderCommitDelayMs: Number(document.getElementById('finderCommitDelay').value),
+    },
+  });
+}
+for (const id of ['finderPause', 'finderDelay', 'finderTab', 'finderCommitDelay']) {
+  document.getElementById(id)
+      .addEventListener('change', finderChanged, {passive: true});
+}
 
 const applyButtonIds = ['applyComposeFileTop', 'applyComposeFileBottom'];
 const appliedTexts = ['applyComposeTextTop', 'applyComposeTextBottom'];

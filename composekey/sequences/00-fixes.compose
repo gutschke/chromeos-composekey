@@ -1,0 +1,332 @@
+# Title: Fixes: sequence cleanup (consistent key order, accents, Greek)
+# Written for this extension. Takes priority over every other source.
+# Rules and reasons: docs/finder-design.md, "Round three: cleaning up the table".
+
+# Conflicting pairs: the accent now means the same in both orders (owner-accepted decisions). d- was the dong sign (still = d, d =); ,e was e-cedilla (by name); o+ was multiocular O; g' G' were g/G with hook (by name).
+<Multi_key> <d> <minus> : "đ"  # LATIN SMALL LETTER D WITH STROKE
+<Multi_key> <comma> <e> : "ę"  # LATIN SMALL LETTER E WITH OGONEK
+<Multi_key> <comma> <E> : "Ę"  # LATIN CAPITAL LETTER E WITH OGONEK
+<Multi_key> <o> <plus> : "ơ"  # LATIN SMALL LETTER O WITH HORN
+<Multi_key> <g> <apostrophe> : "ǵ"  # LATIN SMALL LETTER G WITH ACUTE
+<Multi_key> <G> <apostrophe> : "Ǵ"  # LATIN CAPITAL LETTER G WITH ACUTE
+
+# Mirrors: a mark plus a letter giving that letter with the mark's accent works in both orders. Only where the reverse was unassigned and not the start of a longer sequence.
+<Multi_key> <C> <asciicircum> : "Ĉ"  # LATIN CAPITAL LETTER C WITH CIRCUMFLEX
+<Multi_key> <c> <asciicircum> : "ĉ"  # LATIN SMALL LETTER C WITH CIRCUMFLEX
+<Multi_key> <G> <asciicircum> : "Ĝ"  # LATIN CAPITAL LETTER G WITH CIRCUMFLEX
+<Multi_key> <g> <asciicircum> : "ĝ"  # LATIN SMALL LETTER G WITH CIRCUMFLEX
+<Multi_key> <H> <asciicircum> : "Ĥ"  # LATIN CAPITAL LETTER H WITH CIRCUMFLEX
+<Multi_key> <h> <asciicircum> : "ĥ"  # LATIN SMALL LETTER H WITH CIRCUMFLEX
+<Multi_key> <J> <asciicircum> : "Ĵ"  # LATIN CAPITAL LETTER J WITH CIRCUMFLEX
+<Multi_key> <j> <asciicircum> : "ĵ"  # LATIN SMALL LETTER J WITH CIRCUMFLEX
+<Multi_key> <O> <equal> : "Ő"  # LATIN CAPITAL LETTER O WITH DOUBLE ACUTE
+<Multi_key> <o> <equal> : "ő"  # LATIN SMALL LETTER O WITH DOUBLE ACUTE
+<Multi_key> <S> <asciicircum> : "Ŝ"  # LATIN CAPITAL LETTER S WITH CIRCUMFLEX
+<Multi_key> <s> <asciicircum> : "ŝ"  # LATIN SMALL LETTER S WITH CIRCUMFLEX
+<Multi_key> <U> <equal> : "Ű"  # LATIN CAPITAL LETTER U WITH DOUBLE ACUTE
+<Multi_key> <u> <equal> : "ű"  # LATIN SMALL LETTER U WITH DOUBLE ACUTE
+<Multi_key> <O> <plus> : "Ơ"  # LATIN CAPITAL LETTER O WITH HORN
+<Multi_key> <U> <plus> : "Ư"  # LATIN CAPITAL LETTER U WITH HORN
+<Multi_key> <u> <plus> : "ư"  # LATIN SMALL LETTER U WITH HORN
+<Multi_key> <N> <grave> : "Ǹ"  # LATIN CAPITAL LETTER N WITH GRAVE
+<Multi_key> <n> <grave> : "ǹ"  # LATIN SMALL LETTER N WITH GRAVE
+<Multi_key> <Y> <underscore> : "Ȳ"  # LATIN CAPITAL LETTER Y WITH MACRON
+<Multi_key> <y> <underscore> : "ȳ"  # LATIN SMALL LETTER Y WITH MACRON
+<Multi_key> <G> <underscore> : "Ḡ"  # LATIN CAPITAL LETTER G WITH MACRON
+<Multi_key> <g> <underscore> : "ḡ"  # LATIN SMALL LETTER G WITH MACRON
+<Multi_key> <H> <quotedbl> : "Ḧ"  # LATIN CAPITAL LETTER H WITH DIAERESIS
+<Multi_key> <h> <quotedbl> : "ḧ"  # LATIN SMALL LETTER H WITH DIAERESIS
+<Multi_key> <K> <apostrophe> : "Ḱ"  # LATIN CAPITAL LETTER K WITH ACUTE
+<Multi_key> <k> <apostrophe> : "ḱ"  # LATIN SMALL LETTER K WITH ACUTE
+<Multi_key> <M> <apostrophe> : "Ḿ"  # LATIN CAPITAL LETTER M WITH ACUTE
+<Multi_key> <m> <apostrophe> : "ḿ"  # LATIN SMALL LETTER M WITH ACUTE
+<Multi_key> <P> <apostrophe> : "Ṕ"  # LATIN CAPITAL LETTER P WITH ACUTE
+<Multi_key> <p> <apostrophe> : "ṕ"  # LATIN SMALL LETTER P WITH ACUTE
+<Multi_key> <V> <asciitilde> : "Ṽ"  # LATIN CAPITAL LETTER V WITH TILDE
+<Multi_key> <v> <asciitilde> : "ṽ"  # LATIN SMALL LETTER V WITH TILDE
+<Multi_key> <W> <grave> : "Ẁ"  # LATIN CAPITAL LETTER W WITH GRAVE
+<Multi_key> <w> <grave> : "ẁ"  # LATIN SMALL LETTER W WITH GRAVE
+<Multi_key> <W> <apostrophe> : "Ẃ"  # LATIN CAPITAL LETTER W WITH ACUTE
+<Multi_key> <w> <apostrophe> : "ẃ"  # LATIN SMALL LETTER W WITH ACUTE
+<Multi_key> <W> <quotedbl> : "Ẅ"  # LATIN CAPITAL LETTER W WITH DIAERESIS
+<Multi_key> <w> <quotedbl> : "ẅ"  # LATIN SMALL LETTER W WITH DIAERESIS
+<Multi_key> <X> <quotedbl> : "Ẍ"  # LATIN CAPITAL LETTER X WITH DIAERESIS
+<Multi_key> <x> <quotedbl> : "ẍ"  # LATIN SMALL LETTER X WITH DIAERESIS
+<Multi_key> <Z> <asciicircum> : "Ẑ"  # LATIN CAPITAL LETTER Z WITH CIRCUMFLEX
+<Multi_key> <z> <asciicircum> : "ẑ"  # LATIN SMALL LETTER Z WITH CIRCUMFLEX
+<Multi_key> <t> <quotedbl> : "ẗ"  # LATIN SMALL LETTER T WITH DIAERESIS
+<Multi_key> <E> <asciitilde> : "Ẽ"  # LATIN CAPITAL LETTER E WITH TILDE
+<Multi_key> <e> <asciitilde> : "ẽ"  # LATIN SMALL LETTER E WITH TILDE
+<Multi_key> <Y> <grave> : "Ỳ"  # LATIN CAPITAL LETTER Y WITH GRAVE
+<Multi_key> <y> <grave> : "ỳ"  # LATIN SMALL LETTER Y WITH GRAVE
+<Multi_key> <Y> <asciitilde> : "Ỹ"  # LATIN CAPITAL LETTER Y WITH TILDE
+<Multi_key> <y> <asciitilde> : "ỹ"  # LATIN SMALL LETTER Y WITH TILDE
+<Multi_key> <A> <period> : "Ȧ"  # LATIN CAPITAL LETTER A WITH DOT ABOVE
+<Multi_key> <a> <period> : "ȧ"  # LATIN SMALL LETTER A WITH DOT ABOVE
+<Multi_key> <B> <exclam> : "Ḅ"  # LATIN CAPITAL LETTER B WITH DOT BELOW
+<Multi_key> <D> <exclam> : "Ḍ"  # LATIN CAPITAL LETTER D WITH DOT BELOW
+<Multi_key> <d> <exclam> : "ḍ"  # LATIN SMALL LETTER D WITH DOT BELOW
+<Multi_key> <H> <period> : "Ḣ"  # LATIN CAPITAL LETTER H WITH DOT ABOVE
+<Multi_key> <h> <period> : "ḣ"  # LATIN SMALL LETTER H WITH DOT ABOVE
+<Multi_key> <H> <exclam> : "Ḥ"  # LATIN CAPITAL LETTER H WITH DOT BELOW
+<Multi_key> <h> <exclam> : "ḥ"  # LATIN SMALL LETTER H WITH DOT BELOW
+<Multi_key> <K> <exclam> : "Ḳ"  # LATIN CAPITAL LETTER K WITH DOT BELOW
+<Multi_key> <k> <exclam> : "ḳ"  # LATIN SMALL LETTER K WITH DOT BELOW
+<Multi_key> <L> <exclam> : "Ḷ"  # LATIN CAPITAL LETTER L WITH DOT BELOW
+<Multi_key> <l> <exclam> : "ḷ"  # LATIN SMALL LETTER L WITH DOT BELOW
+<Multi_key> <M> <exclam> : "Ṃ"  # LATIN CAPITAL LETTER M WITH DOT BELOW
+<Multi_key> <m> <exclam> : "ṃ"  # LATIN SMALL LETTER M WITH DOT BELOW
+<Multi_key> <N> <period> : "Ṅ"  # LATIN CAPITAL LETTER N WITH DOT ABOVE
+<Multi_key> <n> <period> : "ṅ"  # LATIN SMALL LETTER N WITH DOT ABOVE
+<Multi_key> <N> <exclam> : "Ṇ"  # LATIN CAPITAL LETTER N WITH DOT BELOW
+<Multi_key> <n> <exclam> : "ṇ"  # LATIN SMALL LETTER N WITH DOT BELOW
+<Multi_key> <R> <period> : "Ṙ"  # LATIN CAPITAL LETTER R WITH DOT ABOVE
+<Multi_key> <r> <period> : "ṙ"  # LATIN SMALL LETTER R WITH DOT ABOVE
+<Multi_key> <R> <exclam> : "Ṛ"  # LATIN CAPITAL LETTER R WITH DOT BELOW
+<Multi_key> <r> <exclam> : "ṛ"  # LATIN SMALL LETTER R WITH DOT BELOW
+<Multi_key> <T> <exclam> : "Ṭ"  # LATIN CAPITAL LETTER T WITH DOT BELOW
+<Multi_key> <t> <exclam> : "ṭ"  # LATIN SMALL LETTER T WITH DOT BELOW
+<Multi_key> <V> <exclam> : "Ṿ"  # LATIN CAPITAL LETTER V WITH DOT BELOW
+<Multi_key> <v> <exclam> : "ṿ"  # LATIN SMALL LETTER V WITH DOT BELOW
+<Multi_key> <W> <period> : "Ẇ"  # LATIN CAPITAL LETTER W WITH DOT ABOVE
+<Multi_key> <w> <period> : "ẇ"  # LATIN SMALL LETTER W WITH DOT ABOVE
+<Multi_key> <W> <exclam> : "Ẉ"  # LATIN CAPITAL LETTER W WITH DOT BELOW
+<Multi_key> <w> <exclam> : "ẉ"  # LATIN SMALL LETTER W WITH DOT BELOW
+<Multi_key> <X> <period> : "Ẋ"  # LATIN CAPITAL LETTER X WITH DOT ABOVE
+<Multi_key> <x> <period> : "ẋ"  # LATIN SMALL LETTER X WITH DOT ABOVE
+<Multi_key> <Y> <period> : "Ẏ"  # LATIN CAPITAL LETTER Y WITH DOT ABOVE
+<Multi_key> <y> <period> : "ẏ"  # LATIN SMALL LETTER Y WITH DOT ABOVE
+<Multi_key> <Z> <exclam> : "Ẓ"  # LATIN CAPITAL LETTER Z WITH DOT BELOW
+<Multi_key> <z> <exclam> : "ẓ"  # LATIN SMALL LETTER Z WITH DOT BELOW
+<Multi_key> <A> <exclam> : "Ạ"  # LATIN CAPITAL LETTER A WITH DOT BELOW
+<Multi_key> <a> <exclam> : "ạ"  # LATIN SMALL LETTER A WITH DOT BELOW
+<Multi_key> <A> <question> : "Ả"  # LATIN CAPITAL LETTER A WITH HOOK ABOVE
+<Multi_key> <a> <question> : "ả"  # LATIN SMALL LETTER A WITH HOOK ABOVE
+<Multi_key> <E> <exclam> : "Ẹ"  # LATIN CAPITAL LETTER E WITH DOT BELOW
+<Multi_key> <e> <exclam> : "ẹ"  # LATIN SMALL LETTER E WITH DOT BELOW
+<Multi_key> <E> <question> : "Ẻ"  # LATIN CAPITAL LETTER E WITH HOOK ABOVE
+<Multi_key> <e> <question> : "ẻ"  # LATIN SMALL LETTER E WITH HOOK ABOVE
+<Multi_key> <I> <question> : "Ỉ"  # LATIN CAPITAL LETTER I WITH HOOK ABOVE
+<Multi_key> <i> <question> : "ỉ"  # LATIN SMALL LETTER I WITH HOOK ABOVE
+<Multi_key> <I> <exclam> : "Ị"  # LATIN CAPITAL LETTER I WITH DOT BELOW
+<Multi_key> <i> <exclam> : "ị"  # LATIN SMALL LETTER I WITH DOT BELOW
+<Multi_key> <O> <exclam> : "Ọ"  # LATIN CAPITAL LETTER O WITH DOT BELOW
+<Multi_key> <o> <exclam> : "ọ"  # LATIN SMALL LETTER O WITH DOT BELOW
+<Multi_key> <O> <question> : "Ỏ"  # LATIN CAPITAL LETTER O WITH HOOK ABOVE
+<Multi_key> <o> <question> : "ỏ"  # LATIN SMALL LETTER O WITH HOOK ABOVE
+<Multi_key> <u> <exclam> : "ụ"  # LATIN SMALL LETTER U WITH DOT BELOW
+<Multi_key> <U> <question> : "Ủ"  # LATIN CAPITAL LETTER U WITH HOOK ABOVE
+<Multi_key> <u> <question> : "ủ"  # LATIN SMALL LETTER U WITH HOOK ABOVE
+<Multi_key> <Y> <exclam> : "Ỵ"  # LATIN CAPITAL LETTER Y WITH DOT BELOW
+<Multi_key> <y> <exclam> : "ỵ"  # LATIN SMALL LETTER Y WITH DOT BELOW
+<Multi_key> <Y> <question> : "Ỷ"  # LATIN CAPITAL LETTER Y WITH HOOK ABOVE
+<Multi_key> <y> <question> : "ỷ"  # LATIN SMALL LETTER Y WITH HOOK ABOVE
+<Multi_key> <Y> <minus> : "Ȳ"  # LATIN CAPITAL LETTER Y WITH MACRON
+<Multi_key> <y> <minus> : "ȳ"  # LATIN SMALL LETTER Y WITH MACRON
+<Multi_key> <G> <minus> : "Ḡ"  # LATIN CAPITAL LETTER G WITH MACRON
+<Multi_key> <g> <minus> : "ḡ"  # LATIN SMALL LETTER G WITH MACRON
+
+# Caron with <, both orders, for every caron letter (taught form; c and v prefixes stay as compatibility). Replaces < o (anticlockwise gapped circle arrow) and H < (heavy left angle ornament), both by name now.
+<Multi_key> <less> <A> : "Ǎ"  # LATIN CAPITAL LETTER A WITH CARON
+<Multi_key> <A> <less> : "Ǎ"  # LATIN CAPITAL LETTER A WITH CARON
+<Multi_key> <less> <a> : "ǎ"  # LATIN SMALL LETTER A WITH CARON
+<Multi_key> <a> <less> : "ǎ"  # LATIN SMALL LETTER A WITH CARON
+<Multi_key> <less> <I> : "Ǐ"  # LATIN CAPITAL LETTER I WITH CARON
+<Multi_key> <I> <less> : "Ǐ"  # LATIN CAPITAL LETTER I WITH CARON
+<Multi_key> <less> <i> : "ǐ"  # LATIN SMALL LETTER I WITH CARON
+<Multi_key> <i> <less> : "ǐ"  # LATIN SMALL LETTER I WITH CARON
+<Multi_key> <less> <O> : "Ǒ"  # LATIN CAPITAL LETTER O WITH CARON
+<Multi_key> <O> <less> : "Ǒ"  # LATIN CAPITAL LETTER O WITH CARON
+<Multi_key> <less> <o> : "ǒ"  # LATIN SMALL LETTER O WITH CARON
+<Multi_key> <o> <less> : "ǒ"  # LATIN SMALL LETTER O WITH CARON
+<Multi_key> <less> <U> : "Ǔ"  # LATIN CAPITAL LETTER U WITH CARON
+<Multi_key> <U> <less> : "Ǔ"  # LATIN CAPITAL LETTER U WITH CARON
+<Multi_key> <less> <u> : "ǔ"  # LATIN SMALL LETTER U WITH CARON
+<Multi_key> <u> <less> : "ǔ"  # LATIN SMALL LETTER U WITH CARON
+<Multi_key> <less> <G> : "Ǧ"  # LATIN CAPITAL LETTER G WITH CARON
+<Multi_key> <G> <less> : "Ǧ"  # LATIN CAPITAL LETTER G WITH CARON
+<Multi_key> <less> <g> : "ǧ"  # LATIN SMALL LETTER G WITH CARON
+<Multi_key> <g> <less> : "ǧ"  # LATIN SMALL LETTER G WITH CARON
+<Multi_key> <less> <K> : "Ǩ"  # LATIN CAPITAL LETTER K WITH CARON
+<Multi_key> <K> <less> : "Ǩ"  # LATIN CAPITAL LETTER K WITH CARON
+<Multi_key> <less> <k> : "ǩ"  # LATIN SMALL LETTER K WITH CARON
+<Multi_key> <k> <less> : "ǩ"  # LATIN SMALL LETTER K WITH CARON
+<Multi_key> <less> <j> : "ǰ"  # LATIN SMALL LETTER J WITH CARON
+<Multi_key> <j> <less> : "ǰ"  # LATIN SMALL LETTER J WITH CARON
+<Multi_key> <less> <H> : "Ȟ"  # LATIN CAPITAL LETTER H WITH CARON
+<Multi_key> <H> <less> : "Ȟ"  # LATIN CAPITAL LETTER H WITH CARON
+<Multi_key> <less> <h> : "ȟ"  # LATIN SMALL LETTER H WITH CARON
+<Multi_key> <h> <less> : "ȟ"  # LATIN SMALL LETTER H WITH CARON
+
+# Breve: letter then (. "( x" stays with the circled letters, so breve is the one accent written after the letter only.
+<Multi_key> <e> <parenleft> : "ĕ"  # LATIN SMALL LETTER E WITH BREVE
+<Multi_key> <i> <parenleft> : "ĭ"  # LATIN SMALL LETTER I WITH BREVE
+<Multi_key> <o> <parenleft> : "ŏ"  # LATIN SMALL LETTER O WITH BREVE
+<Multi_key> <u> <parenleft> : "ŭ"  # LATIN SMALL LETTER U WITH BREVE
+<Multi_key> <E> <parenleft> : "Ĕ"  # LATIN CAPITAL LETTER E WITH BREVE
+<Multi_key> <I> <parenleft> : "Ĭ"  # LATIN CAPITAL LETTER I WITH BREVE
+<Multi_key> <O> <parenleft> : "Ŏ"  # LATIN CAPITAL LETTER O WITH BREVE
+<Multi_key> <U> <parenleft> : "Ŭ"  # LATIN CAPITAL LETTER U WITH BREVE
+
+# Diaeresis with :, both orders, as a second mark beside ". Replaces o : and O : (Cyrillic binocular O, by name).
+<Multi_key> <colon> <a> : "ä"  # LATIN SMALL LETTER A WITH DIAERESIS
+<Multi_key> <a> <colon> : "ä"  # LATIN SMALL LETTER A WITH DIAERESIS
+<Multi_key> <colon> <e> : "ë"  # LATIN SMALL LETTER E WITH DIAERESIS
+<Multi_key> <e> <colon> : "ë"  # LATIN SMALL LETTER E WITH DIAERESIS
+<Multi_key> <colon> <i> : "ï"  # LATIN SMALL LETTER I WITH DIAERESIS
+<Multi_key> <i> <colon> : "ï"  # LATIN SMALL LETTER I WITH DIAERESIS
+<Multi_key> <colon> <o> : "ö"  # LATIN SMALL LETTER O WITH DIAERESIS
+<Multi_key> <o> <colon> : "ö"  # LATIN SMALL LETTER O WITH DIAERESIS
+<Multi_key> <colon> <u> : "ü"  # LATIN SMALL LETTER U WITH DIAERESIS
+<Multi_key> <u> <colon> : "ü"  # LATIN SMALL LETTER U WITH DIAERESIS
+<Multi_key> <colon> <y> : "ÿ"  # LATIN SMALL LETTER Y WITH DIAERESIS
+<Multi_key> <y> <colon> : "ÿ"  # LATIN SMALL LETTER Y WITH DIAERESIS
+<Multi_key> <colon> <A> : "Ä"  # LATIN CAPITAL LETTER A WITH DIAERESIS
+<Multi_key> <A> <colon> : "Ä"  # LATIN CAPITAL LETTER A WITH DIAERESIS
+<Multi_key> <colon> <E> : "Ë"  # LATIN CAPITAL LETTER E WITH DIAERESIS
+<Multi_key> <E> <colon> : "Ë"  # LATIN CAPITAL LETTER E WITH DIAERESIS
+<Multi_key> <colon> <I> : "Ï"  # LATIN CAPITAL LETTER I WITH DIAERESIS
+<Multi_key> <I> <colon> : "Ï"  # LATIN CAPITAL LETTER I WITH DIAERESIS
+<Multi_key> <colon> <O> : "Ö"  # LATIN CAPITAL LETTER O WITH DIAERESIS
+<Multi_key> <O> <colon> : "Ö"  # LATIN CAPITAL LETTER O WITH DIAERESIS
+<Multi_key> <colon> <U> : "Ü"  # LATIN CAPITAL LETTER U WITH DIAERESIS
+<Multi_key> <U> <colon> : "Ü"  # LATIN CAPITAL LETTER U WITH DIAERESIS
+<Multi_key> <colon> <Y> : "Ÿ"  # LATIN CAPITAL LETTER Y WITH DIAERESIS
+<Multi_key> <Y> <colon> : "Ÿ"  # LATIN CAPITAL LETTER Y WITH DIAERESIS
+
+# Greek: * is the Greek prefix (Greek keyboard layout), never ring. Alpha, theta and chi had no key sequence; w gives omega as it looks. Ring keeps o a, a a, o u, u o. Final sigma and cross product by name.
+<Multi_key> <asterisk> <a> : "α"  # GREEK SMALL LETTER ALPHA
+<Multi_key> <asterisk> <A> : "Α"  # GREEK CAPITAL LETTER ALPHA
+<Multi_key> <asterisk> <u> : "θ"  # GREEK SMALL LETTER THETA
+<Multi_key> <asterisk> <U> : "Θ"  # GREEK CAPITAL LETTER THETA
+<Multi_key> <asterisk> <x> : "χ"  # GREEK SMALL LETTER CHI
+<Multi_key> <asterisk> <w> : "ω"  # GREEK SMALL LETTER OMEGA
+<Multi_key> <asterisk> <W> : "Ω"  # GREEK CAPITAL LETTER OMEGA
+
+# u o gives u with ring, the same as o u; the u-breve prefix is retired (u o was o with breve, a look-alike trap). Breve stays on U o and o (.
+<Multi_key> <u> <o> : "ů"  # LATIN SMALL LETTER U WITH RING ABOVE
+
+# Invisible format characters move from single Compose to Compose Compose names, so they cannot be typed by accident and do not collide with names.
+<Multi_key> <Multi_key> <n> <b> <s> <p> : " "  # NO-BREAK SPACE
+<Multi_key> <Multi_key> <w> <j> : "⁠"  # WORD JOINER
+<Multi_key> <Multi_key> <l> <r> <m> : "‎"  # LEFT-TO-RIGHT MARK
+<Multi_key> <Multi_key> <r> <l> <m> : "‏"  # RIGHT-TO-LEFT MARK
+<Multi_key> <Multi_key> <l> <r> <e> : "‪"  # LEFT-TO-RIGHT EMBEDDING
+<Multi_key> <Multi_key> <r> <l> <e> : "‫"  # RIGHT-TO-LEFT EMBEDDING
+<Multi_key> <Multi_key> <p> <d> <f> : "‬"  # POP DIRECTIONAL FORMATTING
+<Multi_key> <Multi_key> <l> <r> <o> : "‭"  # LEFT-TO-RIGHT OVERRIDE
+<Multi_key> <Multi_key> <r> <l> <o> : "‮"  # RIGHT-TO-LEFT OVERRIDE
+<Multi_key> <Multi_key> <s> <h> <y> : "­"  # SOFT HYPHEN
+<Multi_key> <Multi_key> <z> <w> <j> : "‍"  # ZERO WIDTH JOINER
+
+
+# ~ = is ≈, as programmers write "approximately" (~=) and as three of
+# three usability testers guessed; ≅ (congruent), which ~ = gave in
+# pointless-xcompose, moves to = ~ and keeps its names.
+<Multi_key> <asciitilde> <equal> : "≈"  # ALMOST EQUAL TO
+<Multi_key> <equal> <asciitilde> : "≅"  # APPROXIMATELY EQUAL TO (congruent)
+
+# Subscript letters: _ _ and the letter (_ a is ā, the macron, so one _ is
+# taken); _ _ * and the letter for Greek, as * is Greek elsewhere. Mirrors
+# ^ _ for superscript letters. _ _ alone (¯) then waits one key.
+<Multi_key> <underscore> <underscore> <a> : "ₐ"  # LATIN SUBSCRIPT SMALL LETTER A
+<Multi_key> <underscore> <underscore> <e> : "ₑ"  # LATIN SUBSCRIPT SMALL LETTER E
+<Multi_key> <underscore> <underscore> <o> : "ₒ"  # LATIN SUBSCRIPT SMALL LETTER O
+<Multi_key> <underscore> <underscore> <x> : "ₓ"  # LATIN SUBSCRIPT SMALL LETTER X
+<Multi_key> <underscore> <underscore> <h> : "ₕ"  # LATIN SUBSCRIPT SMALL LETTER H
+<Multi_key> <underscore> <underscore> <k> : "ₖ"  # LATIN SUBSCRIPT SMALL LETTER K
+<Multi_key> <underscore> <underscore> <l> : "ₗ"  # LATIN SUBSCRIPT SMALL LETTER L
+<Multi_key> <underscore> <underscore> <m> : "ₘ"  # LATIN SUBSCRIPT SMALL LETTER M
+<Multi_key> <underscore> <underscore> <n> : "ₙ"  # LATIN SUBSCRIPT SMALL LETTER N
+<Multi_key> <underscore> <underscore> <p> : "ₚ"  # LATIN SUBSCRIPT SMALL LETTER P
+<Multi_key> <underscore> <underscore> <s> : "ₛ"  # LATIN SUBSCRIPT SMALL LETTER S
+<Multi_key> <underscore> <underscore> <t> : "ₜ"  # LATIN SUBSCRIPT SMALL LETTER T
+<Multi_key> <underscore> <underscore> <i> : "ᵢ"  # LATIN SUBSCRIPT SMALL LETTER I
+<Multi_key> <underscore> <underscore> <r> : "ᵣ"  # LATIN SUBSCRIPT SMALL LETTER R
+<Multi_key> <underscore> <underscore> <u> : "ᵤ"  # LATIN SUBSCRIPT SMALL LETTER U
+<Multi_key> <underscore> <underscore> <v> : "ᵥ"  # LATIN SUBSCRIPT SMALL LETTER V
+<Multi_key> <underscore> <underscore> <j> : "ⱼ"  # LATIN SUBSCRIPT SMALL LETTER J
+<Multi_key> <underscore> <underscore> <asterisk> <b> : "ᵦ"  # GREEK SUBSCRIPT SMALL LETTER BETA
+<Multi_key> <underscore> <underscore> <asterisk> <g> : "ᵧ"  # GREEK SUBSCRIPT SMALL LETTER GAMMA
+<Multi_key> <underscore> <underscore> <asterisk> <r> : "ᵨ"  # GREEK SUBSCRIPT SMALL LETTER RHO
+<Multi_key> <underscore> <underscore> <asterisk> <f> : "ᵩ"  # GREEK SUBSCRIPT SMALL LETTER PHI
+<Multi_key> <underscore> <underscore> <asterisk> <x> : "ᵪ"  # GREEK SUBSCRIPT SMALL LETTER CHI
+
+# Superscript letters: ^ ^ and the letter, the counterpart of _ _ for
+# subscripts (^ a is â, so one ^ is taken). ^ ^ i and ^ ^ n were there.
+<Multi_key> <asciicircum> <asciicircum> <A> : "ᴬ"  # MODIFIER LETTER CAPITAL A
+<Multi_key> <asciicircum> <asciicircum> <B> : "ᴮ"  # MODIFIER LETTER CAPITAL B
+<Multi_key> <asciicircum> <asciicircum> <D> : "ᴰ"  # MODIFIER LETTER CAPITAL D
+<Multi_key> <asciicircum> <asciicircum> <E> : "ᴱ"  # MODIFIER LETTER CAPITAL E
+<Multi_key> <asciicircum> <asciicircum> <G> : "ᴳ"  # MODIFIER LETTER CAPITAL G
+<Multi_key> <asciicircum> <asciicircum> <H> : "ᴴ"  # MODIFIER LETTER CAPITAL H
+<Multi_key> <asciicircum> <asciicircum> <I> : "ᴵ"  # MODIFIER LETTER CAPITAL I
+<Multi_key> <asciicircum> <asciicircum> <J> : "ᴶ"  # MODIFIER LETTER CAPITAL J
+<Multi_key> <asciicircum> <asciicircum> <K> : "ᴷ"  # MODIFIER LETTER CAPITAL K
+<Multi_key> <asciicircum> <asciicircum> <L> : "ᴸ"  # MODIFIER LETTER CAPITAL L
+<Multi_key> <asciicircum> <asciicircum> <M> : "ᴹ"  # MODIFIER LETTER CAPITAL M
+<Multi_key> <asciicircum> <asciicircum> <N> : "ᴺ"  # MODIFIER LETTER CAPITAL N
+<Multi_key> <asciicircum> <asciicircum> <O> : "ᴼ"  # MODIFIER LETTER CAPITAL O
+<Multi_key> <asciicircum> <asciicircum> <P> : "ᴾ"  # MODIFIER LETTER CAPITAL P
+<Multi_key> <asciicircum> <asciicircum> <R> : "ᴿ"  # MODIFIER LETTER CAPITAL R
+<Multi_key> <asciicircum> <asciicircum> <T> : "ᵀ"  # MODIFIER LETTER CAPITAL T
+<Multi_key> <asciicircum> <asciicircum> <U> : "ᵁ"  # MODIFIER LETTER CAPITAL U
+<Multi_key> <asciicircum> <asciicircum> <V> : "ⱽ"  # MODIFIER LETTER CAPITAL V
+<Multi_key> <asciicircum> <asciicircum> <W> : "ᵂ"  # MODIFIER LETTER CAPITAL W
+<Multi_key> <asciicircum> <asciicircum> <a> : "ᵃ"  # MODIFIER LETTER SMALL A
+<Multi_key> <asciicircum> <asciicircum> <b> : "ᵇ"  # MODIFIER LETTER SMALL B
+<Multi_key> <asciicircum> <asciicircum> <c> : "ᶜ"  # MODIFIER LETTER SMALL C
+<Multi_key> <asciicircum> <asciicircum> <d> : "ᵈ"  # MODIFIER LETTER SMALL D
+<Multi_key> <asciicircum> <asciicircum> <e> : "ᵉ"  # MODIFIER LETTER SMALL E
+<Multi_key> <asciicircum> <asciicircum> <f> : "ᶠ"  # MODIFIER LETTER SMALL F
+<Multi_key> <asciicircum> <asciicircum> <g> : "ᵍ"  # MODIFIER LETTER SMALL G
+<Multi_key> <asciicircum> <asciicircum> <h> : "ʰ"  # MODIFIER LETTER SMALL H
+<Multi_key> <asciicircum> <asciicircum> <j> : "ʲ"  # MODIFIER LETTER SMALL J
+<Multi_key> <asciicircum> <asciicircum> <k> : "ᵏ"  # MODIFIER LETTER SMALL K
+<Multi_key> <asciicircum> <asciicircum> <l> : "ˡ"  # MODIFIER LETTER SMALL L
+<Multi_key> <asciicircum> <asciicircum> <m> : "ᵐ"  # MODIFIER LETTER SMALL M
+<Multi_key> <asciicircum> <asciicircum> <o> : "ᵒ"  # MODIFIER LETTER SMALL O
+<Multi_key> <asciicircum> <asciicircum> <p> : "ᵖ"  # MODIFIER LETTER SMALL P
+<Multi_key> <asciicircum> <asciicircum> <r> : "ʳ"  # MODIFIER LETTER SMALL R
+<Multi_key> <asciicircum> <asciicircum> <s> : "ˢ"  # MODIFIER LETTER SMALL S
+<Multi_key> <asciicircum> <asciicircum> <t> : "ᵗ"  # MODIFIER LETTER SMALL T
+<Multi_key> <asciicircum> <asciicircum> <u> : "ᵘ"  # MODIFIER LETTER SMALL U
+<Multi_key> <asciicircum> <asciicircum> <v> : "ᵛ"  # MODIFIER LETTER SMALL V
+<Multi_key> <asciicircum> <asciicircum> <w> : "ʷ"  # MODIFIER LETTER SMALL W
+<Multi_key> <asciicircum> <asciicircum> <x> : "ˣ"  # MODIFIER LETTER SMALL X
+<Multi_key> <asciicircum> <asciicircum> <y> : "ʸ"  # MODIFIER LETTER SMALL Y
+<Multi_key> <asciicircum> <asciicircum> <z> : "ᶻ"  # MODIFIER LETTER SMALL Z
+
+# _ _ is "subscript" and ^ ^ "superscript" for everything that has one,
+# digits and signs too (_ _ 4 gave ¯4: _ _ alone was ¯, which waited and
+# then typed the 4 after it). The short forms _ 4 and ^ 2 stay.
+<Multi_key> <underscore> <underscore> <0> : "₀"  # SUBSCRIPT ZERO
+<Multi_key> <underscore> <underscore> <1> : "₁"  # SUBSCRIPT ONE
+<Multi_key> <underscore> <underscore> <2> : "₂"  # SUBSCRIPT TWO
+<Multi_key> <underscore> <underscore> <3> : "₃"  # SUBSCRIPT THREE
+<Multi_key> <underscore> <underscore> <4> : "₄"  # SUBSCRIPT FOUR
+<Multi_key> <underscore> <underscore> <5> : "₅"  # SUBSCRIPT FIVE
+<Multi_key> <underscore> <underscore> <6> : "₆"  # SUBSCRIPT SIX
+<Multi_key> <underscore> <underscore> <7> : "₇"  # SUBSCRIPT SEVEN
+<Multi_key> <underscore> <underscore> <8> : "₈"  # SUBSCRIPT EIGHT
+<Multi_key> <underscore> <underscore> <9> : "₉"  # SUBSCRIPT NINE
+<Multi_key> <underscore> <underscore> <plus> : "₊"  # SUBSCRIPT PLUS SIGN
+<Multi_key> <underscore> <underscore> <minus> : "₋"  # SUBSCRIPT MINUS
+<Multi_key> <underscore> <underscore> <equal> : "₌"  # SUBSCRIPT EQUALS SIGN
+<Multi_key> <underscore> <underscore> <parenleft> : "₍"  # SUBSCRIPT LEFT PARENTHESIS
+<Multi_key> <underscore> <underscore> <parenright> : "₎"  # SUBSCRIPT RIGHT PARENTHESIS
+<Multi_key> <asciicircum> <asciicircum> <0> : "⁰"  # SUPERSCRIPT ZERO
+<Multi_key> <asciicircum> <asciicircum> <1> : "¹"  # SUPERSCRIPT ONE
+<Multi_key> <asciicircum> <asciicircum> <2> : "²"  # SUPERSCRIPT TWO
+<Multi_key> <asciicircum> <asciicircum> <3> : "³"  # SUPERSCRIPT THREE
+<Multi_key> <asciicircum> <asciicircum> <4> : "⁴"  # SUPERSCRIPT FOUR
+<Multi_key> <asciicircum> <asciicircum> <5> : "⁵"  # SUPERSCRIPT FIVE
+<Multi_key> <asciicircum> <asciicircum> <6> : "⁶"  # SUPERSCRIPT SIX
+<Multi_key> <asciicircum> <asciicircum> <7> : "⁷"  # SUPERSCRIPT SEVEN
+<Multi_key> <asciicircum> <asciicircum> <8> : "⁸"  # SUPERSCRIPT EIGHT
+<Multi_key> <asciicircum> <asciicircum> <9> : "⁹"  # SUPERSCRIPT NINE
+<Multi_key> <asciicircum> <asciicircum> <plus> : "⁺"  # SUPERSCRIPT PLUS SIGN
+<Multi_key> <asciicircum> <asciicircum> <minus> : "⁻"  # SUPERSCRIPT MINUS
+<Multi_key> <asciicircum> <asciicircum> <equal> : "⁼"  # SUPERSCRIPT EQUALS SIGN
+<Multi_key> <asciicircum> <asciicircum> <parenleft> : "⁽"  # SUPERSCRIPT LEFT PARENTHESIS
+<Multi_key> <asciicircum> <asciicircum> <parenright> : "⁾"  # SUPERSCRIPT RIGHT PARENTHESIS

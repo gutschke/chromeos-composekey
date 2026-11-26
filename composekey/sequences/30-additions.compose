@@ -50,3 +50,20 @@
 # Operators people type as ASCII digraphs
 <Multi_key> <exclam> <equal>              : "≠"  # NOT EQUAL TO
 <Multi_key> <asciitilde> <asciitilde>     : "≈"  # ALMOST EQUAL TO
+
+# By name, like the emoji: characters the table had no sequence for, which
+# usability testers looked for (a maths student found only IPA ɑ for alpha).
+<Multi_key> <Multi_key> <a> <l> <p> <h> <a>          : "α"  # GREEK SMALL LETTER ALPHA
+<Multi_key> <Multi_key> <A> <l> <p> <h> <a>          : "Α"  # GREEK CAPITAL LETTER ALPHA
+<Multi_key> <Multi_key> <f> <o> <r> <a> <l> <l>      : "∀"  # FOR ALL
+<Multi_key> <Multi_key> <e> <x> <i> <s> <t> <s>      : "∃"  # THERE EXISTS
+
+# Coloured hearts and a few more emoji a usability tester looked for.
+<Multi_key> <Multi_key> <b> <l> <u> <e> <h> <e> <a> <r> <t>        : "💙"  # BLUE HEART
+<Multi_key> <Multi_key> <g> <r> <e> <e> <n> <h> <e> <a> <r> <t>    : "💚"  # GREEN HEART
+<Multi_key> <Multi_key> <y> <e> <l> <l> <o> <w> <h> <e> <a> <r> <t> : "💛"  # YELLOW HEART
+<Multi_key> <Multi_key> <p> <u> <r> <p> <l> <e> <h> <e> <a> <r> <t> : "💜"  # PURPLE HEART
+<Multi_key> <Multi_key> <b> <l> <a> <c> <k> <h> <e> <a> <r> <t>    : "🖤"  # BLACK HEART
+<Multi_key> <Multi_key> <w> <h> <i> <t> <e> <h> <e> <a> <r> <t>    : "🤍"  # WHITE HEART
+<Multi_key> <Multi_key> <o> <r> <a> <n> <g> <e> <h> <e> <a> <r> <t> : "🧡"  # ORANGE HEART
+<Multi_key> <Multi_key> <s> <o> <b> <b> <i> <n> <g>                : "😭"  # LOUDLY CRYING FACE
