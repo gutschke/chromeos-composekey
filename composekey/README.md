@@ -43,6 +43,11 @@ For example Alt + `-` minimizes the window, which also ends the composition.
 Sequences containing such keys (`-`, `=`, `[`, `]`, and possibly digits) only
 work in tap mode.
 
+Some apps open their menu bar when Alt is pressed. For those, choose "Right
+Alt or Right Control" as the Compose key in the options; either key then
+works as Compose, and Right Control leaves the menu alone. Holding Right
+Control may run into Ctrl shortcuts in the same way.
+
 ### Keys and names
 
 After Compose, type a few keys or a name. Compose `" a` is ä, `o o` is °,

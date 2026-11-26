@@ -2816,7 +2816,7 @@ function logKey(keyData, requestId) {
   if (composeKey !== undefined) {
     // Characters stay anonymous (the log must not record text); named
     // keys (Enter, ArrowDown, ...) are shown, as they say what was done.
-    entry[3] = keyData.code == composeKey ? 'compose' :
+    entry[3] = isComposeCode(keyData.code) ? 'compose' :
         modifierKeys.has(keyData.key) ? 'modifier' :
         [...String(keyData.key)].length == 1 ? 'char' :
         String(keyData.key || keyData.code);
@@ -3481,6 +3481,16 @@ function setComposeKeyDown(value) {
 }
 
 /**
+ * @param {string} code KeyboardEvent.code
+ * @return {boolean} whether `code` is (one of) the Compose key(s).
+ */
+function isComposeCode(code) {
+  // The setting is one key code, or several separated by spaces
+  // ("AltRight ControlRight"): any of them is Compose.
+  return composeKey !== undefined && composeKey.split(' ').includes(code);
+}
+
+/**
  * For a Compose key that is a modifier, whether keyData says that modifier is
  * held; null when the event cannot tell (the Compose key is not a modifier).
  * @param {string} code KeyboardEvent.code of the Compose key
@@ -3831,13 +3841,14 @@ chrome.input.ime.onKeyEvent.addListener((engineID, keyData, requestId) => {
     // later press would look like a repeat, leaving compose dead. So it is
     // also cleared on focus changes (resetState), and by any other key that
     // arrives without the Compose key's modifier flag.
-    if (composeKeyDown && keyData.code != composeKey &&
-        modifierFlagOf(composeKey, keyData) === false) {
+    if (composeKeyDown && !isComposeCode(keyData.code) &&
+        composeKey.split(' ').every(
+            (code) => modifierFlagOf(code, keyData) === false)) {
       setComposeKeyDown(false);
     }
 
     let isComposeEvent = false;
-    if (keyData.code == composeKey) {
+    if (isComposeCode(keyData.code)) {
       if (keyData.type == 'keyup') {
         setComposeKeyDown(false);
         isComposeEvent = composeOnKeyUp;
@@ -3865,7 +3876,7 @@ chrome.input.ime.onKeyEvent.addListener((engineID, keyData, requestId) => {
       // Hold-to-compose: releasing the Compose key settles a pending
       // ambiguous sequence. (In tap mode the release comes before any
       // sequence key, when nothing can be pending yet.)
-      if (keyData.code == composeKey && composing) {
+      if (isComposeCode(keyData.code) && composing) {
         finderComposeReleased(keyData);
         const h = heldResult();
         if (h !== null) {

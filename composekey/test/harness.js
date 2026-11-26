@@ -289,18 +289,18 @@ class Session {
    * wrapped in real ShiftLeft keydown/keyup events, as on hardware, because
    * the Shift events themselves must not disturb a pending sequence.
    */
-  async tap(key, {code, shift, alt} = {}) {
+  async tap(key, {code, shift, alt, ctrl} = {}) {
     code = code ?? keyToCode(key);
     if (shift) {
-      this.worker.keyEvent('keydown', 'Shift', 'ShiftLeft', {shift: true, alt});
+      this.worker.keyEvent('keydown', 'Shift', 'ShiftLeft', {shift: true, alt, ctrl});
       await this.settle(5);
     }
-    this.worker.keyEvent('keydown', key, code, {shift, alt});
+    this.worker.keyEvent('keydown', key, code, {shift, alt, ctrl});
     await this.settle(5);
-    this.worker.keyEvent('keyup', key, code, {shift, alt});
+    this.worker.keyEvent('keyup', key, code, {shift, alt, ctrl});
     await this.settle(5);
     if (shift) {
-      this.worker.keyEvent('keyup', 'Shift', 'ShiftLeft', {alt});
+      this.worker.keyEvent('keyup', 'Shift', 'ShiftLeft', {alt, ctrl});
       await this.settle(5);
     }
   }
@@ -310,11 +310,13 @@ class Session {
     this.storage.areas.sync.set('composeFile', text);
   }
 
-  /** Tap the Compose key (right Alt by default). */
-  async compose() {
-    this.worker.keyEvent('keydown', 'Alt', 'AltRight', {alt: true});
+  /** Tap the Compose key: right Alt, or the key with KeyboardEvent.code `code`. */
+  async compose(code = 'AltRight') {
+    const key = code.replace(/(Left|Right)$/, '');
+    const mod = {Alt: 'alt', Control: 'ctrl', Shift: 'shift'}[key];
+    this.worker.keyEvent('keydown', key, code, mod ? {[mod]: true} : {});
     await this.settle(5);
-    this.worker.keyEvent('keyup', 'Alt', 'AltRight', {});
+    this.worker.keyEvent('keyup', key, code, {});
     await this.settle(5);
   }
 
