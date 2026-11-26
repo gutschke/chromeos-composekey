@@ -41,8 +41,8 @@ function assertComposed(s, expected, contextID = 42) {
 
 test('baseline: compose o o gives a degree sign', async () => {
   const s = await warmSession();
-  await s.type('oo');
-  assertComposed(s, '°');
+  await s.type('"a');
+  assertComposed(s, 'ä');
 });
 
 test('worker restarted while a field stays focused', async () => {
@@ -50,8 +50,8 @@ test('worker restarted while a field stays focused', async () => {
   // no new onFocus arrives. The next key event wakes a fresh worker.
   const s = await warmSession();
   s.start();
-  await s.type('oo');
-  assertComposed(s, '°');
+  await s.type('"a');
+  assertComposed(s, 'ä');
 });
 
 // Used to fail: every worker start re-ran setComposeFile(), whose resetState()
@@ -60,8 +60,8 @@ test('worker restarted between compose key and sequence', async () => {
   const s = await warmSession();
   await s.compose();
   s.start();
-  for (const ch of 'oo') await s.tap(ch);
-  assertComposed(s, '°');
+  for (const ch of '"a') await s.tap(ch, {shift: ch === '"'});
+  assertComposed(s, 'ä');
 });
 
 test('worker cold-started by focusing a field', async () => {
@@ -73,8 +73,8 @@ test('worker cold-started by focusing a field', async () => {
   s.start();
   s.worker.focus(43);
   await s.settle();
-  await s.type('oo');
-  assertComposed(s, '°', 43);
+  await s.type('"a');
+  assertComposed(s, 'ä', 43);
 });
 
 test('first ever start, focused immediately', async () => {
@@ -82,8 +82,8 @@ test('first ever start, focused immediately', async () => {
   current.start();
   current.worker.focus();
   await current.settle();
-  await current.type('oo');
-  assertComposed(current, '°');
+  await current.type('"a');
+  assertComposed(current, 'ä');
 });
 
 // Chrome does not order completions across storage areas, so the cold-start
@@ -99,8 +99,8 @@ for (const [name, lat] of [
     s.start();
     s.worker.focus(43);
     await s.settle();
-    await s.type('oo');
-    assertComposed(s, '°', 43);
+    await s.type('"a');
+    assertComposed(s, 'ä', 43);
   });
 }
 
@@ -142,6 +142,6 @@ test('blur while worker was asleep leaves nothing committed', async () => {
   s.start();
   s.worker.blur();
   await s.settle();
-  await s.type('oo');
+  await s.type('"a');
   assert.deepEqual(s.rec.commits, []);
 });

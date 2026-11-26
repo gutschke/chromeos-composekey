@@ -25,9 +25,15 @@ import json
 import pathlib
 import re
 import sys
+import unicodedata
 
 HERE = pathlib.Path(__file__).resolve().parent.parent        # .../composekey
 SEQ_DIR = HERE / 'sequences'
+NAMES = SEQ_DIR / 'names.tsv'
+# Sequences taken out of the table, whichever source defines them (left-hand
+# sides only, one per line). 00-fixes.compose, which wins over every other
+# source, holds sequences that were changed or added.
+RETIRED = SEQ_DIR / '00-retired.compose'
 WORKER = HERE / 'service_worker.js'
 README = HERE / 'README.md'
 
@@ -118,7 +124,24 @@ def compose_line(keys, out, comment):
 
 
 def seq_files():
-    return sorted(p for p in SEQ_DIR.glob('*.compose'))
+    return sorted(p for p in SEQ_DIR.glob('*.compose') if p != RETIRED)
+
+
+def load_retired():
+    """{keys: reason} from 00-retired.compose."""
+    retired = {}
+    if not RETIRED.exists():
+        return retired
+    for n, raw in enumerate(RETIRED.read_text(encoding='utf-8').splitlines(), 1):
+        line, _, reason = raw.partition('#')
+        if not line.strip():
+            continue
+        syms = re.findall(r'<([^>]*)>', line)
+        keys = [key_of(x) for x in syms[1:]] if syms and syms[0] == COMPOSE else [None]
+        if not keys or None in keys:
+            sys.exit(f'{RETIRED.name}:{n}: cannot read {line.strip()!r}')
+        retired[tuple(keys)] = reason.strip()
+    return retired
 
 
 def merged():
@@ -143,7 +166,334 @@ def merged():
             entries.append((keys, out, comment, f.stem))
             added += 1
         report.append((f.name, added, dup_same, overridden, dict(parse.skipped)))
-    return entries, report
+    # Retired sequences go, unless 00-fixes.compose redefines them. A retired
+    # line that matches nothing is an error: it is stale, or mistyped, and
+    # would otherwise silently retire nothing.
+    retired = load_retired()
+    found = {tuple(k) for k, _, _, _ in entries}
+    stale = [' '.join(k) for k in retired if k not in found]
+    if stale:
+        sys.exit(f'{RETIRED.name}: not in any source: {stale}')
+    kept = [e for e in entries if tuple(e[0]) not in retired or e[3] == '00-fixes']
+    # What the retired ones used to type: someone who types one out of habit
+    # is offered it first (finder.js).
+    merged.retired = [(e[0], e[1]) for e in entries
+                      if tuple(e[0]) in retired and e[3] != '00-fixes']
+    report.append((RETIRED.name, -(len(entries) - len(kept)), 0, 0, {}))
+    # A character whose every sequence was retired stays reachable by name:
+    # it is kept as a Compose Compose row, which js_block turns into a name.
+    # So does one whose sequences were all taken by a higher-priority file
+    # (00-fixes.compose gives * x to χ; ⨯ had only that).
+    left = {e[1] for e in kept}
+    lost = [(None, out, '', name.rsplit('.', 1)[0]) for name, _, out, _, _ in merged.lost]
+    for keys, out, comment, src in entries + lost:
+        if out not in left:
+            left.add(out)
+            kept.append(([COMPOSE], out, comment, src))
+    return kept, report
+
+
+# --- Names and search aliases --------------------------------------------------
+#
+# Each output gets a short display name and search aliases, for the finder.
+# Unicode's names exist for everything but are not what people type: nobody
+# searches for "LATIN SMALL LETTER U WITH DIAERESIS", and DIAERESIS is
+# "umlaut" to most. So sequences/names.tsv (by hand) sets display names and
+# adds aliases; the rules below fill in the rest: Unicode's name, synonyms of
+# its words, the general category, and Compose Compose names.
+
+# Words of Unicode names, and what people call them.
+SYNONYMS = {
+    'DIAERESIS': 'umlaut|trema|dieresis', 'STROKE': 'slash|bar',
+    'CARON': 'hacek|wedge', 'CIRCUMFLEX': 'hat|caret', 'LAMDA': 'lambda',
+    'NO-BREAK': 'nbsp|non-breaking', 'QUOTATION': 'quote', 'SOLIDUS': 'slash',
+    'DOUBLE-STRUCK': 'blackboard bold', 'RIGHTWARDS': 'right',
+    'LEFTWARDS': 'left', 'UPWARDS': 'up', 'DOWNWARDS': 'down',
+    'SUPERSCRIPT': 'superscript|power|sup', 'SUBSCRIPT': 'subscript|sub',
+    'VULGAR': 'fraction', 'OGONEK': 'hook|tail', 'CEDILLA': 'cedille',
+    'MACRON': 'bar|overline|long',
+}
+# General categories worth a word. Not Sm: arrows and | ~ are Sm too.
+CATEGORY_WORDS = {'Sc': 'currency|money', 'Pd': 'dash', 'Zs': 'space',
+                  'Pi': 'quote', 'Pf': 'quote', 'Cf': 'invisible'}
+NUMBERS = {w: n for n, w in enumerate(
+    'ZERO ONE TWO THREE FOUR FIVE SIX SEVEN EIGHT NINE TEN ELEVEN TWELVE '
+    'THIRTEEN FOURTEEN FIFTEEN SIXTEEN SEVENTEEN EIGHTEEN NINETEEN TWENTY'.split())}
+NUMBERS.update({'FIFTY': 50, 'HUNDRED': 100, 'THOUSAND': 1000})
+# Shortenings for names over 24 characters, tried in order.
+ABBREVIATIONS = [
+    ('quotation mark', 'quote'), ('parenthesis', 'paren'),
+    ('ordinal indicator', 'ordinal'), (' ornament', ''), ('-pointing', ''),
+    (' pointing', ''), ('leftwards', 'left'), ('rightwards', 'right'),
+    ('upwards', 'up'), ('downwards', 'down'), ('anticlockwise', 'ccw'),
+    ('clockwise', 'cw'), ('greater-than', 'greater'), ('less-than', 'less'),
+    (' or equal to', ' or equal'), ('double-struck', 'bb'),
+    ('exclamation mark', 'exclamation'), ('question mark', 'question'),
+    (' operator', ''), ('with ', ''),
+]
+NAME_MAX = 24
+
+
+def strip_vs(out):
+    """Without a trailing emoji presentation selector (VS16)."""
+    return out[:-1] if out.endswith('️') else out
+
+
+def spoken_number(words):
+    total = current = 0
+    for w in words:
+        if w not in NUMBERS:
+            return None
+        n = NUMBERS[w]
+        if n in (100, 1000):
+            total += max(current, 1) * n
+            current = 0
+        else:
+            current += n
+    return total + current
+
+
+def shorten(name):
+    """Fit NAME_MAX: abbreviate, then drop whole words from the end."""
+    for long, short in ABBREVIATIONS:
+        if len(name) <= NAME_MAX:
+            break
+        name = name.replace(long, short)
+    name = ' '.join(name.split())
+    while len(name) > NAME_MAX and ' ' in name:
+        name = name.rsplit(' ', 1)[0]
+    name = re.sub(r' (of|or|and|to|with)$', '', name)
+    return name[:NAME_MAX]
+
+
+def default_name(out):
+    """A short human name derived from Unicode's: "e acute", "circled 3"."""
+    parts = [unicodedata.name(c, '') for c in strip_vs(out)]
+    if not parts or not parts[0]:
+        return ''
+    n = parts[0]
+    extra = [p.replace('COMBINING ', '') for p in parts[1:] if p]
+    n = re.sub(r'^LATIN (SUBSCRIPT|SUPERSCRIPT) (SMALL|CAPITAL) LETTER ', r'\1 \2 LETTER ', n)
+    n = re.sub(r'^(SUPERSCRIPT|SUBSCRIPT) LATIN (SMALL|CAPITAL) LETTER ', r'\1 \2 LETTER ', n)
+    m = re.match(r'(?:(SUPERSCRIPT|SUBSCRIPT|MODIFIER) )?(?:(LATIN|GREEK|CYRILLIC) )?'
+                 r'(?:LETTER )?(SMALL|CAPITAL)? ?(?:LETTER|LIGATURE) (.+?)(?: WITH (.*))?$', n)
+    if m and (m.group(1) or m.group(2)):
+        prefix, script, case, letter, marks = m.groups()
+        words = letter.split()
+        last = 'lambda' if words[-1] == 'LAMDA' else words[-1].lower()
+        if case == 'CAPITAL':
+            last = last.upper() if len(last) == 1 else last.capitalize()
+        name = ' '.join([w.lower() for w in words[:-1]] + [last])
+        if 'LIGATURE' in n:
+            name += ' ligature'
+        if script in ('GREEK', 'CYRILLIC'):
+            name = script.lower() + ' ' + name
+        if prefix:
+            name = prefix.lower() + ' ' + name
+        marks = ([marks.lower().replace(' and ', ' ')] if marks else []) + \
+            [e.lower() for e in extra]
+        if marks:
+            name += ' ' + ' '.join(marks)
+        if len(name) > NAME_MAX:
+            name = name.replace(' above', '').replace(' below', ' under')
+        return shorten(name)
+    m = re.match(r'(?:DINGBAT )?(CIRCLED|PARENTHESIZED|NEGATIVE CIRCLED|DOUBLE CIRCLED)'
+                 r'(?: SANS-SERIF)? (?:NUMBER|DIGIT|LATIN (SMALL|CAPITAL) LETTER) (.+)$', n)
+    if m:
+        kind, case, rest = m.groups()
+        v = spoken_number(rest.split())
+        return kind.lower() + ' ' + (str(v) if v is not None else
+                                     rest.lower() if case == 'SMALL' else rest)
+    m = re.match(r'(SMALL )?ROMAN NUMERAL (.+)$', n)
+    if m and spoken_number(m.group(2).split()) is not None:
+        return ('small roman %d' if m.group(1) else 'roman %d') % spoken_number(m.group(2).split())
+    m = re.match(r'VULGAR FRACTION (.+)$', n)
+    if m:
+        return shorten(m.group(1).lower())
+    m = re.match(r'(SUPERSCRIPT|SUBSCRIPT) (%s)$' % '|'.join(list(NUMBERS)[:10]), n)
+    if m:
+        return m.group(1).lower() + ' ' + str(NUMBERS[m.group(2)])
+    m = re.match(r'PLAYING CARD (.+)$', n)
+    if m:
+        return shorten(m.group(1).lower())
+    name = ' '.join([n] + extra).lower()
+    name = re.sub(r' (sign|symbol)$', '', name)
+    name = re.sub(r'^(apl functional symbol|modifier letter|musical symbol|latin letter) ', '', name)
+    return shorten(name)
+
+
+def load_names(outputs):
+    """names.tsv as {output: (display or None, [aliases])}. A character may
+    stand for its emoji form too (⚠ for ⚠️)."""
+    by_base = {}
+    for out in outputs:
+        by_base.setdefault(strip_vs(out), []).append(out)
+    names, problems = {}, []
+    if not NAMES.exists():
+        return names
+    for n, line in enumerate(NAMES.read_text(encoding='utf-8').splitlines(), 1):
+        # A comment is "#" and a space; "#" and a tab is the character #.
+        if not line or (line.startswith('#') and not line.startswith('#\t')):
+            continue
+        cols = line.split('\t')
+        if len(cols) != 3:
+            problems.append(f'{NAMES.name}:{n}: want 3 tab-separated columns')
+            continue
+        chars = cols[0].split('/') if cols[0] != '/' else ['/']
+        shown = cols[1].split('/') if cols[1] != '-' else [None] * len(chars)
+        # Lower case, except a capitalised name (Rightarrow ⇒, as in LaTeX).
+        aliases = [a.strip() if re.fullmatch(r'[A-Z][a-z]+', a.strip()) else a.strip().lower()
+                   for a in cols[2].split('|') if a.strip()]
+        for i, c in enumerate(chars):
+            hits = by_base.get(c, [])
+            if not hits:
+                problems.append(f'{NAMES.name}:{n}: {c!r} is not in the table')
+            d = shown[i] if i < len(shown) else None
+            if d and len(d) > NAME_MAX:
+                problems.append(f'{NAMES.name}:{n}: {d!r} is longer than {NAME_MAX}')
+            for out in hits:
+                names[out] = (d, aliases, len(names) + 1)
+    if problems:
+        sys.exit('\n'.join(problems))
+    return names
+
+
+def name_and_aliases(out, all_keys, names):
+    """(display name, aliases joined by "|", rank in names.tsv or 0)."""
+    display = default_name(out)
+    aliases = []
+    hand = names.get(out)
+    if hand:
+        display = hand[0] or display
+        aliases += hand[1]
+    uname = ' + '.join(unicodedata.name(c, '') for c in strip_vs(out))
+    aliases.append(uname.lower())
+    for w in uname.split():
+        aliases += SYNONYMS.get(w, '').split('|')
+    aliases += CATEGORY_WORDS.get(unicodedata.category(out[0]), '').split('|')
+    if ord(out[0]) >= 0x1F000 or out.endswith('️'):
+        aliases.append('emoji')
+    # Raised and lowered letters and digits under the names people search
+    # for: Unicode calls ᵗ "modifier letter small t".
+    uname1 = unicodedata.name(out, '') if len(out) == 1 else ''
+    m = re.fullmatch(r'(?:MODIFIER LETTER|SUPERSCRIPT LATIN) (SMALL|CAPITAL) (?:LETTER )?([A-Z])', uname1)
+    if m:
+        aliases.append('superscript ' + (m.group(2) if m.group(1) == 'CAPITAL' else m.group(2).lower()))
+    m = re.fullmatch(r'(SUPERSCRIPT|SUBSCRIPT) (ZERO|ONE|TWO|THREE|FOUR|FIVE|SIX|SEVEN|EIGHT|NINE)', uname1)
+    if m:
+        d = 'ZERO ONE TWO THREE FOUR FIVE SIX SEVEN EIGHT NINE'.split().index(m.group(2))
+        aliases.append(('sup' if m.group(1) == 'SUPERSCRIPT' else 'sub') + str(d))
+    # Greek letters by their names: theta, omega, pi (LAMDA is lambda).
+    # Capitals by the capitalised name, as in LaTeX: Delta is Δ.
+    m = re.fullmatch(r'GREEK (SMALL|CAPITAL) LETTER (\w+)', unicodedata.name(out, '') if len(out) == 1 else '')
+    if m:
+        word = m.group(2).lower().replace('lamda', 'lambda')
+        aliases.append(word if m.group(1) == 'SMALL' else word.capitalize())
+    for keys in all_keys:
+        if keys and keys[0] == COMPOSE and len(keys) > 3:
+            aliases.append(''.join(keys[1:]).lower())    # Compose Compose name
+    aliases = [a for a in dict.fromkeys(a.strip() for a in aliases)
+               if a and a != display.lower()]
+    return display, '|'.join(aliases), hand[2] if hand else 0
+
+
+NAME_TOKEN = re.compile(r'[a-z]{3,}|[A-Z][a-z]{2,}')
+
+
+def primary_name(out, all_keys, display, aliases):
+    """The name to teach for typing it by name: its old Compose Compose name,
+    else its display name or first alias, if a single lowercase word."""
+    for keys in all_keys:
+        if keys and keys[0] == COMPOSE and all(len(k) == 1 for k in keys[1:]):
+            word = ''.join(keys[1:])
+            if NAME_TOKEN.fullmatch(word):
+                return word
+    # Not an alias: an alias may be shared ("times" is × and ⨯), and the
+    # typed name is the one that wins it. A Greek letter wins its own name
+    # (sigma is σ, not ∑; gamma γ, not IPA ɣ).
+    m = re.fullmatch(r'GREEK (SMALL|CAPITAL) LETTER (\w+)', unicodedata.name(out, '') if len(out) == 1 else '')
+    if m:
+        word = m.group(2).lower().replace('lamda', 'lambda')
+        return word if m.group(1) == 'SMALL' else word.capitalize()
+    if NAME_TOKEN.fullmatch(display.lower()):
+        return display.lower()
+    return ''
+
+
+# Words that describe or group characters rather than name one: search
+# terms, never typed names (they would make every real name that starts
+# with them wait, and would mean several characters).
+NOT_NAMES = set('''
+currency money math maths dash arrow arrows emoji happy sad smile fruit animal
+symbol sign letter mark quote quotes quotation bracket brackets space number
+digit fraction accent ring angle temperature done check love face hand food
+weather music small capital big long short double single left right up down
+open close white black heavy light round square circle dot dots line bar
+legal approx about around
+'''.split())
+
+
+def typed_names(entries, keys_of, names):
+    """{output: [typed names]}: the words that type a character after
+    Compose. Single words only (Space ends a name, so a phrase cannot be
+    typed), that name the character: its old Compose Compose name, its
+    Greek name (capitalised for capitals, as in LaTeX), a one-word display
+    name, and single-word aliases in names.tsv that are not NOT_NAMES. One
+    word types one character: where several claim it, the strongest claim
+    wins (an own name over an alias), then the rank in names.tsv, then
+    table order; the others keep it as a search word only."""
+    order = {}
+    for i, (_, out, _, _) in enumerate(entries):
+        order.setdefault(out, i)
+    letter_seqs = {''.join(k) for k, _, _, _ in entries
+                   if k and k[0] != COMPOSE and all(len(x) == 1 and 'a' <= x <= 'z' for x in k)}
+    claims = {}   # word -> [(strength, rank, order, out)]
+    for out, all_keys in keys_of.items():
+        hand = names.get(out)
+        rank = hand[2] if hand else 10**6
+        found = []
+        for keys in all_keys:
+            if keys and keys[0] == COMPOSE and len(keys) > 1 and all(len(k) == 1 for k in keys[1:]):
+                found.append((0, ''.join(keys[1:])))
+        m = re.fullmatch(r'GREEK (SMALL|CAPITAL) LETTER (\w+)',
+                         unicodedata.name(out, '') if len(out) == 1 else '')
+        if m:
+            w = m.group(2).lower().replace('lamda', 'lambda')
+            w = w if m.group(1) == 'SMALL' else w.capitalize()
+            if len(w) >= 3 or w.lower() not in letter_seqs:
+                found.append((0, w))
+        display = (hand[0] if hand and hand[0] else default_name(out)).lower()
+        found.append((1, display))
+        m = re.fullmatch(r'(SUPERSCRIPT|SUBSCRIPT) (ZERO|ONE|TWO|THREE|FOUR|FIVE|SIX|SEVEN|EIGHT|NINE)',
+                         unicodedata.name(out, '') if len(out) == 1 else '')
+        if m:   # sub2 ₂, sup3 ³: what people type for them
+            d = 'ZERO ONE TWO THREE FOUR FIVE SIX SEVEN EIGHT NINE'.split().index(m.group(2))
+            found.append((0, ('sup' if m.group(1) == 'SUPERSCRIPT' else 'sub') + str(d)))
+        for a in (hand[1] if hand else []):
+            found.append((2, a))
+        for strength, w in found:
+            ok = (re.fullmatch(r'[a-z]{3,}|[A-Z][a-z]{2,}|(sub|sup)[0-9]', w) and w.lower() not in NOT_NAMES) or \
+                 (strength == 0 and re.fullmatch(r'[a-zA-Z][a-z]', w) and w.lower() not in letter_seqs)
+            if ok:
+                claims.setdefault(w, []).append((strength, rank, order.get(out, 10**6), out))
+    typed = {}
+    typed_names.contests = []
+    for w, cs in claims.items():
+        cs = sorted(set(cs))
+        winner = cs[0][3]
+        if len({strip_vs(c[3]).lower() for c in cs}) > 1:
+            typed_names.contests.append((w, winner, [c[3] for c in cs[1:]]))
+        typed.setdefault(winner, [])
+        if w not in typed[winner]:
+            typed[winner].append(w)
+    # The teaching name first: the strongest claim the character won.
+    for out, ws in typed.items():
+        ws.sort(key=lambda w: min(c[0] for c in claims[w] if c[3] == out))
+    return typed
+
+
+def name_tokens(display, aliases):
+    return {a for a in [display.lower()] + aliases.split('|') if NAME_TOKEN.fullmatch(a)}
 
 
 def replace_block(text, begin, end, body, path):
@@ -155,44 +505,112 @@ def replace_block(text, begin, end, body, path):
 
 
 def js_block(entries):
+    """Rows for the worker. Compose Compose sequences are not keys any more:
+    a name is typed after a single Compose (see finder.js), so they become
+    names, and a character with no other sequence gets a row with no keys."""
     rows = []
+    # Sequences of three or more lowercase letters are names in all but
+    # name ("sum" ∑, "del" ∇, "inf" ∞), and as sequences they committed
+    # in the middle of words ("delta" gave ∇ta): they become names.
+    entries = [([COMPOSE] + keys if len(keys) >= 3 and
+                all(len(k) == 1 and 'a' <= k <= 'z' for k in keys) else keys, out, c, src)
+               for keys, out, c, src in entries]
+    keys_of = {}
+    for keys, out, _, _ in entries:
+        keys_of.setdefault(out, []).append(keys)
+    names = load_names(keys_of)
+    typed = typed_names(entries, keys_of, names)
+    js_block.typed = typed
+    done = set()
+    by_name = {}       # name -> outputs, for the check below
+    letter_seqs = {}   # all-lowercase key sequence -> output
     for keys, out, comment, src in entries:
-        tag = ' // ' + ((comment + '  ') if comment else '') + '[%s]' % src
-        rows.append('  [%s, %s],%s' % (json.dumps(keys, ensure_ascii=False),
-                                      json.dumps(out, ensure_ascii=False),
-                                      tag.replace('\n', ' ')))
+        named = bool(keys) and keys[0] == COMPOSE   # incl. [COMPOSE]: name only
+        if named and keys != [COMPOSE] and out in done:
+            continue
+        if not named and all(len(k) == 1 and 'a' <= k <= 'z' for k in keys):
+            letter_seqs[''.join(keys)] = out
+        if named and any(not (k and k[0] == COMPOSE) for k in keys_of[out]):
+            continue   # the character has keys; the name is just an alias
+        tag = ' // [%s]' % src
+        fields = [[] if named else keys, out]
+        # Name and aliases on the first row of each output only.
+        if out not in done:
+            display, aliases, rank = name_and_aliases(out, keys_of[out], names)
+            words = typed.get(out, [])
+            fields += [display, aliases] + ([rank, ' '.join(words)] if words else [rank] if rank else [])
+            for t in words:
+                by_name.setdefault(t, []).append(out)
+        done.add(out)
+        rows.append('  [%s],%s' % (', '.join(json.dumps(v, ensure_ascii=False)
+                                          for v in fields), tag))
+    # A name typed after Compose and a key sequence of the same letters must
+    # not mean different characters: "pint" was ⨕ by keys, 🍺 by name.
+    clash = sorted(f'{w} (keys: {letter_seqs[w]}, name: {"".join(by_name[w])})'
+                   for w in letter_seqs if len(w) >= 3 and w in by_name
+                   and letter_seqs[w] not in by_name[w])
+    # (A two-letter name is only typed where no sequence has its letters:
+    # "mu" stays µ by keys; finder.js skips it as a name.)
+    if clash:
+        sys.exit('letter sequences that are also names of other characters:\n  ' +
+                 '\n  '.join(clash))
     return ('/**\n'
-            ' * Built-in sequences: [keys, output]. Each key is a single typed\n'
-            ' * character, or "Multi_key" for a further press of Compose.\n'
+            ' * Built-in sequences: [keys, output, name, aliases, rank, typed name].\n'
+            ' * Each key is a single typed character; no keys: by name only. The\n'
+            ' * rest is for the finder, on the first row of each output only:\n'
+            ' * display name, search aliases joined by "|", its line in\n'
+            ' * sequences/names.tsv if listed (ranks results), and the name that\n'
+            ' * types it after Compose.\n'
+            ' * Unicode %s data.\n'
             ' * Generated: edit sequences/*.compose and run\n'
             ' * tools/gen-sequences.py build.\n'
             ' * @type {!Array<!Array>}\n'
             ' */\n'
-            'const builtinSequences = Object.freeze([\n' + '\n'.join(rows) + '\n]);\n')
+            % unicodedata.unidata_version +
+            'const builtinSequences = Object.freeze([\n' + '\n'.join(rows) + '\n]);\n\n'
+            '/** Retired sequences, [keys, what they typed]: offered first when\n'
+            ' * typed out of habit (sequences/00-retired.compose). */\n'
+            'const retiredSequences = Object.freeze(%s);\n'
+            % json.dumps([[k, o] for k, o in getattr(merged, 'retired', [])], ensure_ascii=False))
 
 
-def md_seq(keys):
+def md_text(s):
+    """A table cell's text, safe from Markdown and HTML: GitHub read a cell
+    starting with < as HTML, and | ends a cell."""
+    s = s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+    s = s.replace('|', '&#124;').replace('`', '&#96;').replace('\\', '&#92;')
+    return s.replace('*', '\\*').replace('_', '\\_')
+
+
+def md_seq(keys, name=''):
+    """The keys, as typed after Compose; a character typed by name only
+    shows its name."""
+    if keys == [COMPOSE]:
+        return 'name: ' + md_text(name) if name else ''
     # Not stripped: a sequence may end in a space (", " is cedilla).
     s = ''.join('Compose ' if k == COMPOSE else k for k in keys)
     if ' ' in s.replace('Compose ', ''):
         s = '"%s"' % s
-    s = s.replace('|', '&#124;').replace('`', '&#96;')
-    return s.replace('*', '\\*').replace('_', '\\_')
+    return md_text(s)
 
 
 SECTION_TITLES = {}
 
 
-def md_block(entries):
+def md_block(entries, typed):
+    """Every row starts and ends with |: a row starting "# |" was read as a
+    heading, and one starting "<" as HTML, and either ended the table.
+    tools/check-readme-render checks the result as GitHub renders it."""
     out = []
     last = None
     for keys, o, comment, src in entries:
         if src != last:
             title = SECTION_TITLES.get(src) or header_title(src)
-            out.append('\n### %s\n\nOutput | Sequence | Comment\n------ | -------- | -------' % title)
+            out.append('\n### %s\n\n| Output | Sequence | Comment |\n| ------ | -------- | ------- |' % title)
             last = src
-        shown = '&nbsp;' if o.isspace() else o.replace('|', '&#124;')
-        out.append('%s | %s | %s' % (shown, md_seq(keys), comment.replace('|', '&#124;')))
+        shown = '&nbsp;' if o.isspace() else md_text(o)
+        name = (typed.get(o) or [''])[0]
+        out.append('| %s | %s | %s |' % (shown, md_seq(keys, name), md_text(comment)))
     return '\n'.join(out).lstrip('\n') + '\n'
 
 
@@ -211,7 +629,7 @@ def generated():
         WORKER: replace_block(WORKER.read_text(encoding='utf-8'),
                               BEGIN_JS, END_JS, js_block(entries), WORKER),
         README: replace_block(README.read_text(encoding='utf-8'),
-                              BEGIN_MD, END_MD, md_block(entries), README),
+                              BEGIN_MD, END_MD, md_block(entries, js_block.typed), README),
     }
 
 
@@ -221,6 +639,8 @@ def cmd_build(args):
         print(f'{name}: {added} added, {same} duplicates of earlier entries, '
               f'{over} overridden by earlier files')
     if args.verbose:
+        for w, win, losers in getattr(typed_names, 'contests', []):
+            print(f'  name {w!r}: {win} (also claimed by {"".join(losers)})')
         for name, seq, out, win, winner in merged.lost:
             print(f'  {name}: {seq!r} -> {out} lost to {win} from {winner}')
     for path, text in files.items():

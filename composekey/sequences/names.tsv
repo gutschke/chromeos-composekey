@@ -1,0 +1,386 @@
+# Display names and search aliases for the finder (Compose, then Tab).
+#
+# One line per character: chars TAB display TAB alias|alias|...
+#  - chars: one output, or a lower/Upper pair written "ø/Ø".
+#  - display: the name shown in the list, at most 24 characters; a pair has
+#    "lower/Upper" names; "-" keeps the name derived from Unicode's.
+#  - aliases: what people might type to find it; every word and phrase is
+#    searchable. Unicode's own name, synonyms of its words (DIAERESIS gives
+#    umlaut, ...), the general category and the Compose Compose name are added
+#    by tools/gen-sequences.py, so they need not be repeated here.
+#
+# People do not agree on names, so be generous with aliases. Every character
+# listed must be in the table: the build stops otherwise.
+ß/ẞ	sharp s/capital sharp s	eszett|ss|scharfes s|german s|double s
+æ/Æ	ae ligature/AE ligature	ash|aesc|ae
+œ/Œ	oe ligature/OE ligature	ethel|oe
+ĳ/Ĳ	ij ligature/IJ ligature	ij|dutch ij
+ø/Ø	o slash/O slash	o stroke|slashed o|o bar|danish o|norwegian o|oe
+å/Å	a ring/A ring	aa|swedish a|danish a|angstrom
+ł/Ł	l slash/L slash	l stroke|polish l|barred l
+đ/Đ	d stroke/D stroke	d bar|crossed d|croatian d|dj
+ð/Ð	eth/Eth	edh|icelandic d|th
+þ/Þ	thorn/Thorn	icelandic|th
+ı	dotless i	turkish i|undotted i
+ə/Ə	schwa/Schwa	turned e|upside down e|azerbaijani e
+ŋ/Ŋ	eng/Eng	engma|agma|ng
+ħ/Ħ	h stroke/H stroke	h bar|maltese h
+ŧ/Ŧ	t stroke/T stroke	t bar
+ĸ	kra	greenlandic k
+ſ	long s	medial s|old s
+ʒ	ezh	yogh|tailed z|zh
+ʃ	esh	sh|integral s
+ʔ	glottal stop	okina|hamza
+ñ/Ñ	n tilde/N tilde	enye|ene|spanish n
+ç/Ç	c cedilla/C cedilla	cedille|french c|cedilla
+č/Č	c caron/C caron	c hacek|czech c|ch
+š/Š	s caron/S caron	s hacek|sh
+ž/Ž	z caron/Z caron	z hacek|zh
+ő/Ő	o double acute/O double acute	hungarian o|hungarumlaut
+ű/Ű	u double acute/U double acute	hungarian u|hungarumlaut
+ğ/Ğ	g breve/G breve	soft g|turkish g|yumusak g
+ş/Ş	s cedilla/S cedilla	turkish s
+ș/Ș	s comma/S comma	romanian s|s comma below
+ț/Ț	t comma/T comma	romanian t|t comma below
+ă/Ă	a breve/A breve	romanian a|vietnamese a
+ä/Ä	-	ae|a umlaut|a dots
+ö/Ö	-	oe|o umlaut|o dots
+ü/Ü	-	ue|u umlaut|u dots
+«	left guillemet	guillemet|chevron|angle quote|french quote|<<|laquo
+»	right guillemet	guillemet|chevron|angle quote|french quote|>>|raquo
+‹	single left guillemet	guillemet|chevron|lsaquo
+›	single right guillemet	guillemet|chevron|rsaquo
+“	left double quote	smart quote|curly quote|open quote|ldquo|66|german quote|german closing quote
+”	right double quote	smart quote|curly quote|close quote|rdquo|99
+‘	left single quote	smart quote|curly quote|open quote|lsquo|6
+’	apostrophe	right single quote|curly apostrophe|smart quote|rsquo|9
+„	low double quote	german quote|polish quote|bdquo|99 low
+‚	low single quote	german quote|sbquo
+–	en dash	ndash|dash|range|to
+—	em dash	mdash|dash|long dash
+―	horizontal bar	quotation dash|dash
+‐	hyphen	real hyphen|unicode hyphen
+…	ellipsis	dots|three dots|...|hellip|ldots
+•	bullet	bullet point|dot|list
+·	middle dot	interpunct|centered dot|centre dot|middot|cdot
+¡	inverted exclamation	spanish exclamation|upside down exclamation
+¿	inverted question	spanish question|upside down question
+‽	interrobang	?!|question exclamation
+§	section	section sign|paragraph sign|legal|sect|section
+¶	pilcrow	paragraph|para|paragraph mark|pilcrow
+†	dagger	obelisk|obelus|died|death|footnote|dagger
+‡	double dagger	diesis|footnote|ddagger
+‰	per mille	permille|per mil|per thousand
+‱	per ten thousand	basis point|permyriad
+′	prime	minutes|feet|foot|arcminute
+″	double prime	seconds|inches|inch|arcsecond
+№	numero	number|no.|number sign
+#	hash	number sign|hashtag|pound sign|octothorpe|sharp
+@	at sign	at|commercial at|email
+\	backslash	reverse solidus|back slash
+|	vertical bar	pipe|vertical line|bar
+­	soft hyphen	shy|hyphenation point|discretionary hyphen
+​	zero width space	zwsp|invisible space
+‍	zero width joiner	zwj|joiner
+‌	zero width non-joiner	zwnj|non-joiner
+⁠	word joiner	wj|no break
+‎	left-to-right mark	lrm|ltr|bidi
+‏	right-to-left mark	rlm|rtl|bidi
+⁂	asterism	dinkus|three asterisks
+␣	visible space	space symbol|open box|blank
+⏎	return symbol	return|enter|carriage return|newline
+↵	enter arrow	return|enter|newline
+⌘	command key	command|cmd|mac|cloverleaf|place of interest
+⌨	keyboard	typing
+©	copyright	(c)|copr|copy
+®	registered	(r)|registered trademark|reg
+™	trademark	tm|(tm)|trade mark
+℠	service mark	sm
+°	degree	degrees|deg|temperature|angle|ring
+℃	degree celsius	celsius|centigrade|°c|temperature
+℉	degree fahrenheit	fahrenheit|°f|temperature
+µ	micro	mu|micron|micro sign|u
+±	plus-minus	plus minus|plusminus|pm|+-|tolerance
+×	multiplication	times|multiply|cross|by|dimensions|x|multiplication
+÷	division	divide|obelus|div
+−	minus	minus sign|subtract|real minus
+≈	almost equal	approx|approximately|about|around|~=|~~
+≅	congruent	approximately equal|isomorphic|cong|congruent
+≡	identical	equivalent|equiv|triple bar|congruent modulo|===
+≠	not equal	neq|ne|!=|unequal|differs
+≤	less or equal	le|leq|<=|at most
+≥	greater or equal	ge|geq|>=|at least
+≪	much less	ll|<<
+≫	much greater	gg|>>
+∞	infinity	inf|infinite|forever|lemniscate|endless|infty
+√	square root	sqrt|root|radical|surd
+∛	cube root	cbrt|root
+∑	summation	sum|sigma|total|n-ary sum|Sum
+∫	integral	int|integrate|antiderivative
+∂	partial	partial derivative|curly d|del|partial
+∇	nabla	del|gradient|grad|nabla
+∅	empty set	null set|nothing|emptyset|varnothing
+⌀	diameter	dia|diam
+∈	element of	in|member|belongs to|isin
+∉	not element of	not in|notin
+⊂	subset	proper subset|subset
+⊆	subset or equal	subseteq
+⊃	superset	proper superset|supset
+∩	intersection	cap|and
+∪	union	cup|or
+∧	logical and	and|wedge|conjunction|land
+∨	logical or	or|vee|disjunction|lor
+¬	not	negation|logical not|lnot|neg
+⊻	xor	exclusive or
+⊥	perpendicular	bottom|false|up tack|perp|falsum
+∴	therefore	thus|hence|so
+∵	because	since
+∎	end of proof	qed|tombstone|halmos
+ℵ	aleph	alef|cardinality|aleph
+ℏ	h bar	reduced planck|dirac constant|hbar
+ℓ	script l	ell|litre|liter
+ℝ	real numbers	reals|blackboard r
+ℕ	natural numbers	naturals|blackboard n
+ℤ	integers	blackboard z
+ℚ	rational numbers	rationals|blackboard q
+ℂ	complex numbers	complex|blackboard c
+∘	composition	compose|ring operator|circle|after
+⋅	dot operator	dot product|cdot|times dot
+⨯	cross product	vector product|times
+½	one half	half|1/2|0.5|fraction
+¼	one quarter	quarter|1/4|0.25|fraction
+¾	three quarters	3/4|0.75|fraction
+⅓	one third	third|1/3|fraction
+⅔	two thirds	2/3|fraction
+⅛	one eighth	eighth|1/8|fraction
+²	superscript 2	squared|square|power 2|^2
+³	superscript 3	cubed|cube|power 3|^3
+€	euro	eur|euros|currency|money
+£	pound	sterling|gbp|quid|british pound|currency|money
+¥	yen	yuan|jpy|cny|renminbi|currency|money
+$	dollar	usd|buck|currency|money
+¢	cent	cents|currency|money
+₹	indian rupee	rupee|inr|currency
+₨	rupee	rs|pakistani rupee|currency
+₽	ruble	rouble|rub|russian|currency
+₩	won	krw|korean won|currency
+฿	baht	thb|thai baht|currency
+₴	hryvnia	uah|ukrainian|currency
+₦	naira	ngn|nigerian|currency
+₫	dong	vnd|vietnamese|currency
+¤	currency	generic currency|scarab|money
+→	right arrow	arrow|to|maps to|->|rarr|rightarrow
+←	left arrow	arrow|from|<-|larr|gets|leftarrow
+↑	up arrow	arrow|uarr
+↓	down arrow	arrow|darr
+↔	left right arrow	both ways|<->|harr|arrow
+⇒	implies	double arrow|=>|then|rArr|implies|Rightarrow
+⇔	if and only if	iff|equivalent|<=>|double arrow|Leftrightarrow
+⇐	is implied by	double arrow|<=|lArr|Leftarrow
+✓	check mark	check|tick|checkmark|yes|done|correct
+✔	heavy check mark	check|tick|bold tick|done
+✗	ballot x	cross|x mark|no|wrong
+✘	heavy ballot x	cross|x mark|no|wrong
+☐	ballot box	checkbox|empty box|todo|unchecked
+☑	checked box	checkbox|ticked box|done
+✡	star of david	magen david|jewish star|hexagram
+☮	peace	peace sign|cnd|peace symbol
+☯	yin yang	tao|taoism|balance
+☢	radioactive	radiation|nuclear|trefoil
+☣	biohazard	biological hazard
+⚠	warning	caution|alert|danger|hazard
+⚡	high voltage	lightning|zap|bolt|electricity|thunder
+❤	red heart	heart|love|<3
+♥	heart suit	heart|love|hearts|heartsuit
+♠	spade suit	spade|spades
+♣	club suit	club|clubs
+♢	diamond suit	diamond|diamonds
+♪	eighth note	music|note|quaver
+♫	beamed notes	music|notes|song
+♯	sharp	music sharp|hash
+♭	flat	music flat
+♮	natural	music natural
+☺	smiley	smile|happy face|smiling face
+☹	frowning face	frown|sad face|sad
+☎	telephone	phone|call
+✉	envelope	mail|email|letter
+✈	airplane	plane|flight|airport|travel
+☕	hot beverage	coffee|tea|hot drink|cafe
+⌛	hourglass	wait|timer|sand
+⌚	watch	time|wristwatch
+✏	pencil	edit|write
+✍	writing hand	signature|sign|write
+☛	pointing hand	index|manicule|point
+⚛	atom	science|physics
+⚕	staff of aesculapius	medicine|medical|caduceus|doctor|asclepius
+☤	caduceus	hermes|medical|medicine
+♿	wheelchair	accessible|accessibility|disabled|handicap
+℞	prescription	rx|recipe|pharmacy
+👍	thumbs up	like|yes|ok|approve|+1|good|agree
+👎	thumbs down	dislike|no|-1|bad|disagree
+😂	tears of joy	lol|laughing|lmao|haha|crying laughing
+🤣	rofl	rolling on the floor|lmao|laughing
+🙏	folded hands	pray|please|thanks|thank you|namaste|hope
+💕	two hearts	love|hearts
+💔	broken heart	heartbreak|sad
+😊	blush	smiling eyes|happy|smile
+🙂	slight smile	smile|ok|fine
+😄	big grin	grinning|smile|happy|laugh
+😁	beaming face	grin|teeth|happy
+😉	wink	winking|joke
+😍	heart eyes	love|crush|adore
+😘	blowing a kiss	kiss|xoxo|love
+😎	sunglasses	cool|shades
+🤔	thinking	hmm|think|wonder|ponder
+😐	neutral face	meh|straight face
+🙄	eye roll	rolling eyes|whatever
+😏	smirk	smug
+😢	crying face	cry|tear|sad
+😭	sob	loudly crying|bawling|sad
+😡	enraged face	rage|furious|angry|pouting
+😠	angry face	angry|mad|grumpy
+😱	scream	shock|horror|omg|fear
+😅	sweat smile	phew|nervous|relief
+😴	sleeping	sleep|zzz|tired
+🤪	zany face	crazy|goofy|silly
+🥳	partying face	party|celebrate|birthday
+🤫	shushing face	shush|quiet|shh|secret
+🤗	hug	hugging
+😇	halo	angel|innocent
+😈	devil	evil|imp|horns
+🙃	upside-down face	sarcasm|silly|irony
+🧐	monocle	inspect|curious
+🤦	facepalm	face palm|smh|ugh
+🤷	shrug	idk|dunno|whatever
+💀	skull	dead|dying
+💩	pile of poo	poo|poop|shit|turd
+👻	ghost	boo|halloween
+👽	alien	ufo|extraterrestrial
+🤖	robot	bot
+🙈	see no evil	monkey|oops
+👏	clapping hands	clap|applause|bravo
+👋	waving hand	wave|hello|hi|bye
+💪	flexed biceps	muscle|strong|flex
+👊	fist bump	punch|fist|bro
+✌	victory hand	victory|peace|v sign
+🤞	fingers crossed	luck|hope
+👉	pointing right	point|this
+🤝	handshake	deal|agreement
+🙌	raised hands	hooray|praise|celebrate
+👌	ok hand	ok|perfect|aok
+🖕	middle finger	fu|finger
+🖖	vulcan salute	spock|llap|star trek|live long|live long and prosper|vulcan
+🔥	fire	lit|hot|flame
+⭐	star	favorite|favourite
+✨	sparkles	sparkle|shiny|new|magic
+💯	hundred points	100|perfect
+✅	check mark button	check|done|yes|green check
+❌	cross mark	cross|no|wrong|cancel
+🎉	party popper	tada|party|congratulations|congrats|celebrate
+🎁	gift	present|wrapped present
+🎂	birthday cake	bday|cake|birthday
+🚀	rocket	launch|ship it|space
+👀	eyes	look|watching|see
+💡	light bulb	idea|tip
+💰	money bag	money|cash|rich
+🔒	lock	locked|secure|private
+🔑	key	password
+📧	e-mail	email|mail
+📱	mobile phone	phone|mobile|cell|smartphone
+💻	laptop	computer|pc
+📅	calendar	date
+⏰	alarm clock	alarm|wake up
+🍺	beer	pint|cheers
+🍷	wine	wine glass|red wine
+🥂	clinking glasses	cheers|toast|champagne
+🍕	pizza	slice
+🍔	burger	hamburger
+🌍	globe europe-africa	earth|world|globe|europe|africa
+🌈	rainbow	pride
+❄	snowflake	snow|cold|winter
+☀	sun	sunny|weather
+🌙	crescent moon	moon|night
+🐱	cat face	cat|kitty
+🐶	dog face	dog|puppy
+🦄	unicorn	magic
+🐝	honeybee	bee
+🐛	bug	caterpillar
+🚗	car	automobile|auto
+🏠	house	home
+😆	laughing	xd|squinting
+😃	grinning	smiley|big smile
+😛	tongue out	silly|razz
+😮	surprised	wow|open mouth
+😕	confused	unsure
+😑	expressionless	blank
+😳	flushed	embarrassed|blush
+💋	kiss mark	kiss|lips|lipstick
+💤	zzz	sleep|snore
+💥	collision	boom|bang|pow
+💨	dashing away	fast|whoosh|fart
+ 	no-break space	nbsp|non-breaking space|nonbreaking|hard space
+ 	thin space	thinsp|narrow space
+😋	yum	delicious|tasty|savouring food
+❓	question mark	question|?
+❗	exclamation mark	exclamation|!|bang
+⏳	hourglass	wait|timer|sand
+😌	relieved	calm|content
+😪	sleepy	tired
+🤒	sick	ill|thermometer|fever
+🤓	nerd	geek|glasses
+🤡	clown	joker
+🏆	trophy	winner|cup|prize
+🏅	medal	sports medal|award
+🔔	bell	notification|ring
+📈	chart up	trending|growth|stonks|graph
+📌	pushpin	pin
+🔗	link	url|chain
+🎵	musical note	music|note|song
+🎮	video game	gaming|controller|game
+📖	open book	book|read
+📷	camera	photo|picture
+🎈	balloon	party
+🌮	taco	mexican
+🍎	apple	red apple|fruit
+🍌	banana	fruit
+🥑	avocado	guacamole
+☁	cloud	cloudy|weather
+🌧	rain	cloud with rain|rainy|weather
+☂	umbrella	rain
+🌸	cherry blossom	flower|sakura|blossom
+🌹	rose	flower
+🌳	tree	deciduous tree
+🐼	panda	panda face
+🐧	penguin	linux|tux
+🐒	monkey	ape
+🐍	snake	python
+🐟	fish	fishing
+🐙	octopus	tentacles
+🚲	bicycle	bike|cycling
+α/Α	greek alpha/greek Alpha	alpha|alfa
+∀	for all	forall|every|universal quantifier
+∃	there exists	exists|existential quantifier
+
+# LaTeX names, which maths users type as names (pm, ne, infty).
+∓	-	mp
+∮	-	oint
+ε	-	varepsilon|epsilon
+θ	-	theta
+φ	-	phi
+⊕	-	oplus
+⊗	-	otimes
+
+# Coloured hearts: by colour, as phones offer them.
+💙	blue heart	blue heart|heart
+💚	green heart	green heart|heart
+💛	yellow heart	yellow heart|heart
+💜	purple heart	purple heart|heart
+🖤	black heart	black heart|heart
+🤍	white heart	white heart|heart
+🧡	orange heart	orange heart|heart
+😭	crying	cry|crying|sob|tears|bawling
+
+# Names testers reached for (sub- and superscript panel).
+ᵀ	-	transpose
+º	masculine ordinal	ordinal|ordinal indicator
+ª	feminine ordinal	feminine ordinal indicator

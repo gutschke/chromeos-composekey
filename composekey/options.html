@@ -89,6 +89,44 @@
         intervening keystroke.</p>
     </section>
     <section>
+      Finding sequences:
+      <p>
+        <label>
+          <input id="finderPause" type="checkbox">
+          Show what can follow when I pause during a sequence, after
+          <select id="finderDelay">
+            <option value="600">0.6</option>
+            <option value="1000">1</option>
+            <option value="1500">1.5</option>
+            <option value="2500">2.5</option>
+          </select>
+          seconds
+        </label>
+      </p>
+      <p>
+        <label>
+          When a character could still be the start of something longer
+          (Compose <code>m u</code> is µ, but could become
+          <code>multiplication</code>), type it after
+          <select id="finderCommitDelay">
+            <option value="1500">1.5 seconds</option>
+            <option value="2500">2.5 seconds</option>
+            <option value="4000">4 seconds</option>
+            <option value="-1">never: wait for the next key (default)</option>
+          </select>
+        </label>
+      </p>
+      <p>
+        <label>
+          <input id="finderTab" type="checkbox">
+          Names after Compose (Compose <code>yen</code>, <code>fire</code>), and
+          Compose, then Tab, to search by name
+        </label>
+      </p>
+      <p>In the list, keep typing to narrow it down, use the arrow keys and
+        Enter to pick a row, or Escape to cancel.</p>
+    </section>
+    <section>
       <textarea id="testArea" rows=5 cols=100>Test here! To write &frac12;, press and release Compose followed by &lt;1&gt; &lt;2&gt;.</textarea>
       <div id="testDiv" contenteditable=true>Test here too!</div>
     </section>
